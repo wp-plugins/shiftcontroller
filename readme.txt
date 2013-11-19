@@ -33,11 +33,7 @@ Author URI: http://www.shiftcontroller.com
 3. When you first open ShiftController in your WordPress admin panel, it will ask which existing WordPress user accounts would you like to import into ShiftController..
 
 == Screenshots ==
-screenshot01.png
-
-= License =
-
-This plugin is provided "as is" and without any warranty or expectation of function. We'll probably try to help you if you ask nicely, but we can't promise anything. You are welcome to use this plugin and modify it however you want, as long as you give credit where it is due. 
+1. Month Schedule Overview
 
 == Upgrade Notice ==
 The upgrade is simply - upload everything up again to your `/wp-content/plugins/` directory, then go to the ShiftController menu item in the admin panel. It will automatically start the upgrade process if any needed.
