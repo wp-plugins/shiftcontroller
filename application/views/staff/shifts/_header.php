@@ -1,0 +1,1 @@
+<h2><?php echo lang('my_schedule'); ?></h2>

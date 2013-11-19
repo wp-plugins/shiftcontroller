@@ -1,0 +1,361 @@
+<?php
+if( ! function_exists('_print_r') )
+{
+	function _print_r($thing)
+	{
+		echo '<pre>';
+		print_r( $thing );
+		echo '</pre>';
+	}
+}
+
+if( ! class_exists('hcWpPost') )
+{
+class hcWpPost {
+	var $post_title;
+	var $post_content;
+	var $post_status;
+	var $post_author;    /* author user id (optional) */
+	var $post_name;      /* slug (optional) */
+	var $post_type;      /* 'page' or 'post' (optional, defaults to 'post') */
+	var $comment_status; /* open or closed for commenting (optional) */
+	}
+}
+
+if( ! class_exists('hcWpBase2') )
+{
+class hcWpBase2
+{
+	var $app = '';
+	var $types = array();
+	var $dir = '';
+	var $_admin_styles = array();
+	var $_admin_scripts = array();
+	var $pages = array();
+	var $page_param = '';
+	var $own_db = FALSE;
+
+	public function __construct( 
+		$app, 
+		$dir, 
+		$types = array(),
+		$own_db = FALSE
+		)
+	{
+		$this->app = $app;
+		$this->dir = $dir;
+		$this->types = array();
+		$this->page_param = 'page_id';
+		$this->own_db = $own_db;
+
+		reset( $types );
+		foreach( $types as $t )
+		{
+			$full_type = $this->app . '-' . $t;
+			$this->types[ $t ] = $full_type;
+		}
+
+		$this->_admin_styles = array();
+		$this->_admin_scripts = array();
+
+		$file = $this->dir . '/' . $app . '.php';
+		if( file_exists($file) )
+		{
+			register_activation_hook( $file, array($this, '_install') );
+		}
+
+		add_action(	'init',						array($this, '_init') );
+		if( $this->is_me_admin() )
+		{
+			add_action( 'admin_enqueue_scripts',	array($this, 'admin_scripts') );
+			add_action( 'admin_head', 				array($this, 'admin_head') );
+		}
+		add_action( 'save_post',				array($this, 'save_meta'));
+	}
+
+	private function _init_db()
+	{
+		global $table_prefix;
+		$mypref = $table_prefix . $this->app . '_';
+		$GLOBALS['NTS_CONFIG'][$this->app]['DB_HOST'] = DB_HOST;
+		$GLOBALS['NTS_CONFIG'][$this->app]['DB_USER'] = DB_USER;
+		$GLOBALS['NTS_CONFIG'][$this->app]['DB_PASS'] = DB_PASSWORD;
+		$GLOBALS['NTS_CONFIG'][$this->app]['DB_NAME'] = DB_NAME;
+		$GLOBALS['NTS_CONFIG'][$this->app]['DB_TABLES_PREFIX'] = $mypref;
+	}
+
+	function register_admin_style( $url )
+	{
+		$id = $this->app . '-style-admin-' . (count($this->_admin_styles) + 1);
+		$this->_admin_styles[] = array( $id, $url );
+	}
+
+	function register_admin_script( $url, $id = '' )
+	{
+		if( ! $id )
+		{
+			$id = $this->app . '-script-admin-' . ( count($this->_admin_scripts) + 1);
+		}
+
+		$skip = FALSE;
+		/* check jquery */
+		$check_url = is_array($url) ? $url[0] : $url;
+		if( preg_match('/\/jquery\-\d/', $check_url) )
+			$skip = TRUE;
+
+		if( ! $skip )
+			$this->_admin_scripts[] = array( $id, $url );
+	}
+
+	function is_me_admin()
+	{
+		global $post;
+		if(
+			( isset($post) && in_array($post->post_type, $this->types) )
+			OR
+			( isset($_REQUEST['post_type']) && in_array($_REQUEST['post_type'], $this->types) )
+			)
+		{
+			$return = TRUE;
+		}
+		else
+		{
+			$page = isset($_GET['page']) ? $_GET['page'] : '';
+			if( isset($_REQUEST['page']) )
+			{
+				$page = $_REQUEST['page'];
+			}
+			if( $page && ($page == $this->app) )
+			{
+				$return = TRUE;
+			}
+			else
+			{
+				$return = FALSE;
+			}
+		}
+		return $return;
+	}
+
+	function admin_scripts()
+	{
+		if( $this->is_me_admin() )
+		{
+			reset( $this->_admin_styles );
+			foreach( $this->_admin_styles as $sa )
+			{
+				if( is_array($sa[1]) )
+				{
+					// processed later in head
+				}
+				else
+				{
+					wp_enqueue_style( $sa[0], $sa[1] );
+				}
+			}
+
+			reset( $this->_admin_scripts );
+			foreach( $this->_admin_scripts as $sa )
+			{
+				if( $sa[1] )
+				{
+					if( is_array($sa[1]) )
+					{
+						// processed later in head
+					}
+					else
+					{
+						wp_enqueue_script( $sa[0], $sa[1] );
+					}
+				}
+				else
+					wp_enqueue_script( $sa[0] );
+			}
+		}
+	}
+
+	function admin_head()
+	{
+	/* this is here because damn WP can't handle confitional scripts for damn IE */
+		$return = array();
+
+		reset( $this->_admin_styles );
+		foreach( $this->_admin_styles as $sa )
+		{
+			if( $sa[1] && is_array($sa[1]) )
+			{
+				$return[] = 
+					'<!--[if ' . $sa[1][1] . ']>' .
+					"\n" . 
+					'<link rel="stylesheet" id="' . $sa[0] . '" href="' . $sa[1][0] . ' type="text/css" media="all" />' .
+					"\n" . 
+					'<![endif]-->' .
+					"\n";
+			}
+		}
+
+		reset( $this->_admin_scripts );
+		foreach( $this->_admin_scripts as $sa )
+		{
+			if( $sa[1] && is_array($sa[1]) )
+			{
+				$return[] = 
+					'<!--[if ' . $sa[1][1] . ']>' .
+					"\n" . 
+					'<script src="' . $sa[1][0] . '"></script>' . 
+					"\n" . 
+					'<![endif]-->' .
+					"\n";
+			}
+		}
+
+		$return = join( "\n", $return );
+		echo $return;
+	}
+
+// normally overwritten by child classes
+	function _install()
+	{
+	}
+
+	function _init()
+	{
+	// custom types and taxonimies
+		$file = $this->dir . '/conf/cpt.php';
+		if( file_exists($file) )
+		{
+			require( $file );
+		}
+
+	// own database
+		if( $this->own_db )
+		{
+			$this->_init_db();
+		}
+
+	// load shortcode
+		global $wpdb;
+
+		$shortcode = '[' . $this->app . ']';
+		$this->pages = array();
+		$pages = $wpdb->get_results( 
+			"
+			SELECT 
+				ID 
+			FROM $wpdb->posts 
+			WHERE 
+				(post_type = 'post' OR post_type = 'page') AND 
+				(
+				post_content LIKE '%" . $shortcode . "%'
+				)
+			"
+			);
+		foreach( $pages as $p )
+		{
+			$this->pages[] = $p->ID;
+		}
+
+		if( $this->pages )
+			$web_page = get_bloginfo('wpurl') . '?' . $this->page_param . '=' . $this->pages[0];
+		else
+			$web_page = get_bloginfo('wpurl');
+		$GLOBALS['NTS_CONFIG'][$this->app]['FRONTEND_WEBPAGE'] = $web_page;
+
+	// other config
+		$GLOBALS['NTS_CONFIG'][$this->app]['REMOTE_INTEGRATION'] = 'wordpress';
+		$session_name = 'ntssess_' . $this->app;
+		$GLOBALS['NTS_CONFIG'][$this->app]['SESSION_NAME'] = $session_name;
+
+		session_name( $session_name );
+		@session_start();
+		ob_start();
+	}
+
+	function get_options( $defaults = array() )
+	{
+		$options = get_option($this->app);
+		$return = array_merge( $defaults, $options );
+		return $return;
+	}
+
+	function get_option( $key )
+	{
+		$options = $this->get_options();
+		$return = isset($options[$key]) ? $options[$key] : NULL;
+		return $return;
+	}
+
+	function render( $view, $vars )
+	{
+		$file = $this->dir . '/views/' . $view . '.php';
+		if( ! file_exists($file) )
+		{
+			$content = 'File "' . $view . '" does not exist<br>';
+		}
+		else
+		{
+			extract( $vars );
+			ob_start();
+			require( $file );
+			$content = ob_get_contents();
+			ob_end_clean();
+		}
+		return $content;
+	}
+
+	function save_option( $key, $value )
+	{
+		$options = $this->get_options();
+		$options[$key] = $value;
+		update_option($this->app, $options);
+	}
+
+	function check_post( $post_id )
+	{
+		global $post;
+	/* verify nonce */
+	/*
+	    if ( !isset( $_POST['ninja_annc_nonce'] ) || !wp_verify_nonce( $_POST['ninja_annc_nonce'], basename( __FILE__ ) ) )
+	        return FALSE;
+	*/
+	
+	/* Check if the current user has permission to edit the post. */
+		if( $post )
+		{
+			$post_type = get_post_type_object( $post->post_type );
+			if ( ! current_user_can($post_type->cap->edit_post, $post_id) )
+				return FALSE;
+		}
+		return TRUE;
+	}
+
+	function save_meta( $post_id )
+	{
+		// normally overwritten by child classes
+		return $post_id;
+	}
+
+	function make_input( $start, $props )
+	{
+		$display = array();
+		$display[] = $start;
+
+		if( ! isset($props['id']) )
+		{
+			$id = $props['name'];
+			$id = str_replace( '[', '_', $id );
+			$id = str_replace( ']', '', $id );
+			$props['id'] = $id;
+		}
+
+		reset( $props );
+		foreach( $props as $k => $v )
+		{
+			$display[] = $k . '="' . $v . '"';			
+		}
+		$return = '<' . join( ' ', $display ) . '>';
+		return $return;
+	}
+}
+}
+?>

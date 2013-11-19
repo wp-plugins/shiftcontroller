@@ -1,0 +1,21 @@
+<?php
+$tabs = array(
+	'my'		=> lang('shift_next'),
+	);
+
+if( $this->hc_modules->exists('shift_trades') )
+{
+	$tabs['trades'] = lang('trades_my');
+	$tabs['pickup'] = lang('trades_to_pick_up');
+}
+
+?>
+<ul class="nav nav-tabs">
+<?php foreach( $tabs as $k => $l ) : ?>
+	<li<?php if( $k == $display ){echo ' class="active"';}; ?>>
+		<a href="<?php echo ci_site_url(array($this->conf['path'], 'index', $k)); ?>">
+			<?php echo $l; ?>
+		</a>
+	</li>
+<?php endforeach; ?>
+</ul>
