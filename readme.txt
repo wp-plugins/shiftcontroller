@@ -1,4 +1,4 @@
-=== ShiftController ===
+=== ShiftController Staff Scheduler - Employee Shift Scheduling ===
 
 Contributors: HitCode
 Tags: staff scheduling, shift scheduling, employee scheduling, rota shift scheduling
@@ -17,6 +17,7 @@ It helps overcome schedule conflicts as you can see and correct any conflicts du
 The monthly shifts are listed by position (location) or by staff member, the plugin automatically calculates the working time and the number of shifts.
 The plugin automatically emails the schedule to every staff member and lets them know when they work.
 ShiftController users database is automatically synchronized with WordPress - you can define which WordPress user roles will be administrators and staff members in ShiftController. 
+Please visit [our website](http://www.shiftcontroller.com "WordPress Employee Scheduling") for more info, or try our online staff scheduling [demo](http://www.shiftcontroller.com/demo/ "ShiftController Premium Demo") with all features.
 
 == Support ==
 Please contact us at http://www.shiftcontroller.com/contact/
