@@ -7,7 +7,12 @@ class Schedules_controller extends Backend_controller
 		$this->conf = array(
 			'path'	=> 'admin/schedules',
 			);
-		parent::__construct( User_model::LEVEL_ADMIN );
+		parent::__construct( User_model::LEVEL_MANAGER );
+
+		/* check how many locations do we have */
+		$lm = new Location_Model;
+		$location_count = $lm->count();
+		$this->data['location_count'] = $location_count;
 	}
 
 	function publish()
@@ -450,9 +455,12 @@ class Schedules_controller extends Backend_controller
 		$this->data['range'] = $range;
 
 		$um = new User_Model;
-		$staffs = $um
-			->where('active', USER_MODEL::STATUS_ACTIVE)
-			->get()->all;
+		if( $display == 'staff' )
+		{
+			$um->where('active', USER_MODEL::STATUS_ACTIVE);
+		}
+		$staffs = $um->get()->all;
+
 		$this->data['staffs'] = array();
 		foreach( $staffs as $sta )
 		{

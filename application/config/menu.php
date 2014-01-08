@@ -1,20 +1,22 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 $CI =& ci_get_instance();
 
-$config[User_model::LEVEL_ADMIN]['m1'] = array( 
-	lang('schedules'),
-	'admin/schedules',
-	10
-	);
-$config[User_model::LEVEL_ADMIN]['m2'] = array(
-	lang('users'),
-	'admin/users',
-	20
-	);
-$config[User_model::LEVEL_ADMIN]['m3'] = array(
-	lang('timeoffs'),
-	'admin/timeoffs',
-	30
+$config[User_model::LEVEL_ADMIN] = array(
+	array(
+		lang('schedules'),
+		'admin/schedules',
+		10
+		),
+	array(
+		lang('users'),
+		'admin/users',
+		20
+		),
+	array(
+		lang('timeoffs'),
+		'admin/timeoffs',
+		30
+		),
 	);
 
 $config[User_model::LEVEL_ADMIN]['conf'] = array( 
@@ -35,6 +37,19 @@ $config[User_model::LEVEL_ADMIN]['conf'] = array(
 		lang('menu_conf_settings'),
 		'conf/admin',
 		100
+		),
+	);
+
+$config[User_model::LEVEL_MANAGER] = array(
+	array(
+		lang('schedules'),
+		'admin/schedules',
+		10
+		),
+	array(
+		lang('timeoffs'),
+		'admin/timeoffs',
+		30
 		),
 	);
 

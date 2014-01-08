@@ -261,6 +261,7 @@ class MY_Controller extends MX_Controller
 			$this->output->set_content_type('application/json');
 			$this->output->enable_profiler(FALSE);
 			echo json_encode($out);
+			hc_ci_before_exit();
 			exit;
 //			return;
 		}

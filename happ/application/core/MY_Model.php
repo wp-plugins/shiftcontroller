@@ -376,11 +376,21 @@ class MY_model extends DataMapper
 				{
 					$options[0] = ' - ' . $select_label . ' - ';
 				}
+
 				$other_titles = $other_model->titles();
-				reset( $other_titles );
-				foreach( $other_titles as $other_id => $other_title )
+				if( count($other_titles) > 1 )
 				{
-					$options[ $other_id ] = $other_title;
+					reset( $other_titles );
+					foreach( $other_titles as $other_id => $other_title )
+					{
+						$options[ $other_id ] = $other_title;
+					}
+				}
+				else
+				{
+					$other_ids = array_keys( $other_titles );
+					$return[$fn]['type'] = 'hidden';
+					$return[$fn]['default'] = $other_ids[0];
 				}
 			}
 			$return[$fn]['options'] = $options;

@@ -35,8 +35,11 @@ echo form_open(
 				<td>
 					<?php
 					if( $role_value )
-						if( $role_value == 'administrator' ) 
+					{
+						if( $role_value == 'administrator' )
+						{
 							$default = USER_MODEL::LEVEL_ADMIN;
+						}
 						else
 						{
 							if( $this_role_count )
@@ -44,19 +47,23 @@ echo form_open(
 							else
 								$default = 0;
 						}
+					}
 					else
 						$default = 0;
 
 					$field_name = 'role_' . $role_value;
+					$options = array(
+						USER_MODEL::LEVEL_ADMIN		=> lang('user_level_admin'),
+						USER_MODEL::LEVEL_MANAGER	=> lang('user_level_manager'),
+						USER_MODEL::LEVEL_STAFF		=> lang('user_level_staff'),
+						0							=> lang('common_none'),
+						);
+
 					echo $this->hc_form->input(
 						array(
-							'type'	=> 'dropdown',
-							'name'	=> $field_name,
-							'options'	=> array(
-								USER_MODEL::LEVEL_STAFF	=> lang('user_level_staff'),
-								USER_MODEL::LEVEL_ADMIN	=> lang('user_level_admin'),
-								0						=> lang('common_none'),
-								),
+							'type'		=> 'dropdown',
+							'name'		=> $field_name,
+							'options'	=> $options,
 							'default'	=> $default,
 							)
 						);

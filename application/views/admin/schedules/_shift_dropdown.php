@@ -55,6 +55,7 @@ $title = array(
 	);
 
 $title['location'] .= $sh->location_name;
+
 if( $sh->user_id && isset($staffs[$sh->user_id]) )
 {
 	$title['staff'] .= $staffs[$sh->user_id]->full_name();
@@ -92,6 +93,31 @@ switch( $display_as )
 }
 
 $menu['1'][0] .= $add_title;
+
+if( $this->hc_modules->exists('notes') )
+{
+	$notes = $sh->note->get()->all;
+	if( count($notes) > 0 )
+	{
+		$notes_text = array();
+		reset( $notes );
+		foreach( $notes as $n )
+		{
+			$notes_text[] = $n->content;
+		}
+		$notes_text = join( "\n", $notes_text );
+
+//		$notes_view = '<i class="icon-comment-alt" title="' . $notes_text . '"></i> ' . count($notes);
+
+		$notes_view = '';
+		$notes_view .= '<span class="hc-tooltip" title="' . $notes_text . '">';
+		$notes_view .= '<i class="icon-comment-alt"></i> ' . count($notes);
+		$notes_view .= '</span>';
+
+		$menu['1'][2] = $notes_view;
+		$menu['1'][1]['title'] = $notes_text;
+	}
+}
 
 /* CONFLICTS */
 if( $conflicts )

@@ -50,7 +50,8 @@ echo hc_bootstrap::input(
 echo hc_bootstrap::input(
 	$this->hc_form->input($fields['location']),
 	$fields['location']['label'],
-	$this->hc_form->error('location')
+	$this->hc_form->error('location'),
+	$fields['location']
 	);
 ?>
 

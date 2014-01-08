@@ -3,7 +3,8 @@ include_once( NTS_SYSTEM_APPPATH . '/core/MY_Model.php' );
 class User_model extends MY_model
 {
 	const LEVEL_STAFF = 1;
-	const LEVEL_ADMIN = 2;
+	const LEVEL_MANAGER = 2;
+	const LEVEL_ADMIN = 3;
 
 	const STATUS_ACTIVE = 1;
 	const STATUS_ARCHIVE = 0;
@@ -53,6 +54,7 @@ class User_model extends MY_model
 			'rules'	=> array(
 				'enum' => array(
 					self::LEVEL_STAFF,
+					self::LEVEL_MANAGER,
 					self::LEVEL_ADMIN
 					)
 				),
@@ -71,6 +73,7 @@ class User_model extends MY_model
 	var $prop_text = array(
 		'level'	=> array(
 			self::LEVEL_STAFF 	=> 'lang:user_level_staff',
+			self::LEVEL_MANAGER	=> 'lang:user_level_manager',
 			self::LEVEL_ADMIN	=> 'lang:user_level_admin',
 			),
 		'active'	=> array(

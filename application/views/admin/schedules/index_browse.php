@@ -1,15 +1,11 @@
-<div class="row-fluid">
-	<div class="pull-left">
-		<?php require( dirname(__FILE__) . '/_tabs.php' ); ?>
-	</div>
-	<div class="pull-right">
-		<?php require( dirname(__FILE__) . '/_date_range.php' ); ?>
-	</div>
-	<div class="pull-right" style="margin-right: 1em;">
-		<?php require( dirname(__FILE__) . '/_export.php' ); ?>
-	</div>
-</div>
+<p>
+<?php require( dirname(__FILE__) . '/_date_range.php' ); ?>
+<p>
+<?php require( dirname(__FILE__) . '/_tabs.php' ); ?>
+<p>
+<?php require( dirname(__FILE__) . '/_export.php' ); ?>
 
+<p>
 <div class="hc-page-status" data-src="<?php echo ci_site_url( array('admin/schedules/status', 'start', $start_date, 'end', $end_date) ); ?>">
 	<?php echo Modules::run('admin/schedules/status', 'start', $start_date, 'end', $end_date); ?>
 </div>
@@ -20,7 +16,9 @@
 	<th><?php echo lang('time'); ?></th>
 	<th><?php echo lang('time_duration'); ?></th>
 	<th><?php echo lang('user_level_staff'); ?></th>
-	<th><?php echo lang('location'); ?></th>
+	<?php if( $location_count > 1 ) : ?>
+		<th><?php echo lang('location'); ?></th>
+	<?php endif; ?>
 </tr>
 
 <?php foreach( $shifts as $sh ) : ?>
@@ -58,9 +56,11 @@
 			?>
 			</ul>
 		</td>
-		<td>
-			<?php echo $sh->location_name; ?>
-		</td>
+		<?php if( $location_count > 1 ) : ?>
+			<td>
+				<?php echo $sh->location_name; ?>
+			</td>
+		<?php endif; ?>
 	</tr>
 <?php endforeach; ?>
 </table>

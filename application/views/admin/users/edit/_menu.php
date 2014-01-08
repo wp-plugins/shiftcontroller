@@ -15,6 +15,12 @@ if( ! $ri )
 else
 {
 	$menu[$ri . '_edit']	= ci_anchor( array($ri, 'admin/users', 'edit', $object->id), '<i class="icon-edit"></i>' . ' ' . lang('common_edit') . ' [' . ucfirst($ri) . ']', '' );
+	$menu['delete']		= ci_anchor( array('admin/users',	'delete', $object->id), '<i class="icon-remove"></i>' . ' ' . lang('common_delete') );
+}
+
+if( $this->auth->check() == $object->id )
+{
+	unset( $menu['delete'] );
 }
 
 $menu['_header2']	= lang('users');

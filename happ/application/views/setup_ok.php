@@ -9,6 +9,14 @@ $brand_title = $this->config->item('nts_app_title');
 Thank you for trying <strong><?php echo $brand_title; ?></strong>! Please now proceed to the <a href="<?php echo ci_site_url(); ?>">start page</a>.
 
 <?php if( $this->input->server('SERVER_NAME') != 'localhost') : ?>
+<?php
+$track_setup = $this->config->item('nts_track_setup');
+if( $track_setup )
+{
+	list( $track_site_id, $track_goal_id ) = explode( ':', $track_setup );
+}
+?>
+<?php if( $track_setup ) : ?>
 <br><br><br><br>
 
 <p>
@@ -20,10 +28,11 @@ Thank you for trying <strong><?php echo $brand_title; ?></strong>! Please now pr
   (function() {
     var u=(("https:" == document.location.protocol) ? "https" : "http") + "://www.fiammante.com/piwik/";
     _paq.push(["setTrackerUrl", u+"piwik.php"]);
-    _paq.push(["setSiteId", "2"]);
-	_paq.push(['trackGoal', 2]);
+    _paq.push(["setSiteId", "<?php echo $track_site_id; ?>"]);
+	_paq.push(['trackGoal', <?php echo $track_goal_id; ?>]);
     var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0]; g.type="text/javascript";
     g.defer=true; g.async=true; g.src=u+"piwik.js"; s.parentNode.insertBefore(g,s);
   })();
 </script>
+<?php endif; ?>
 <?php endif; ?>

@@ -59,6 +59,9 @@ class Dispatcher_controller extends Front_controller
 			case USER_MODEL::LEVEL_ADMIN:
 				$to = 'admin/schedules';
 				break;
+			case USER_MODEL::LEVEL_MANAGER:
+				$to = 'admin/schedules';
+				break;
 			case USER_MODEL::LEVEL_STAFF:
 				$to = 'staff/shifts';
 				break;

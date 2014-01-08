@@ -54,7 +54,9 @@ $tab_content['edit'] =
 		) . 
 	hc_bootstrap::input(
 		$this->hc_form->input( $fields['location'] ),
-		$fields['location']['label']
+		$fields['location']['label'],
+		$this->hc_form->error('location'),
+		$fields['location']
 		) . 
 	hc_bootstrap::input(
 		$this->hc_form->input( $fields['user'] ),

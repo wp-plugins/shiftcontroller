@@ -10,7 +10,7 @@ class Shifts_controller extends Backend_controller_crud
 			'entity'		=> 'shift',
 			'after_save'	=> 'shift',
 			);
-		parent::__construct( User_model::LEVEL_ADMIN );
+		parent::__construct( User_model::LEVEL_MANAGER );
 	}
 
 	function publish( $id )

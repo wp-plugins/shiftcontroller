@@ -33,10 +33,14 @@ class Timeoffs_notify
 			}
 		}
 
-		$staff = $timeoff->user;
+		$staff = $timeoff->user->get_clone();
+		$staff_view = $staff->title();
 
 	/* compile message */
 		$text = $timeoff->view_text();
+	// a hack to overcome the wrong staff problem for new timeoffs
+		$text['user'][1] = $staff_view;
+
 		$msg = new stdClass();
 		$msg->subject = lang('timeoff') . ': ' . $timeoff->prop_text('status');
 		$msg->body = array();
@@ -52,7 +56,8 @@ class Timeoffs_notify
 	// send to all admins too
 		$um = new User_model;
 		$um
-			->where( 'level',	USER_MODEL::LEVEL_ADMIN )
+//			->where( 'level',	USER_MODEL::LEVEL_ADMIN )
+			->where_in( 'level',	array(USER_MODEL::LEVEL_MANAGER, USER_MODEL::LEVEL_ADMIN) )
 			->where( 'active',	USER_MODEL::STATUS_ACTIVE )
 			;
 		$um->get();

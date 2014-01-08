@@ -334,10 +334,14 @@ jQuery(document).on( 'change', '.hc-radio-more-info', function(event)
 
 jQuery(document).ready( function()
 {
+//	$('.hc-tooltip').tooltip();
+
 	jQuery('.hc-radio-more-info:checked').each( function()
 	{
 		var my_container = jQuery( this ).closest('label');
 		var my_info = my_container.find('.hc-radio-info');
 		my_info.show();
 	});
+
+	jQuery('.hc')[0].scrollIntoView();
 });

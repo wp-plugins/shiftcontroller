@@ -34,6 +34,7 @@ class hcWpBase2
 	var $pages = array();
 	var $page_param = '';
 	var $own_db = FALSE;
+	var $query_prefix = '?/';
 
 	public function __construct( 
 		$app, 
@@ -70,6 +71,13 @@ class hcWpBase2
 			add_action( 'admin_enqueue_scripts',	array($this, 'admin_scripts') );
 			add_action( 'admin_head', 				array($this, 'admin_head') );
 		}
+
+		if( $this->is_me_front() )
+		{
+			add_action( 'wp_enqueue_scripts',	array($this, 'admin_scripts') );
+			add_action( 'wp_head', 				array($this, 'admin_head') );
+		}
+
 		add_action( 'save_post',				array($this, 'save_meta'));
 	}
 
@@ -100,11 +108,84 @@ class hcWpBase2
 		$skip = FALSE;
 		/* check jquery */
 		$check_url = is_array($url) ? $url[0] : $url;
-		if( preg_match('/\/jquery\-\d/', $check_url) )
+		if( 
+			preg_match('/\/jquery\-\d/', $check_url) && 
+			wp_script_is('jquery')
+		)
+		{
 			$skip = TRUE;
+		}
 
 		if( ! $skip )
 			$this->_admin_scripts[] = array( $id, $url );
+	}
+
+	public function admin_init()
+	{
+		if( $this->is_me_admin() )
+		{
+			$current_user = wp_get_current_user();
+			$GLOBALS['NTS_CONFIG'][$this->app]['FORCE_LOGIN_ID'] = $current_user->ID;
+			$GLOBALS['NTS_CONFIG'][$this->app]['FORCE_LOGIN_NAME'] = $current_user->user_email;
+
+			$GLOBALS['NTS_CONFIG'][$this->app]['BASE_URL'] = get_admin_url();
+			$GLOBALS['NTS_CONFIG'][$this->app]['INDEX_PAGE'] = 'admin.php?page=' . $this->app . '&';
+		}
+	}
+
+	public function front_init()
+	{
+		global $post;
+		$return = FALSE;
+
+		if( $this->is_me_front() )
+		{
+/*
+			if( ! $this->load_by_js )
+			{
+				$this->print_styles();
+				$this->print_scripts();
+				wp_enqueue_script( 'lprScript5', 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true' );
+				wp_enqueue_script( 'lprScript6', 'http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/src/infobox.js' );
+			}
+*/
+
+			add_action( 'wp_enqueue_scripts',	array($this, 'admin_scripts') );
+			add_action( 'wp_head', 				array($this, 'admin_head') );
+
+			$current_user = wp_get_current_user();
+			$GLOBALS['NTS_CONFIG'][$this->app]['FORCE_LOGIN_ID'] = $current_user->ID;
+			$GLOBALS['NTS_CONFIG'][$this->app]['FORCE_LOGIN_NAME'] = $current_user->user_email;
+
+			$url = parse_url( get_permalink($post) );
+			$base_url = $url['path'];
+			$index_page = (isset($url['query']) && $url['query']) ? '?' . $url['query'] . '&' : $this->query_prefix;
+
+			$GLOBALS['NTS_CONFIG'][$this->app]['BASE_URL'] = $base_url;
+			$GLOBALS['NTS_CONFIG'][$this->app]['INDEX_PAGE'] = $index_page;
+			$return = TRUE;
+		}
+		return $return;
+	}
+
+	public function is_me_front()
+	{
+		global $post;
+		$return = FALSE;
+
+		if( is_admin() )
+			return $return;
+		$pattern = get_shortcode_regex();
+		if(
+			$post && 
+			preg_match_all('/'. $pattern .'/s', $post->post_content, $matches) &&
+			array_key_exists(2, $matches) &&
+			in_array($this->app, $matches[2])
+			)
+		{
+			$return = TRUE;
+		}
+		return $return;
 	}
 
 	function is_me_admin()
@@ -139,10 +220,23 @@ class hcWpBase2
 
 	function admin_scripts()
 	{
-		if( $this->is_me_admin() )
+		reset( $this->_admin_styles );
+		foreach( $this->_admin_styles as $sa )
 		{
-			reset( $this->_admin_styles );
-			foreach( $this->_admin_styles as $sa )
+			if( is_array($sa[1]) )
+			{
+				// processed later in head
+			}
+			else
+			{
+				wp_enqueue_style( $sa[0], $sa[1] );
+			}
+		}
+
+		reset( $this->_admin_scripts );
+		foreach( $this->_admin_scripts as $sa )
+		{
+			if( $sa[1] )
 			{
 				if( is_array($sa[1]) )
 				{
@@ -150,27 +244,11 @@ class hcWpBase2
 				}
 				else
 				{
-					wp_enqueue_style( $sa[0], $sa[1] );
+					wp_enqueue_script( $sa[0], $sa[1] );
 				}
 			}
-
-			reset( $this->_admin_scripts );
-			foreach( $this->_admin_scripts as $sa )
-			{
-				if( $sa[1] )
-				{
-					if( is_array($sa[1]) )
-					{
-						// processed later in head
-					}
-					else
-					{
-						wp_enqueue_script( $sa[0], $sa[1] );
-					}
-				}
-				else
-					wp_enqueue_script( $sa[0] );
-			}
+			else
+				wp_enqueue_script( $sa[0] );
 		}
 	}
 
@@ -216,6 +294,11 @@ class hcWpBase2
 // normally overwritten by child classes
 	function _install()
 	{
+	// own database
+		if( $this->own_db )
+		{
+			$this->_init_db();
+		}
 	}
 
 	function _init()
@@ -256,9 +339,33 @@ class hcWpBase2
 		}
 
 		if( $this->pages )
-			$web_page = get_bloginfo('wpurl') . '?' . $this->page_param . '=' . $this->pages[0];
+		{
+			$web_page = get_permalink($this->pages[0]);
+			if( strlen($this->query_prefix) )
+			{
+				$url = parse_url( $web_page );
+				if( isset($url['query']) && $url['query'] )
+				{
+					$web_page .= '&';
+				}
+				else
+				{
+					$web_page .= $this->query_prefix;
+				}
+			}
+
+/*
+			$url = parse_url( get_permalink($this->pages[0]) );
+			$web_page = $url['path'];
+			$index_page = (isset($url['query']) && $url['query']) ? '?' . $url['query'] . '&' : $this->query_prefix;
+			if( strlen($index_page) )
+				$web_page .= $index_page;
+*/
+		}
 		else
+		{
 			$web_page = get_bloginfo('wpurl');
+		}
 		$GLOBALS['NTS_CONFIG'][$this->app]['FRONTEND_WEBPAGE'] = $web_page;
 
 	// other config

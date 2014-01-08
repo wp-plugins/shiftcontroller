@@ -13,10 +13,6 @@ $ri = $CI->remote_integration();
 	<div class="container">
 <?php endif; ?>
 
-<?php if( ! $ri ) : ?>
-	<?php require( dirname(__FILE__) . '/profile.php' ); ?>
-<?php endif; ?>
-
 <?php	require( dirname(__FILE__) . '/menu.php' ); ?>
 <?php	require( dirname(__FILE__) . '/main.php' ); ?>
 

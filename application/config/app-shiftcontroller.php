@@ -7,6 +7,7 @@ $config['nts_app_url'] = 'http://www.shiftcontroller.com';
 
 $config['nts_promo_url'] = 'http://www.shiftcontroller.com/order/';
 $config['nts_promo_title'] = 'ShiftController Premium';
+$config['nts_track_setup'] = '16:2';
 
 $config['modules'] = array(
 	'conf',

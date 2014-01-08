@@ -27,8 +27,8 @@ switch( $range )
 
 <div class="pagination">
 	<ul>
-	<li><a href="<?php echo ci_site_url(array($this->conf['path'], 'index', $display, $prev_date)); ?>">&lt;&lt;</a></li>
-	<li><a href="#"><strong><?php echo $nav_title; ?></strong></a></li>
-	<li><a href="<?php echo ci_site_url(array($this->conf['path'], 'index', $display, $next_date)); ?>">&gt;&gt;</a></li>
+		<li><a href="<?php echo ci_site_url(array($this->conf['path'], 'index', $display, $prev_date)); ?>">&lt;&lt;</a></li>
+		<li><a href="#"><strong><?php echo $nav_title; ?></strong></a></li>
+		<li><a href="<?php echo ci_site_url(array($this->conf['path'], 'index', $display, $next_date)); ?>">&gt;&gt;</a></li>
 	</ul>
 </div>

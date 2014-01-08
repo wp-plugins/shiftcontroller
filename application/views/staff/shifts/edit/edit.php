@@ -8,72 +8,17 @@ $tabs = array();
 $tab_content = array();
 
 /* EDIT */
-$tabs['edit'] = '<i class="icon-edit"></i> ' . lang('common_edit');
+$tabs['edit'] = '<i class="icon-edit"></i> ' . lang('common_view');
+
+$this->hc_time->setDateDb( $object->date );
 
 $tab_content['edit'] = array();
 $tab_content['edit'][] = 
-	form_open( 
-		join('/', array($this->conf['path'], 'save', $object->id)),
-		array(
-			'class' => 'form-horizontal form-condensed'
-			)
-		)
+	'<p>' . $object->prop_text('status', TRUE) .
+	'<p>' . '<i class="icon-calendar"></i> ' . $this->hc_time->formatDate() . 
+	'<p>' . '<i class="icon-time"></i> ' . $this->hc_time->formatTimeOfDay($object->start) . ' - ' .  $this->hc_time->formatTimeOfDay($object->end) . 
+	'<p>' . '<i class="icon-home"></i> ' . $object->location->get()->title()
 	;
-$tab_content['edit'][] = 
-	hc_bootstrap::input(
-		$this->hc_form->input( $fields['id'] ),
-		$fields['id']['label']
-		) 
-	;
-
-if( $object->date == $object->date_end )
-{
-	$tab_content['edit'][] = 
-		hc_bootstrap::input(
-			$this->hc_form->input( $fields['date'] ),
-			$fields['date']['label']
-			) . 
-		hc_bootstrap::input(
-			$this->hc_form->input($fields['start']) . 
-			' - ' .
-			$this->hc_form->input($fields['end'])
-			,
-			lang('time'),
-			$this->hc_form->error('start') OR $this->hc_form->error('end')
-			)
-		;
-}
-else
-{
-	$tab_content['edit'][] = 
-		hc_bootstrap::input(
-			$this->hc_form->input($fields['date']) . 
-			' - ' .
-			$this->hc_form->input($fields['date_end'])
-			,
-			lang('time_dates'),
-			$this->hc_form->error('date') OR $this->hc_form->error('date_end')
-			)
-		;
-}
-
-$tab_content['edit'][] = 
-	hc_bootstrap::form_actions(
-		form_submit(
-			array(
-				'name' => 'submit',
-				'class' => 'btn btn-primary'
-				),
-			lang('common_save')
-			) . '&nbsp;' . 
-		ci_anchor( 
-			array($this->conf['path'], 'delete', $object->id),
-			lang('common_delete'),
-			'class="btn btn-danger hc-confirm"'
-			)
-		)
-	;
-$tab_content['edit'][] = form_close();
 
 $tab_content['edit'] = join( "\n", $tab_content['edit'] );
 

@@ -99,6 +99,7 @@ $lang['users_active'] = 'Active Users';
 $lang['user_restore'] = 'Restore';
 $lang['user_level'] = 'User Level';
 $lang['user_level_staff'] = 'Staff';
+$lang['user_level_manager'] = 'Manager';
 $lang['user_level_admin'] = 'Admin';
 $lang['user_status'] = 'Status';
 $lang['user_status_active'] = 'Active';

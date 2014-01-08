@@ -23,8 +23,7 @@ if ( ! function_exists('ci_redirect'))
 		}
 
 	/* this is a hack to ensure that post controller and post system hooks are triggered */
-		$GLOBALS['EXT']->_call_hook('post_controller');
-		$GLOBALS['EXT']->_call_hook('post_system');
+		hc_ci_before_exit();
 
 		switch($method)
 		{

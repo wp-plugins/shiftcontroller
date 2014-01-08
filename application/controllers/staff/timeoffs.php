@@ -9,7 +9,7 @@ class Timeoffs_controller extends Backend_controller_crud
 			'path'		=> 'staff/timeoffs',
 			'entity'	=> 'timeoff',
 			);
-		parent::__construct( User_model::LEVEL_STAFF );
+		parent::__construct( USER_MODEL::LEVEL_STAFF );
 		$this->{$this->model} = $this->auth->user()->timeoff;
 		$this->{$this->model}->user = $this->auth->user();
 		$this->data['fields'] = $this->process_fields();

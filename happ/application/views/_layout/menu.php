@@ -20,15 +20,24 @@ if( $this->auth && $this->auth->user() )
 }
 ?>
 
+<?php if( $this_menu ) : ?>
+	<p>
+	<a href="<?php echo $brand_url; ?>">
+		<?php echo $brand_title; ?> <small><?php echo HC_APP_VERSION; ?></small>
+	</a>
+<?php endif; ?>
+
+<?php if( ! $ri ) : ?>
+	<?php require( dirname(__FILE__) . '/profile.php' ); ?>
+<?php endif; ?>
+
+<?php if( $this_menu ) : ?>
 <p>
 <div class="navbar">
 	<div class="navbar-inner">
 		<div class="container">
 			<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
 				<span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
-			</a>
-			<a class="brand" href="<?php echo $brand_url; ?>">
-				<?php echo $brand_title; ?> <small><?php echo HC_APP_VERSION; ?></small>
 			</a>
 
 <?php if( $this_menu ) : ?>
@@ -69,3 +78,6 @@ if( $this->auth && $this->auth->user() )
 		</div><!-- /.container -->
 	</div><!-- /navbar-inner -->
 </div><!-- /navbar -->
+
+<?php endif; ?>
+

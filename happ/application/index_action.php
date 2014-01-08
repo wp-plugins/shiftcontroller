@@ -100,6 +100,7 @@ if( $CI->input->is_ajax_request() )
 		}
 	}
 	$CI->output->_display();
+	hc_ci_before_exit();
 	exit;
 }
 

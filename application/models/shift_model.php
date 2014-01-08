@@ -94,6 +94,15 @@ class Shift_model extends _Timeblock_model
 		unset( $return['end'] );
 		unset( $return['status'] );
 		$return['date'][1] = $this->date_view();
+
+	/* optimize it sometime later */
+		$lm = new Location_Model;
+		$location_count = $lm->count();
+		if( $location_count < 2 )
+		{
+			unset( $return['location'] );
+		}
+
 		return $return;
 	}
 
@@ -135,6 +144,33 @@ class Shift_model extends _Timeblock_model
 			$return = $this->end - $this->start;
 		else
 			$return = $this->end + (24*60*60 - $this->start);
+		return $return;
+	}
+
+/* remove archived users if any */
+	public function get_form_fields()
+	{
+		$return = parent::get_form_fields();
+
+		$remove_users = array();
+		$um = new User_Model;
+		$um
+			->select( 'id' )
+			->where( 'active', USER_MODEL::STATUS_ARCHIVE )
+			->get();
+		foreach( $um as $u )
+		{
+			$remove_users[] = $u->id;
+		}
+
+		if( $remove_users )
+		{
+			reset( $remove_users );
+			foreach( $remove_users as $rid )
+			{
+				unset( $return['user']['options'][$rid] );
+			}
+		}
 		return $return;
 	}
 

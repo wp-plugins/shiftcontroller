@@ -1,10 +1,21 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Shifts_controller extends Backend_controller
+//class Shifts_controller extends Backend_controller
+class Shifts_controller extends Backend_controller_crud
 {
 	function __construct()
 	{
-		parent::__construct( USER_MODEL::LEVEL_STAFF, 'staff/shifts' );
+		$this->conf = array(
+			'model'		=> 'Shift_model',
+			'path'		=> 'staff/shifts',
+			'entity'	=> 'shift',
+			);
+		parent::__construct( USER_MODEL::LEVEL_STAFF );
+		$this->{$this->model} = $this->auth->user()->shift;
+		$this->{$this->model}->user = $this->auth->user();
+//		$this->data['fields'] = $this->process_fields();
+
+//		parent::__construct( USER_MODEL::LEVEL_STAFF, 'staff/shifts' );
 	}
 
 	function index( $display = 'my' )

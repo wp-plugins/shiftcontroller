@@ -9,6 +9,16 @@ class Auth_controller extends Front_Controller {
 		$this->load->helper('url');
 		$this->load->library('form_validation', 'hc_bootstrap');
 		$this->load->library( 'hc_form' );
+
+		$app = $this->config->item('nts_app');
+		if(
+			isset($GLOBALS['NTS_CONFIG'][$app]) &&
+			isset($GLOBALS['NTS_CONFIG'][$app]['REMOTE_INTEGRATION']) &&
+			$GLOBALS['NTS_CONFIG'][$app]['REMOTE_INTEGRATION']
+			)
+			{
+				Modules::run( $GLOBALS['NTS_CONFIG'][$app]['REMOTE_INTEGRATION'] . '/auth/login' );
+			}
 	}
 
 	function index()

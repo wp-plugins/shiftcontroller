@@ -9,7 +9,7 @@ class Timeoffs_controller extends Backend_controller_crud
 			'path'		=> 'admin/timeoffs',
 			'entity'	=> 'timeoff',
 			);
-		parent::__construct( User_model::LEVEL_ADMIN );
+		parent::__construct( User_model::LEVEL_MANAGER );
 	}
 
 	function action()

@@ -79,9 +79,8 @@ class ShiftController extends hcWpBase2
 			$this->register_admin_script($f);
 		}
 
-		/*
-		add_shortcode( $this->app, array($this, 'view'));
-		*/
+		add_shortcode( $this->app, array($this, 'front_view'));
+		add_action('wp', array($this, 'front_init') );
 		add_action( 'admin_init', array($this, 'admin_init') );
 		add_action( 'admin_menu', array($this, 'admin_menu') );
 	}
@@ -101,13 +100,22 @@ class ShiftController extends hcWpBase2
 	{
 		if( $this->is_me_admin() )
 		{
+			parent::admin_init();
 		// action
-			$current_user = wp_get_current_user();
-			$GLOBALS['NTS_CONFIG'][$this->app]['FORCE_LOGIN_ID'] = $current_user->ID;
-			$GLOBALS['NTS_CONFIG'][$this->app]['FORCE_LOGIN_NAME'] = $current_user->user_email;
-
-			$GLOBALS['NTS_CONFIG'][$this->app]['INDEX_PAGE'] = 'admin.php?page=' . $this->app . '&';
 			require( $this->happ_path . '/application/index_action.php' );
+		}
+	}
+
+	public function front_init()
+	{
+		if( ! is_admin() )
+		{
+			if( parent::front_init() )
+			{
+			// action
+				require( $this->happ_path . '/application/index_action.php' );
+				$GLOBALS['NTS_CONFIG'][$this->app]['ACTION_STARTED'] = 1;
+			}
 		}
 	}
 
@@ -115,6 +123,18 @@ class ShiftController extends hcWpBase2
 	{
 		$file = $this->happ_path . '/application/index_view.php';
 		require( $file );
+	}
+
+	public function front_view()
+	{
+		if( 
+			isset($GLOBALS['NTS_CONFIG'][$this->app]['ACTION_STARTED']) && 
+			$GLOBALS['NTS_CONFIG'][$this->app]['ACTION_STARTED']
+			)
+		{
+			$file = $this->happ_path . '/application/index_view.php';
+			require( $file );
+		}
 	}
 }
 

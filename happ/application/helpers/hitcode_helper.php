@@ -1,5 +1,15 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+if ( ! function_exists('hc_ci_before_exit'))
+{
+	function hc_ci_before_exit()
+	{
+	/* this is a hack to ensure that post controller and post system hooks are triggered */
+		$GLOBALS['EXT']->_call_hook('post_controller');
+		$GLOBALS['EXT']->_call_hook('post_system');
+	}
+}
+
 if ( ! function_exists('hc_basename'))
 {
 	function hc_basename( $path )
@@ -761,7 +771,14 @@ function hc_dropdown_menu( $menu, $wrap = 'li', $me = '', $toggler = '' )
 					$label = lang('common_actions');
 				}
 
-				$out[] = '<a ' . hc_build_html_attr($la) . '>' . $label . ' <span class="caret"></span></a>';
+				$out[] = '<a ' . hc_build_html_attr($la) . '>' . $label . ' <span class="caret"></span>';
+				if( isset($menu[$me][2]) && $menu[$me][2] )
+				{
+					$float_right = $menu[$me][2];
+					$out[] = '<div class="pull-right">' . $float_right . '</div>';
+				}
+
+				$out[] = '</a>';
 				$out[] = '<ul class="dropdown-menu" style="overflow: visible;">';
 				reset( $my_items );
 				foreach( $my_items as $mi )

@@ -1,1 +1,1 @@
-<h2><?php echo lang($this->conf['entity'] . 's'); ?></h2>
+<h2><?php echo lang('shift_add'); ?></h2>

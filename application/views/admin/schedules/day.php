@@ -35,9 +35,11 @@ foreach( $my_shifts as $shift )
 	</li>
 
 	<?php foreach( $sha as $lid => $shs ) : ?>
-		<li>
-			<i class="icon-home"></i> <?php echo $shs[0]->location_name; ?>
-		</li>
+		<?php if( $location_count > 1 ) : ?>
+			<li>
+				<i class="icon-home"></i> <?php echo $shs[0]->location_name; ?>
+			</li>
+		<?php endif; ?>
 
 		<?php foreach( $shs as $sh ) : ?>
 			<?php

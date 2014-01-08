@@ -143,3 +143,27 @@
 .hc .hc-radio-info {
 	display: none;
 }
+
+.hc .container-fluid {
+	padding: 0 0;
+}
+
+@media print {
+	.hc a[href]:after {
+		content: "";
+	}
+
+	.hc [class^="icon-"],
+	.hc [class*=" icon-"] {
+		display: none;
+	}
+}
+
+.hc .dropdown-menu>li,
+.hc .nav>li {
+	margin-left: 0px;
+	}
+
+.hc-tooltip {
+	border-bottom: 1px dotted;
+	}

@@ -12,11 +12,22 @@ class Hc_bootstrap
 		return $out;
 	}
 
-	static function input( $input, $label = '', $error = FALSE )
+	static function input( $input, $label = '', $error = FALSE, $field = array() )
 	{
+		$out = '';
+
+		if( 
+			$field && 
+			isset($field['type']) &&
+			$field['type'] == 'hidden'
+			)
+		{
+			$out .= $input;
+			return $out;
+		}
+
 		if( strlen($label) )
 			$label = hc_parse_lang( $label );
-		$out = '';
 		if( $error )
 			$out .=	'<div class="control-group error">';
 		else
