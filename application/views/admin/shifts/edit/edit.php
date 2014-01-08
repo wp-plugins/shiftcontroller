@@ -60,7 +60,9 @@ $tab_content['edit'] =
 		) . 
 	hc_bootstrap::input(
 		$this->hc_form->input( $fields['user'] ),
-		$fields['user']['label']
+		$fields['user']['label'],
+		$this->hc_form->error('user'),
+		$fields['user']
 		);
 
 $btns = array();

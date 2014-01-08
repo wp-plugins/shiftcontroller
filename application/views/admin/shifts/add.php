@@ -59,7 +59,8 @@ echo hc_bootstrap::input(
 echo hc_bootstrap::input(
 	$this->hc_form->input($fields['user']),
 	$fields['user']['label'],
-	$this->hc_form->error('user')
+	$this->hc_form->error('user'),
+	$fields['user']
 	);
 ?>
 

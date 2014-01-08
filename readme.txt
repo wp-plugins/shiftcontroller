@@ -41,6 +41,13 @@ The upgrade is simply - upload everything up again to your `/wp-content/plugins/
 
 == Changelog ==
 
+= 2.1.0 =
+* Fixed bug when email notification was not sent after publishing just one shift
+* Remove location label if just one location is configured
+* Shift notes view in the calendar
+* Archived users do not appear in the dropdown list when creating or editing shifts
+
+
 = 2.0.6 =
 * Shifts month calendar
 
