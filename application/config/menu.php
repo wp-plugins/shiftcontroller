@@ -1,5 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 $CI =& ci_get_instance();
+$config = array();
 
 $config[User_model::LEVEL_ADMIN] = array(
 	array(

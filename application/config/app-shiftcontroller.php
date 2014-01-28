@@ -16,4 +16,5 @@ $config['modules'] = array(
 //	'notes',
 //	'shift_groups',
 //	'shift_trades',
+	'loginlog',
 	);

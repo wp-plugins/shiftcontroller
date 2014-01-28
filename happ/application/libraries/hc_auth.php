@@ -96,10 +96,28 @@ class Hc_auth
 
 	public function login( $user_id )
 	{
-		$session_data = array(
-			'user_id'	=> $user_id
-			);
-		$this->session->set_userdata($session_data);
+		$current_user_id = $this->check();
+		if( 
+			$user_id
+			&&
+			(
+				$user_id != $current_user_id
+				OR
+				(! isset($_SESSION['NTS_SESSION_REF']))
+			)
+			)
+		{
+			$session_data = array(
+				'user_id'	=> $user_id
+				);
+			$this->session->set_userdata($session_data);
+			$_SESSION['NTS_SESSION_REF'] = hc_random(16);
+
+			if( method_exists($this->auth_model, 'trigger_event') )
+			{
+				$this->auth_model->trigger_event( 'after_login', $this->auth_model );
+			}
+		}
 		return TRUE;
 	}
 

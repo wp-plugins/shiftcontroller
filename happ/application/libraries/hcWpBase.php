@@ -79,6 +79,7 @@ class hcWpBase2
 		}
 
 		add_action( 'save_post',				array($this, 'save_meta'));
+		add_action( 'wp_logout',				array($this, 'logout'));
 	}
 
 	private function _init_db()
@@ -108,6 +109,15 @@ class hcWpBase2
 		$skip = FALSE;
 		/* check jquery */
 		$check_url = is_array($url) ? $url[0] : $url;
+		if(
+			preg_match('/\/jquery\-\d/', $check_url)
+		)
+		{
+			$id = 'jquery';
+			$url = '';
+		}
+
+/*
 		if( 
 			preg_match('/\/jquery\-\d/', $check_url) && 
 			wp_script_is('jquery')
@@ -115,7 +125,7 @@ class hcWpBase2
 		{
 			$skip = TRUE;
 		}
-
+*/
 		if( ! $skip )
 			$this->_admin_scripts[] = array( $id, $url );
 	}
@@ -369,6 +379,7 @@ class hcWpBase2
 		$GLOBALS['NTS_CONFIG'][$this->app]['FRONTEND_WEBPAGE'] = $web_page;
 
 	// other config
+		$GLOBALS['NTS_IS_PLUGIN'] = 'wordpress';
 		$GLOBALS['NTS_CONFIG'][$this->app]['REMOTE_INTEGRATION'] = 'wordpress';
 		$session_name = 'ntssess_' . $this->app;
 		$GLOBALS['NTS_CONFIG'][$this->app]['SESSION_NAME'] = $session_name;
@@ -462,6 +473,14 @@ class hcWpBase2
 		}
 		$return = '<' . join( ' ', $display ) . '>';
 		return $return;
+	}
+
+	public function logout()
+	{
+		if( isset($_SESSION['NTS_SESSION_REF']) )
+		{
+			unset( $_SESSION['NTS_SESSION_REF'] );
+		}
 	}
 }
 }

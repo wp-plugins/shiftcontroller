@@ -9,10 +9,21 @@ class Schedules_controller extends Backend_controller
 			);
 		parent::__construct( User_model::LEVEL_MANAGER );
 
-		/* check how many locations do we have */
+	/* check how many locations do we have */
 		$lm = new Location_Model;
 		$location_count = $lm->count();
 		$this->data['location_count'] = $location_count;
+
+	/* also get all shift templates */
+		$shift_template_titles = array();
+
+		$stm = new Shift_Template_Model;
+		$stm->get();
+		foreach( $stm->get() as $st )
+		{
+//			$shift_template_titles[ $st->start . '-' . $st->end ] = $st->name;
+		}
+		$this->data['shift_template_titles'] = $shift_template_titles;
 	}
 
 	function publish()

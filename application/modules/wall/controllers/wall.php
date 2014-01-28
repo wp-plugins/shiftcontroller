@@ -9,7 +9,7 @@ class Wall_wall_controller extends Front_controller
 			);
 		parent::__construct();
 		$this->load->library( 'hc_time' );
-		
+
 	/* check user level */
 		$user_level = $this->app_conf->get('wall_schedule_display');
 		if( $user_level )
@@ -152,6 +152,8 @@ class Wall_wall_controller extends Front_controller
 	function index( $date = '', $end_date = '' )
 	{
 		$display = 'all';
+		$range = 'month'; // may also be 'week'
+
 	/* check if schedule for this date exists */
 		if( $end_date )
 		{
@@ -169,14 +171,18 @@ class Wall_wall_controller extends Front_controller
 			{
 				$this->hc_time->setNow();
 			}
-			$this->hc_time->setStartWeek();
+
+//			$this->hc_time->setStartWeek();
+			$this->hc_time->setStartMonth();
 			$start_date = $this->hc_time->formatDate_Db();
-			$this->hc_time->setEndWeek();
+//			$this->hc_time->setEndWeek();
+			$this->hc_time->setEndMonth();
 			$end_date = $this->hc_time->formatDate_Db();
 		}
 
 		$this->data['start_date'] = $start_date;
 		$this->data['end_date'] = $end_date;
+		$this->data['range'] = $range;
 
 		$um = new User_Model;
 		$staffs = $um

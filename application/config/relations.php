@@ -1,4 +1,5 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
 /* this file defines model relationships runtime if needed */
 $CI =& ci_get_instance();
 if( $CI->hc_modules->exists('notes') )
@@ -22,19 +23,5 @@ if( $CI->hc_modules->exists('notes') )
 	$config['user']['has_many']['note'] = array(
 		'class'			=> 'note_model',
 		'other_field'	=> 'author',
-		);
-}
-
-if( $CI->hc_modules->exists('shift_trades') )
-{
-
-	$config['shift']['has_one']['trade'] = array(
-		'class'			=> 'trade_model',
-		'other_field'	=> 'shift',
-		);
-
-	$config['user']['has_many']['trade'] = array(
-		'class'			=> 'trade_model',
-		'other_field'	=> 'to_user',
 		);
 }

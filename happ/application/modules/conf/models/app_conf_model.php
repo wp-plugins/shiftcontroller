@@ -1,5 +1,8 @@
 <?php
-Class App_conf_model extends CI_model
+/* copy some base stuff from CI_Model not to explicitely initialize MY_Model */
+
+//class App_conf_model extends CI_model
+class App_conf_model
 {
 	function get_all( )
 	{
@@ -38,5 +41,11 @@ Class App_conf_model extends CI_model
 	{
 		$this->db->where('name', $pname);
 		$this->db->delete('conf', $item);
+	}
+
+	function __get($key)
+	{
+		$CI =& ci_get_instance();
+		return $CI->$key;
 	}
 }

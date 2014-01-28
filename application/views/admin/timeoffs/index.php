@@ -144,7 +144,7 @@ $menu['40'] = $menu_options['delete'];
 <script language="JavaScript">
 jQuery('#<?php echo $check_all_name; ?>').click(function(event)
 {
-	var $that = $(this);
+	var $that = jQuery(this);
 	$that.closest('form').find('[name^=id]:checkbox').each(function()
 	{
 		this.checked = $that.is(':checked');

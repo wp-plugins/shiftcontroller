@@ -679,7 +679,11 @@ class CI_Input {
 		   NOTE: In PHP 5.4 get_magic_quotes_gpc() will always return 0 and
 			 it will probably not exist in future versions at all.
 		*/
-		if ( ! is_php('5.4') && get_magic_quotes_gpc())
+		if (
+			( ! is_php('5.4') && get_magic_quotes_gpc() )
+			OR
+			( isset($GLOBALS['NTS_IS_PLUGIN']) && ($GLOBALS['NTS_IS_PLUGIN'] == 'wordpress') )
+			)
 		{
 			$str = stripslashes($str);
 		}

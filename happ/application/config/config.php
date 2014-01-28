@@ -26,6 +26,12 @@ if( ! $app )
 	exit;
 }
 
+$dev_file = $GLOBALS['NTS_APPPATH'] . '/../developer.php';
+if( file_exists($dev_file) )
+{
+	require( $dev_file );
+}
+
 include( APPPATH . 'version.php' );
 
 $config['controller_suffix'] = '_controller';

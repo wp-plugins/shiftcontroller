@@ -1,9 +1,7 @@
 <?php
 $brand_title = $this->config->item('nts_app_title');
 $brand_url = $this->config->item('nts_app_url');
-
-//require( APPPATH . 'config/menu.php' );
-$menu = $this->config('menu', TRUE );
+$menu = $this->config->item('menu');
 
 $this_menu = array();
 if( $this->auth && $this->auth->user() )

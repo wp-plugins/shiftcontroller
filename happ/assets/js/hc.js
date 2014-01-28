@@ -157,7 +157,7 @@ jQuery(document).on( 'click', 'a.hc-modal', function(e)
 	}
 
 	e.preventDefault();
-    var url = $(this).attr("href");
+    var url = jQuery(this).attr("href");
 
 // if i'm inside #hc-modal itself?
 	if( jQuery(this).closest('#hc-modal').length )
@@ -334,7 +334,7 @@ jQuery(document).on( 'change', '.hc-radio-more-info', function(event)
 
 jQuery(document).ready( function()
 {
-//	$('.hc-tooltip').tooltip();
+//	jQuery('.hc-tooltip').tooltip();
 
 	jQuery('.hc-radio-more-info:checked').each( function()
 	{

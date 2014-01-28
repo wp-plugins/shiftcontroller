@@ -22,33 +22,29 @@ class MY_model extends DataMapper
 	/* runtime relations configuration */
 		if( empty(self::$relations) )
 		{
-			$modules = $this->config->item('modules');
-			reset( $modules );
-			foreach( $modules as $m )
-			{
-				$this->config->load('relations', TRUE, TRUE, $m );
-			}
+			$this->config->load('relations', TRUE, TRUE );
 		}
-	
+
 		if( ! isset(self::$relations[$my_class]) )
 		{
 			self::$relations[$my_class] = array(
 				'has_many' => array(),
 				'has_one' => array(),
 				);
+		}
 
-			$schema = $this->config->item( $my_class, 'relations' );
-			if( $schema )
+		$schema = $this->config->item( $my_class, 'relations' );
+
+		if( $schema )
+		{
+			if( isset($schema['has_many']) )
 			{
-				if( isset($schema['has_many']) )
-				{
-					self::$relations[$my_class]['has_many'] = $schema['has_many'];
-				}
+				self::$relations[$my_class]['has_many'] = array_merge( self::$relations[$my_class]['has_many'], $schema['has_many'] );
+			}
 
-				if( isset($schema['has_one']) )
-				{
-					self::$relations[$my_class]['has_one'] = $schema['has_one'];
-				}
+			if( isset($schema['has_one']) )
+			{
+				self::$relations[$my_class]['has_one'] = array_merge( self::$relations[$my_class]['has_one'], $schema['has_one'] );
 			}
 		}
 

@@ -31,7 +31,11 @@ foreach( $my_shifts as $shift )
 		list( $this_start, $this_end ) = explode( '_', $key );
 	?>
 	<li class="nav-header">
-		<?php echo $this->hc_time->formatTimeOfDay($this_start); ?> - <?php echo $this->hc_time->formatTimeOfDay($this_end); ?>
+		<?php
+		$time_key = $this_start . '-' . $this_end;
+		$time_title = isset($shift_template_titles[$time_key]) ? $shift_template_titles[$time_key] : $this->hc_time->formatTimeOfDay($this_start) . ' - ' . $this->hc_time->formatTimeOfDay($this_end);
+		?>
+		<?php echo $time_title; ?>
 	</li>
 
 	<?php foreach( $sha as $lid => $shs ) : ?>

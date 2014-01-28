@@ -591,7 +591,6 @@ class CI_Loader {
 	public function config($file = '', $use_sections = FALSE, $fail_gracefully = FALSE)
 	{
 		$CI =& ci_get_instance();
-		echo "f = $file<br>";
 		$CI->config->load($file, $use_sections, $fail_gracefully);
 	}
 

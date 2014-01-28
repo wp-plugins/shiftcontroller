@@ -10,14 +10,18 @@ $ri = $CI->remote_integration();
 if( ! $ri )
 {
 	$menu['password']	= ci_anchor( array('admin/users',	'password', $object->id), '<i class="icon-lock"></i>' . ' ' . lang('common_change_password') );
-	$menu['delete']		= ci_anchor( array('admin/users',	'delete', $object->id), '<i class="icon-remove"></i>' . ' ' . lang('common_delete') );
 }
 else
 {
 	$menu[$ri . '_edit']	= ci_anchor( array($ri, 'admin/users', 'edit', $object->id), '<i class="icon-edit"></i>' . ' ' . lang('common_edit') . ' [' . ucfirst($ri) . ']', '' );
-	$menu['delete']		= ci_anchor( array('admin/users',	'delete', $object->id), '<i class="icon-remove"></i>' . ' ' . lang('common_delete') );
 }
 
+if( $this->hc_modules->exists('loginlog') )
+{
+	$menu['loginlog'] = ci_anchor( array('loginlog/admin', 'index', $object->id), '<i class="icon-list"></i>' . ' ' . 'Login Log' );
+}
+
+$menu['delete']		= ci_anchor( array('admin/users',	'delete', $object->id), '<i class="icon-remove"></i>' . ' ' . lang('common_delete') );
 if( $this->auth->check() == $object->id )
 {
 	unset( $menu['delete'] );

@@ -10,30 +10,37 @@ class Timeoffs_notify
 			$changes
 			)
 		{
-			$this->_send( $object );
+			$this->_send( $object, $relations);
 		}
 	}
 
-	private function _send( $timeoff )
+	private function _send( $timeoff, $relations = NULL )
 	{
 		$CI =& ci_get_instance();
 
 		$staff = NULL;
-		$timeoff->user->get();
-		if( $timeoff->user->exists() )
+
+		if( $relations && isset($relations['user']) )
 		{
-			$staff = $timeoff->user;
+			$staff = $relations['user'];
 		}
 		else
 		{
-			$timeoff->user = new User_model;
-			if( $timeoff->user_id )
+			$timeoff->user->get();
+			if( $timeoff->user->exists() )
 			{
-				$timeoff->user->get_by_id( $timeoff->user_id );
+				$staff = $timeoff->user;
 			}
+			else
+			{
+				$timeoff->user = new User_model;
+				if( $timeoff->user_id )
+				{
+					$timeoff->user->get_by_id( $timeoff->user_id );
+				}
+			}
+			$staff = $timeoff->user->get_clone();
 		}
-
-		$staff = $timeoff->user->get_clone();
 		$staff_view = $staff->title();
 
 	/* compile message */

@@ -6,6 +6,7 @@ class MY_Controller extends MX_Controller
 {
 	public $conf = array();
 	protected $builtin_views;
+	protected $inherit_views;
 	public $is_module = FALSE;
 
 	function __construct()
@@ -101,10 +102,18 @@ class MY_Controller extends MX_Controller
 		$this->data['message'] = $this->session->flashdata('message');
 		$this->data['error'] = $this->session->flashdata('error');
 
+	/* menu */
+		$this->config->load('menu', TRUE, TRUE );
+
 		$this->session->set_flashdata('referrer', current_url());
 		$this->set_include( '' );
 
 		$this->set_layout();
+	}
+
+	function inherit_views( $from )
+	{
+		$this->inherit_views = $from;
 	}
 
 	function check_level( $require_level )
@@ -166,8 +175,12 @@ class MY_Controller extends MX_Controller
 		/* header */
 			$file = $view_dirname ? $view_dirname . '/_header' : '_header';
 			$my = $path . '/' . $file;
+			$inherit = $this->inherit_views ? $this->inherit_views . '/' . $file : '';
 			$builtin = $this->builtin_views . '/' . $file;
-			if( $this->load->view_exists($my) )
+
+			if( $inherit && $this->load->view_exists($inherit) )
+				$include_header = $inherit;
+			elseif( $this->load->view_exists($my) )
 				$include_header = $my;
 			elseif( $this->load->view_exists($builtin) )
 				$include_header = $builtin;
@@ -179,16 +192,24 @@ class MY_Controller extends MX_Controller
 			{
 				$file = $view_dirname ? $view_dirname . '/_menu' : '_menu';
 				$my = $path . '/' . $file;
+				$inherit = $this->inherit_views ? $this->inherit_views . '/' . $file : '';
 				$builtin = $this->builtin_views . '/' . $file;
+
 				if( $this->load->view_exists($my) )
 					$include_submenu = $my;
+				elseif( $inherit && $this->load->view_exists($inherit) )
+					$include_submenu = $inherit;
 				elseif( $this->load->view_exists($builtin) )
 					$include_submenu = $builtin;
 
 				$my_tabs = $path . '/' . $view . '_tabs';
+				$inherit_tabs = $this->inherit_views ? $this->inherit_views . '/' . $view . '_tabs' : '';
 				$builtin_tabs = $this->builtin_views . '/' . $view . '_tabs';
+
 				if( $this->load->view_exists($my_tabs) )
 					$include_tabs = $my_tabs;
+				elseif( $inherit_tabs && $this->load->view_exists($inherit_tabs) )
+					$include_tabs = $inherit_tabs;
 				elseif( $this->load->view_exists($builtin_tabs) )
 					$include_tabs = $builtin_tabs;
 			}

@@ -75,7 +75,7 @@ class Hc_bootstrap
 		{
 			$out[] = '<script language="JavaScript">';
 			$out[] = <<<EOT
-$('#$id a[data-toggle="tab"]').on('shown', function (e)
+jQuery('#$id a[data-toggle="tab"]').on('shown', function (e)
 {
 	var active_tab = e.target.hash.substr(1); // strip the starting #
 	jQuery(this).closest('form').find('[name=$field]').val( active_tab );

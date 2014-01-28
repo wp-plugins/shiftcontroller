@@ -38,20 +38,15 @@ class Setup_controller extends MX_Controller
 
 	/* add module models paths for autoloading */
 		$modules = $this->config->item('modules');
-		$modules_locations = $this->config->item('modules_locations');
 		if( is_array($modules) )
 		{
 			reset($modules);
 			foreach( $modules as $module )
 			{
-				reset( $modules_locations );
-				foreach( $modules_locations as $ml )
+				$mod_dir = $this->hc_modules->module_dir($module);
+				if( $mod_dir )
 				{
-					$mod_dir = $ml . $module;
-					if( file_exists($mod_dir) )
-					{
-						Datamapper::add_model_path( $mod_dir );
-					}
+					Datamapper::add_model_path( $mod_dir );
 				}
 			}
 		}
