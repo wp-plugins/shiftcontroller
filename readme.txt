@@ -4,7 +4,7 @@ Contributors: HitCode
 Tags: staff scheduling, shift scheduling, employee scheduling, rota shift scheduling
 License: GPLv2 or later
 
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 Requires at least: 3.3
 Tested up to: 3.7
 
