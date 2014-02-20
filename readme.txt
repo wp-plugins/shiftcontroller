@@ -41,7 +41,7 @@ The upgrade is simply - upload everything up again to your `/wp-content/plugins/
 
 == Changelog ==
 
-= 2.1.2=
+= 2.1.2 =
 * Fixed the 502 error that may have appeared with certain web server configurations
 
 = 2.1.1 =
