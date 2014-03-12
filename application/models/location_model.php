@@ -36,7 +36,7 @@ class Location_model extends MY_model
 		$return = '';
 		if( $html )
 		{
-			$return .= '<i class="icon-home"></i> ';
+			$return .= '<i class="fa fa-home"></i> ';
 		}
 
 		$return .= parent::title();

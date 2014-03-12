@@ -1,1 +1,0 @@
-<h2><?php echo lang($this->conf['entity'] . 's'); ?></h2>

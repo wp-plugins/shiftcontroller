@@ -109,7 +109,17 @@ class CI_Lang {
 
 			if ($found !== TRUE)
 			{
-				show_error('Unable to load the requested language file: language/'.$idiom.'/'.$langfile);
+				if( $idiom != 'english' )
+				{
+					$idiom = 'english';
+					$args = func_get_args();
+					$langfile = $args[0];
+					return $this->load($langfile, $idiom, $return, $add_suffix, $alt_path);
+				}
+				else
+				{
+					show_error('Unable to load the requested language file: language/'.$idiom.'/'.$langfile);
+				}
 			}
 		}
 

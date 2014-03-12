@@ -1,33 +1,45 @@
 <?php
 $defaults = array(
-	'start'	=> $start_date,
-	'end'	=> $end_date,
+	'start'		=> $start_date,
+	'end'		=> $end_date,
+	'display'	=> $display,
 	);
+$this->hc_form->set_defaults( $defaults );
 $errors = array();
 ?>
-<?php echo form_open( join('/', array('admin/schedules/browse')), array('class' => 'form-condensed')); ?>
+<?php 
+echo form_open( 
+	join('/', array('admin/schedules/browse')), 
+	array(
+		'class' => 'form-condensed'
+		)
+	);
+?>
 <?php
-	echo hc_form_input(
-		array(
-			'name'	=> 'start',
-			'type'	=> 'date',
-			),
-		$defaults,
-		$errors,
-		FALSE
-		);
+echo $this->hc_form->input( 
+	array(
+		'name'	=> 'start',
+		'type'	=> 'date',
+		)
+	);
 ?>
  - 
 <?php
-	echo hc_form_input(
-		array(
-			'name'	=> 'end',
-			'type'	=> 'date',
-			),
-		$defaults,
-		$errors,
-		FALSE
-		);
+echo $this->hc_form->input( 
+	array(
+		'name'	=> 'end',
+		'type'	=> 'date',
+		)
+	);
+?>
+
+<?php
+echo $this->hc_form->input( 
+	array(
+		'name'	=> 'display',
+		'type'	=> 'hidden',
+		)
+	);
 ?>
 
 <?php echo form_submit( array('name' => 'submit', 'class' => 'btn btn-primary'), lang('common_go')); ?>

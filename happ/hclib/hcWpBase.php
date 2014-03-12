@@ -27,6 +27,8 @@ if( ! class_exists('hcWpBase2') )
 class hcWpBase2
 {
 	var $app = '';
+	var $slug = '';
+	var $db_prefix = '';
 	var $types = array();
 	var $dir = '';
 	var $_admin_styles = array();
@@ -34,16 +36,26 @@ class hcWpBase2
 	var $pages = array();
 	var $page_param = '';
 	var $own_db = FALSE;
-	var $query_prefix = '?/';
+	var $require_shortcode = FALSE;
+//	var $query_prefix = '?/'; // for CI based apps
+	var $query_prefix = ''; // for NTS based apps
 
 	public function __construct( 
 		$app, 
 		$dir, 
 		$types = array(),
-		$own_db = FALSE
+		$own_db = FALSE,
+		$slug = '',
+		$db_prefix = ''
 		)
 	{
+		$GLOBALS['NTS_IS_PLUGIN'] = 'wordpress';
+
 		$this->app = $app;
+		$GLOBALS['NTS_APP'] = $app;
+
+		$this->slug = $slug ? $slug : $this->app;
+		$this->db_prefix = $db_prefix ? $db_prefix : $this->slug;
 		$this->dir = $dir;
 		$this->types = array();
 		$this->page_param = 'page_id';
@@ -85,7 +97,8 @@ class hcWpBase2
 	private function _init_db()
 	{
 		global $table_prefix;
-		$mypref = $table_prefix . $this->app . '_';
+		$mypref = $table_prefix . $this->db_prefix . '_';
+
 		$GLOBALS['NTS_CONFIG'][$this->app]['DB_HOST'] = DB_HOST;
 		$GLOBALS['NTS_CONFIG'][$this->app]['DB_USER'] = DB_USER;
 		$GLOBALS['NTS_CONFIG'][$this->app]['DB_PASS'] = DB_PASSWORD;
@@ -117,15 +130,6 @@ class hcWpBase2
 			$url = '';
 		}
 
-/*
-		if( 
-			preg_match('/\/jquery\-\d/', $check_url) && 
-			wp_script_is('jquery')
-		)
-		{
-			$skip = TRUE;
-		}
-*/
 		if( ! $skip )
 			$this->_admin_scripts[] = array( $id, $url );
 	}
@@ -139,7 +143,8 @@ class hcWpBase2
 			$GLOBALS['NTS_CONFIG'][$this->app]['FORCE_LOGIN_NAME'] = $current_user->user_email;
 
 			$GLOBALS['NTS_CONFIG'][$this->app]['BASE_URL'] = get_admin_url();
-			$GLOBALS['NTS_CONFIG'][$this->app]['INDEX_PAGE'] = 'admin.php?page=' . $this->app . '&';
+			$GLOBALS['NTS_CONFIG'][$this->app]['INDEX_PAGE'] = 'admin.php?page=' . $this->slug . '&';
+			$GLOBALS['NTS_CONFIG'][$this->app]['ADMIN_PANEL'] = 1;
 		}
 	}
 
@@ -150,16 +155,6 @@ class hcWpBase2
 
 		if( $this->is_me_front() )
 		{
-/*
-			if( ! $this->load_by_js )
-			{
-				$this->print_styles();
-				$this->print_scripts();
-				wp_enqueue_script( 'lprScript5', 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true' );
-				wp_enqueue_script( 'lprScript6', 'http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/src/infobox.js' );
-			}
-*/
-
 			add_action( 'wp_enqueue_scripts',	array($this, 'admin_scripts') );
 			add_action( 'wp_head', 				array($this, 'admin_head') );
 
@@ -190,7 +185,7 @@ class hcWpBase2
 			$post && 
 			preg_match_all('/'. $pattern .'/s', $post->post_content, $matches) &&
 			array_key_exists(2, $matches) &&
-			in_array($this->app, $matches[2])
+			in_array($this->slug, $matches[2])
 			)
 		{
 			$return = TRUE;
@@ -216,7 +211,7 @@ class hcWpBase2
 			{
 				$page = $_REQUEST['page'];
 			}
-			if( $page && ($page == $this->app) )
+			if( $page && ($page == $this->slug) )
 			{
 				$return = TRUE;
 			}
@@ -258,7 +253,9 @@ class hcWpBase2
 				}
 			}
 			else
+			{
 				wp_enqueue_script( $sa[0] );
+			}
 		}
 	}
 
@@ -329,7 +326,7 @@ class hcWpBase2
 	// load shortcode
 		global $wpdb;
 
-		$shortcode = '[' . $this->app . ']';
+		$shortcode = '[' . $this->slug . ']';
 		$this->pages = array();
 		$pages = $wpdb->get_results( 
 			"
@@ -363,23 +360,15 @@ class hcWpBase2
 					$web_page .= $this->query_prefix;
 				}
 			}
-
-/*
-			$url = parse_url( get_permalink($this->pages[0]) );
-			$web_page = $url['path'];
-			$index_page = (isset($url['query']) && $url['query']) ? '?' . $url['query'] . '&' : $this->query_prefix;
-			if( strlen($index_page) )
-				$web_page .= $index_page;
-*/
 		}
 		else
 		{
 			$web_page = get_bloginfo('wpurl');
 		}
+
 		$GLOBALS['NTS_CONFIG'][$this->app]['FRONTEND_WEBPAGE'] = $web_page;
 
 	// other config
-		$GLOBALS['NTS_IS_PLUGIN'] = 'wordpress';
 		$GLOBALS['NTS_CONFIG'][$this->app]['REMOTE_INTEGRATION'] = 'wordpress';
 		$session_name = 'ntssess_' . $this->app;
 		$GLOBALS['NTS_CONFIG'][$this->app]['SESSION_NAME'] = $session_name;
@@ -431,12 +420,6 @@ class hcWpBase2
 	function check_post( $post_id )
 	{
 		global $post;
-	/* verify nonce */
-	/*
-	    if ( !isset( $_POST['ninja_annc_nonce'] ) || !wp_verify_nonce( $_POST['ninja_annc_nonce'], basename( __FILE__ ) ) )
-	        return FALSE;
-	*/
-	
 	/* Check if the current user has permission to edit the post. */
 		if( $post )
 		{

@@ -2,77 +2,70 @@
 $CI =& ci_get_instance();
 $config = array();
 
-$config[User_model::LEVEL_ADMIN] = array(
-	array(
-		lang('schedules'),
-		'admin/schedules',
-		10
-		),
-	array(
-		lang('users'),
-		'admin/users',
-		20
-		),
-	array(
-		lang('timeoffs'),
-		'admin/timeoffs',
-		30
-		),
+$config = array(
+	USER_MODEL::LEVEL_ADMIN . '/schedules' =>
+		array(
+			'title'	=> '<i class="fa fa-calendar"></i> ' . lang('schedules'),
+			'link'	=> 'admin/schedules',
+			),
+	USER_MODEL::LEVEL_ADMIN . '/users' =>
+		array(
+			'title'	=> '<i class="fa fa-user"></i> ' . lang('users'),
+			'link'	=> 'admin/users',
+			),
+	USER_MODEL::LEVEL_ADMIN . '/timeoffs' => 
+		array(
+			'title'	=> '<i class="fa fa-coffee"></i> ' . lang('timeoffs'),
+			'link'	=> 'admin/timeoffs',
+			),
+	USER_MODEL::LEVEL_ADMIN . '/conf' => 
+		array(
+			'title'	=> '<i class="fa fa-cog"></i> ' . lang('menu_conf'),
+			'link'	=> '',
+			'order'	=> 100,
+			),
+		USER_MODEL::LEVEL_ADMIN . '/conf/locations'	=> array( 
+			'title'	=> '<i class="fa fa-home fa-fw"></i> ' . lang('locations'),
+			'link'	=> 'admin/locations',
+			),
+		USER_MODEL::LEVEL_ADMIN . '/conf/templates'	=> array( 
+			'title'	=> '<i class="fa fa-clock-o fa-fw"></i> ' . lang('shift_templates'),
+			'link'	=> 'admin/shift-templates',
+			),
+		USER_MODEL::LEVEL_ADMIN . '/conf/settings'	=> array( 
+			'title'	=> '<i class="fa fa-cogs fa-fw"></i> ' . lang('menu_conf_settings'),
+			'link'	=> 'conf/admin',
+			'order'	=> 100
+			),
 	);
 
-$config[User_model::LEVEL_ADMIN]['conf'] = array( 
-	lang('menu_conf'),
-	'',
-	100,
-	'locations'	=> array( 
-		lang('locations'),
-		'admin/locations',
-		10
-		),
-	'templates'	=> array( 
-		lang('shift_templates'),
-		'admin/shift-templates',
-		20
-		),
-	'settings'	=> array( 
-		lang('menu_conf_settings'),
-		'conf/admin',
-		100
-		),
+$config[ USER_MODEL::LEVEL_MANAGER . '/schedules' ] = array(
+	'title'	=> '<i class="fa fa-calendar"></i> ' . lang('schedules'),
+	'link'	=> 'admin/schedules',
+	);
+$config[ USER_MODEL::LEVEL_MANAGER . '/timeoffs' ] = array(
+	'title'	=> '<i class="fa fa-coffee"></i> ' . lang('timeoffs'),
+	'link'	=> 'admin/timeoffs',
 	);
 
-$config[User_model::LEVEL_MANAGER] = array(
-	array(
-		lang('schedules'),
-		'admin/schedules',
-		10
-		),
-	array(
-		lang('timeoffs'),
-		'admin/timeoffs',
-		30
-		),
+$config[ USER_MODEL::LEVEL_STAFF . '/schedules' ] = array(
+	'title'	=> '<i class="fa fa-calendar-o"></i> ' . lang('my_schedule'),
+	'link'	=> '/staff/shifts',
 	);
-
-$config[User_model::LEVEL_STAFF][] = array( 
-	lang('my_schedule'),
-	'staff/shifts',
-	10
-	);
-$config[User_model::LEVEL_STAFF][] = array( 
-	lang('my_timeoffs'),
-	'staff/timeoffs',
-	20
+$config[ USER_MODEL::LEVEL_STAFF . '/timeoffs' ] = array(
+	'title'	=> '<i class="fa fa-coffee"></i> ' . lang('my_timeoffs'),
+	'link'	=> '/staff/timeoffs',
 	);
 
 $promo_url = $CI->config->item( 'nts_promo_url' );
 if( $promo_url )
 {
 	$promo_title = $CI->config->item( 'nts_promo_title' );
-	$config[User_model::LEVEL_ADMIN]['promo'] = array( 
-		$promo_title,
-		$promo_url,
-		200
+	$config[USER_MODEL::LEVEL_ADMIN . '/promo'] = array(
+		'title'	=> $promo_title,
+		'link'	=> $promo_url,
+		'external'	=> TRUE,
+		'order'	=> 200
 		);
 }
 /* End of file menu.php */

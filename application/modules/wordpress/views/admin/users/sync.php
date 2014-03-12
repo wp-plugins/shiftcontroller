@@ -28,7 +28,7 @@ echo form_open(
 			<?php
 			$this_role_count = ( isset($wordpress_count_users['avail_roles'][$role_value]) ) ? $wordpress_count_users['avail_roles'][$role_value] : 0;
 			?>
-			<tr>
+			<tr class="<?php echo $this_role_count ? 'success' : ''; ?>">
 				<td>
 					<?php echo $role_name; ?> [<?php echo $this_role_count; ?>]
 				</td>

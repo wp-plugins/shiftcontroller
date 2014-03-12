@@ -2,39 +2,44 @@
 <h2><?php echo lang('login'); ?></h2>
 </div>
 
-<?php echo form_open('auth/login', array('class' => 'well')); ?>
 <?php
 $identity['placeholder'] = lang('common_email');
-$error = form_error($identity['name']);
-$class = $error ? 'control-group error' : 'control-group';
+$password['placeholder'] = lang('common_password');
 ?>
-<div class="<?php echo $class; ?>">
-<div class="controls">  
-<?php echo form_input( $identity ); ?>
-<?php if( $error ) : ?>
-<span class="help-inline"><?php echo $error; ?></span>
-<?php endif; ?>
-</div>  
-</div>
+
+<?php echo form_open('auth/login', array('class' => 'form-horizontal form-condensed')); ?>
 
 <?php
-$password['placeholder'] = lang('common_password');
-$error = form_error($password['name']);
-$class = $error ? 'control-group error' : 'control-group';
+echo Hc_html::wrap_input(
+	lang('common_email'),
+	$this->hc_form->build_input($identity)
+	);
 ?>
-<div class="<?php echo $class; ?>">
-<div class="controls">  
-<?php echo form_input( $password ); ?>
-<?php if( $error ) : ?>
-<span class="help-inline"><?php echo $error; ?></span>
-<?php endif; ?>
-</div>  
-</div>
 
-<p>
-<?php echo form_submit( array('name' => 'submit', 'class' => 'btn btn-primary'), 'Login');?>
-</p>
+<?php
+echo Hc_html::wrap_input(
+	lang('common_password'),
+	$this->hc_form->build_input($password)
+	);
+?>
+
+<?php
+echo Hc_html::wrap_input(
+	'',
+	form_submit( 
+		array(
+			'name' => 'submit',
+			'class' => 'btn btn-default'
+			),
+		'Login'
+		)
+	);
+?>
 
 <?php echo form_close();?>
 
-<p><a href="<?php echo ci_site_url('auth/forgot_password'); ?>"><?php echo lang('auth_login_form_forgot_password'); ?></a></p>
+<p>
+	<a href="<?php echo ci_site_url('auth/forgot_password'); ?>">
+		<?php echo lang('auth_login_form_forgot_password'); ?>
+	</a>
+</p>

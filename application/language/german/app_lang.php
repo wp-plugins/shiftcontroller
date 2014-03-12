@@ -248,9 +248,6 @@ $lang['trade_status_accepted'] = 'Angenommen';
 $lang['trade_status_completed'] = 'Abgeschlossen';
 $lang['trade_recall'] = 'zurück nehmen';
 $lang['trade_complete'] = 'Abgeschlossen';
-$lang['trades_to_pick_up'] = 'Angebote zum Tauschen';
-$lang['trade_pick_up'] = 'Annehmen';
-$lang['trades_my'] = "Meine Tauschangebote";
 
 /* SCHEDULES */
 $lang['schedule'] = 'Schichten';
@@ -261,8 +258,6 @@ $lang['schedules'] = 'Schichten';
 $lang['schedule_add'] = 'Neue Schicht';
 $lang['schedule_start'] = 'Anfangsdatum';
 $lang['schedule_end'] = 'Enddatum';
-$lang['schedule_by_staff'] = 'nach Mitarbeiter';
-$lang['schedule_by_location'] = 'nach Bereich';
 $lang['schedule_publish'] = 'Dienst veröffentlichen';
 $lang['schedule_unpublish'] = 'Unveröffentliche Dienste';
 $lang['schedule_published'] = 'Veröffentliche Dienste';

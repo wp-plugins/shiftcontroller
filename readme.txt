@@ -4,7 +4,7 @@ Contributors: HitCode
 Tags: staff scheduling, shift scheduling, employee scheduling, rota shift scheduling
 License: GPLv2 or later
 
-Stable tag: 2.1.2
+Stable tag: 2.2.0
 Requires at least: 3.3
 Tested up to: 3.7
 
@@ -41,14 +41,17 @@ The upgrade is simply - upload everything up again to your `/wp-content/plugins/
 
 == Changelog ==
 
-= 2.1.2 =
-* Fixed the 502 error that may have appeared with certain web server configurations
+= 2.2.0 =
+* Shift history module
+* More convenient schedule views (show calendar by location and by staff member, week or month view)
+* Updated view framework (Bootstrap 3)
+* Minor code optimizations and bug fixes
 
 = 2.1.1 =
 * Login log module
 * BUG: Select All in Timoffs and Shift Trades admin views were not working
 * BUG: Repeating options were not active in the Premium version
-* Minor code optimizations and bug fixes. 
+* Minor code optimizations and bug fixes
 
 = 2.1.0 =
 * Fixed bug when email notification was not sent after publishing just one shift

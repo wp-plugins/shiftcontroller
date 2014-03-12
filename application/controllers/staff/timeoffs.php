@@ -37,15 +37,21 @@ class Timeoffs_controller extends Backend_controller_crud
 			$status = TIMEOFF_MODEL::STATUS_PENDING;
 
 	/* all statuses counts */
-		$tabs = array();
-		$res = $this->{$this->model}->select('status')->select_func('COUNT', '@id', 'count')->group_by('status')->order_by('status', 'ASC')->get();
+		$statuses = array();
+		$res = $this->{$this->model}
+			->select('status')
+			->select_func('COUNT', '@id', 'count')
+			->group_by('status')
+			->order_by('status', 'ASC')
+			->get();
+
 		foreach( $res as $r )
 		{
 			if( $r->count > 0 )
-				$tabs[ $r->status ] = $r->count;
+				$statuses[ $r->status ] = $r->count;
 		}
 
-		if( isset($tabs[TIMEOFF_MODEL::STATUS_ACTIVE]) && ($tabs[TIMEOFF_MODEL::STATUS_ACTIVE] > 0) )
+		if( isset($statuses[TIMEOFF_MODEL::STATUS_ACTIVE]) && ($statuses[TIMEOFF_MODEL::STATUS_ACTIVE] > 0) )
 		{
 			$this->hc_time->setNow();
 		/* if this week then not yet expired */
@@ -55,30 +61,31 @@ class Timeoffs_controller extends Backend_controller_crud
 		// count archive
 			$archived_count = $this->{$this->model}
 				->where('status', TIMEOFF_MODEL::STATUS_ACTIVE)
-				->where('date <', $check_with)
+				->where('date_end <', $check_with)
 				->count();
+
 			if( $archived_count > 0 )
 			{
-				$tabs[TIMEOFF_MODEL::STATUS_ARCHIVE] = $archived_count;
-				$tabs[TIMEOFF_MODEL::STATUS_ACTIVE] = $tabs[TIMEOFF_MODEL::STATUS_ACTIVE] - $archived_count;
-				if( $tabs[TIMEOFF_MODEL::STATUS_ACTIVE] <= 0 )
-					unset( $tabs[TIMEOFF_MODEL::STATUS_ACTIVE] );
+				$statuses[TIMEOFF_MODEL::STATUS_ARCHIVE] = $archived_count;
+				$statuses[TIMEOFF_MODEL::STATUS_ACTIVE] = $statuses[TIMEOFF_MODEL::STATUS_ACTIVE] - $archived_count;
+				if( $statuses[TIMEOFF_MODEL::STATUS_ACTIVE] <= 0 )
+					unset( $statuses[TIMEOFF_MODEL::STATUS_ACTIVE] );
 			}
 		}
 
 	/* no timeoffs so far */
-		if( ! $tabs )
+		if( ! $statuses )
 		{
 			ci_redirect( $this->conf['path'] . '/add' );
 			return;
 		}
 
-		$this->data['tabs'] = $tabs;
+		$this->data['statuses'] = $statuses;
 
 	/* load */
-		if( ! isset($tabs[$status]) )
+		if( ! isset($statuses[$status]) )
 		{
-			$all_statuses = array_keys( $tabs );
+			$all_statuses = array_keys( $statuses );
 			$status = $all_statuses[0];
 		}
 

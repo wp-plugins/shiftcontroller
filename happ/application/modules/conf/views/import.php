@@ -4,7 +4,7 @@
 
 <div class="row">
 
-<div class="span6">
+<div class="col-md-6">
 <?php echo form_open_multipart( 'admin/conf/import/do', array('class' => 'well')); ?>
 
 <div class="control-group">
@@ -36,7 +36,7 @@ $f = array(
 <?php echo form_close(); ?>
 </div>
 
-<div class="span4">
+<div class="col-md-4">
 <p>
 <?php echo lang('conf_import_help'); ?>: 
 </p>

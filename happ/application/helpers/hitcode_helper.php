@@ -1,5 +1,8 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/* load hclib */
+include_once( dirname(__FILE__) . '/../../hclib/_bootstrap.php' );
+
 if ( ! function_exists('hc_ci_before_exit'))
 {
 	function hc_ci_before_exit()
@@ -142,18 +145,12 @@ if ( ! function_exists('hc_random'))
 	}
 }
 
-function hc_parse_lang( $label )
-{
-	$lang_pref = 'lang:';
-	if( substr($label, 0, strlen($lang_pref)) == $lang_pref )
-	{
-		$label = substr($label, strlen($lang_pref));
-		$label = lang( $label );
-	}
-	return $label;
-}
-
-function hc_form_input( $field, $defaults = array(), $errors = array(), $show_label = TRUE )
+function hc_form_input(
+	$field,
+	$defaults = array(),
+	$errors = array(),
+	$show_label = TRUE
+	)
 {
 	$out = '';
 
@@ -182,7 +179,7 @@ function hc_form_input( $field, $defaults = array(), $errors = array(), $show_la
 	$text_after = isset($f['text_after']) ? $f['text_after'] : '';
 	$label = isset($f['label']) ? $f['label'] : '';
 	$extra = '';
-	
+
 	if( isset($field['size']) )
 	{
 		if( isset($f['extra']['style']) )
@@ -226,7 +223,7 @@ function hc_form_input( $field, $defaults = array(), $errors = array(), $show_la
 	}
 	else
 	{
-		$label = hc_parse_lang( $label );
+		$label = Hc_lib::parse_lang( $label );
 
 		if( $show_label )
 		{
@@ -277,31 +274,31 @@ function hc_form_input( $field, $defaults = array(), $errors = array(), $show_la
 				break;
 
 			case 'radio':
-//				$out .= '<span class="input-holder">';
+				$out .= '<div class="radio">';
 				foreach( $f['options'] as $fk => $fv )
 				{
-					$out .= '<label class="radio">';
+					$out .= '<label style="display: block;">';
 					$ff = $f;
 					unset( $ff['options'] );
 					$checked = ($default == $fk) ? TRUE : FALSE;
+
 					$out .= form_radio( $ff, $fk, $checked, $extra );
-					$out .= hc_parse_lang($fv);
+					$out .= Hc_lib::parse_lang($fv);
 					$out .= '</label>';
-//					$out .= '&nbsp;&nbsp;&nbsp;';
 				}
-//				$out .= '</span>';
+				$out .= '</div>';
 				break;
 
 			case 'date':
-				$out .= hc_form_date( $f, $default );
+				$out .= hc_form_date( $f, $default, $extra );
 				break;
 
 			case 'time':
-				$out .= hc_form_time( $f, $default );
+				$out .= hc_form_time( $f, $default, $extra );
 				break;
 
 			case 'timeframe':
-				$out .= hc_form_timeframe( $f, $default );
+				$out .= hc_form_timeframe( $f, $default, $extra );
 				break;
 
 			case 'weekday':
@@ -347,15 +344,12 @@ function hc_form_input( $field, $defaults = array(), $errors = array(), $show_la
 
 		if( $error )
 		{
-//			if( $show_label )
-				$out .= '<span class="help-inline">' . $error . '</span>';
-//			else
-//				$out .= '<span class="text-error">' . $error . '</span>';
+			$out .= '<span class="help-inline">' . $error . '</span>';
 		}
 
 		if( isset($f['help']) && (! $error) )
 		{
-			$out .= '<span class="help-block"><em>' . hc_parse_lang($f['help']) . '</em></span>';
+			$out .= '<span class="help-block"><em>' . Hc_lib::parse_lang($f['help']) . '</em></span>';
 		}
 	}
 	return $out;
@@ -398,11 +392,14 @@ function hc_form_time($data = '', $value = '', $extra = '')
 	}
 
 	$value = set_value($data['name'], $value);
-	$extra = 'style="width: 8em;"';
+
+	$extra = $extra ? array($extra) : array();
+	$extra[] = 'style="width: 8em;"';
 	if( isset($data['readonly']) && $data['readonly'] )
 	{
-		$extra .= ' readonly="readonly" disabled="disabled"';
+		$extra[] = ' readonly="readonly" disabled="disabled"';
 	}
+	$extra = join( ' ', $extra );
 	$out .= form_dropdown( $data['name'], $options, $value, $extra );
 	return $out;
 }
@@ -767,7 +764,7 @@ function hc_dropdown_menu( $menu, $wrap = 'li', $me = '', $toggler = '' )
 
 				if( $toggler == 'btn' )
 				{
-					$la['class'] .= ' btn btn-small';
+					$la['class'] .= ' btn btn-default btn-sm';
 					$label = lang('common_actions');
 				}
 
@@ -824,50 +821,6 @@ function hc_dropdown_menu( $menu, $wrap = 'li', $me = '', $toggler = '' )
 
 	$out = join( "\n", $out );
 	return $out;
-}
-
-
-function hc_expandable_list( $entries, $title_tag = 'name', $children_tag = 'items', $url_function = NULL )
-{
-	$return = '';
-	$return .= '<ul class="hc-expandable-list">';
-	reset( $entries );
-	foreach( $entries as $e ){
-		$return .= '<li>';
-		$return .= '<span>';
-		$return .= $e[ $title_tag ];
-		$return .= '</span>';
-		if( $e[$children_tag] ){
-			$return .= '<ul>';
-			reset($e[$children_tag]);
-			foreach( $e[$children_tag] as $c ){
-				$return .= '<li>';
-				if( $url_function ){
-					$target = $url_function($c);
-					$return .= '<a href="' . $target . '">';
-					}
-				$return .= '<b>' . $c[ $title_tag ] . '</b>';
-				
-				
-				if( isset($c['description']) )
-					$return .= '<p>' . $c['description'] . '</p>';
-				if( $url_function ){
-					$return .= '</a>';
-					}
-				$return .= '</li>';
-				}
-			$return .= '</ul>';
-			}
-		$return .= '</li>';
-		}
-	$return .= '</ul>';
-	
-	$return .= "\n";
-	$return .= "<script language=\"JavaScript\">\n";
-	$return .= "hc_expandable_list();\n";
-	$return .= "</script>\n";
-	$return .= "\n";
-	return $return;
 }
 
 /* End of file array_helper.php */

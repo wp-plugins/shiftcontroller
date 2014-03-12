@@ -1,3 +1,16 @@
-<a class="btn btn-default" href="<?php echo ci_site_url(array($this->conf['path'], 'index', 'export', $start_date, $end_date)); ?>">
-	<i class="icon-download-alt"></i> <?php echo lang('common_csv_export'); ?>
+<?php
+$target_display = 'export' . $display;
+
+$link = ci_site_url(
+	array(
+		$this->conf['path'], 'index',
+		'display',	$target_display,
+		'start',	$start_date,
+		'end',		$end_date,
+		)
+	);
+?>
+
+<a class="btn btn-default" href="<?php echo $link; ?>">
+	<i class="fa fa-download"></i> <?php echo lang('common_download'); ?>
 </a>

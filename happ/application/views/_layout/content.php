@@ -15,15 +15,17 @@
 	<?php endif; ?>
 
 	<?php if( $error ) : ?>
-	<div class="alert alert-error">
-	<button type="button" class="close" data-dismiss="alert">&times;</button>
-	<?php	if( is_array($error) ) : ?>
-	<ul>
-	<?php		foreach( $error as $e ) : ?>
-	<li><?php		echo $e; ?></li>
-	<?php		endforeach; ?>
-	</ul>
-	<?php	else : ?>
+		<div class="alert alert-danger">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<?php if( is_array($error) ) : ?>
+				<ul>
+				<?php foreach( $error as $e ) : ?>
+					<li>
+						<?php echo $e; ?>
+					</li>
+				<?php endforeach; ?>
+				</ul>
+			<?php else : ?>
 	<?php		echo $error;?>
 	<?php	endif; ?>
 	</div>

@@ -1,4 +1,7 @@
 <?php
+if( $range == 'week' )
+	$wide_view = TRUE;
+
 $this->hc_time->setDateDb( $date );
 $this_weekday = $this->hc_time->getWeekday();
 
@@ -17,36 +20,43 @@ foreach( $my_shifts as $shift )
 }
 ?>
 
-<ul class="nav nav-list nav-list-condensed">
+<ul class="nav nav-stacked nav-condensed">
 <li>
 	<h4>
-	<?php echo $this->hc_time->formatWeekdayShort(); ?><br><small><?php echo $this->hc_time->formatDate(); ?></small>
+		<?php echo $this->hc_time->formatWeekdayShort(); ?>
+		<small><?php echo $this->hc_time->formatDate(); ?></small>
 	</h4>
 </li>
 
 <li class="divider"></li>
 
+<?php $group_count = 0; ?>
 <?php foreach( $grouped_shifts as $key => $sha ) : ?>
 	<?php
-		list( $this_start, $this_end ) = explode( '_', $key );
+	$group_count++;
+	list( $this_start, $this_end ) = explode( '_', $key );
 	?>
-	<li class="nav-header">
-		<?php echo $this->hc_time->formatTimeOfDay($this_start); ?> - <?php echo $this->hc_time->formatTimeOfDay($this_end); ?>
-	</li>
+
+	<?php if( $group_count > 1 ) : ?>
+		<li class="divider"></li>
+	<?php endif; ?>
 
 	<?php foreach( $sha as $lid => $shs ) : ?>
-		<li>
-			<i class="icon-home"></i> <?php echo $shs[0]->location_name; ?>
-		</li>
 
 		<?php foreach( $shs as $sh ) : ?>
-			<li class="alert alert-condensed alert-success">
-				<i class="icon-user"></i> <?php echo $staffs[$sh->user_id]->full_name(); ?>
+			<li>
+				<?php 
+				$titles = array();
+				if( $location_count > 1 )
+					$titles[] = 'location';
+				$titles[] = 'staff';
+				$titles[] = 'time';
+				require( dirname(__FILE__) . '/_shift.php' );
+				?>
 			</li>
 		<?php endforeach; ?>
 
 	<?php endforeach; ?>
-
-	<li class="divider"></li>
 <?php endforeach; ?>
+
 </ul>

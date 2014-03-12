@@ -14,10 +14,9 @@ echo form_open(
 
 <?php foreach( $fields as $f ) : ?>
 	<?php
-	echo hc_bootstrap::input(
-		$this->hc_form->input($f),
+	echo Hc_html::wrap_input(
 		$f['label'],
-		$this->hc_form->error($f['name'])
+		$this->hc_form->build_input($f)
 		);
 	?>
 <?php endforeach; ?>
@@ -28,7 +27,7 @@ $actions[] =
 	form_submit(
 		array(
 			'name' => 'submit',
-			'class' => 'btn btn-primary'
+			'class' => 'btn btn-default'
 			),
 		lang('common_save')
 		)
@@ -37,18 +36,21 @@ $actions[] =
 if( $this->auth->check() != $object->id )
 {
 	$archive_title = $object->active ? lang('user_archive') : lang('user_restore');
-	$archive_btn = $object->active ? 'btn-danger' : 'btn-success';
+	$archive_btn = $object->active ? 'btn-warning' : 'btn-success';
 	$actions[] = 
 		ci_anchor( 
 			array($this->conf['path'], 'disable', $object->id),
 			$archive_title,
-			'class="btn btn-inverse hc-confirm ' . $archive_btn . '"'
+			'class="btn btn-sm hc-confirm ' . $archive_btn . '"'
 			)
 		;
 }
 $actions = join( '&nbsp;', $actions );
 ?>
-<?php 
-echo hc_bootstrap::form_actions( $actions );
+<?php
+echo Hc_html::wrap_input(
+	'',
+	$actions
+	);
 ?>
 <?php echo form_close(); ?>

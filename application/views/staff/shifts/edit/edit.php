@@ -8,16 +8,26 @@ $tabs = array();
 $tab_content = array();
 
 /* EDIT */
-$tabs['edit'] = '<i class="icon-edit"></i> ' . lang('common_view');
+$tabs['edit'] = '<i class="fa fa-edit"></i> ' . lang('common_view');
 
 $this->hc_time->setDateDb( $object->date );
 
 $tab_content['edit'] = array();
 $tab_content['edit'][] = 
-	'<p>' . $object->prop_text('status', TRUE) .
-	'<p>' . '<i class="icon-calendar"></i> ' . $this->hc_time->formatDate() . 
-	'<p>' . '<i class="icon-time"></i> ' . $this->hc_time->formatTimeOfDay($object->start) . ' - ' .  $this->hc_time->formatTimeOfDay($object->end) . 
-	'<p>' . '<i class="icon-home"></i> ' . $object->location->get()->title()
+	'<ul class="list-unstyled list-separated">' . 
+		'<li>' . 
+			$object->prop_text('status', TRUE) .
+		'</li>' . 
+		'<li>' . 
+			'<i class="fa-fw fa fa-calendar"></i> ' . $this->hc_time->formatDate() . 
+		'</li>' . 
+		'<li>' . 
+			'<i class="fa-fw fa fa-clock-o"></i> ' . $this->hc_time->formatTimeOfDay($object->start) . ' - ' .  $this->hc_time->formatTimeOfDay($object->end) . 
+		'</li>' . 
+		'<li>' . 
+			'<i class="fa-fw fa fa-home"></i> ' . $object->location->get()->title() .
+		'</li>' . 
+	'</ul>'
 	;
 
 $tab_content['edit'] = join( "\n", $tab_content['edit'] );
@@ -25,17 +35,17 @@ $tab_content['edit'] = join( "\n", $tab_content['edit'] );
 /* CONFLICTS */
 if( $conflicts )
 {
-	$tabs['conflicts'] = '<i class="icon-exclamation-sign text-error"></i> ' . lang('shift_conflicts');
+	$tabs['conflicts'] = '<i class="fa fa-exclamation-circle text-danger"></i> ' . lang('shift_conflicts');
 
 	$targets = array(
 		'timeoff'	=> 'staff/timeoffs/edit',
 //		'shift'		=> 'staff/shifts/edit'
 		);
 	$tab_content['conflicts'] = array();
-	$tab_content['conflicts'][] = '<ul class="unstyled">';
+	$tab_content['conflicts'][] = '<ul class="list-unstyled">';
 	foreach( $conflicts as $c )
 	{
-		$tab_content['conflicts'][] = '<li class="alert alert-error">';
+		$tab_content['conflicts'][] = '<li class="alert alert-danger">';
 		if( isset($targets[$c->my_class()]) )
 		{
 			$tab_content['conflicts'][] = ci_anchor( 
@@ -54,13 +64,13 @@ if( $conflicts )
 }
 else
 {
-	$tabs['_conflicts'] = '<i class="icon-ok text-success"></i> ' . lang('shift_no_conflicts');
+	$tabs['_conflicts'] = '<i class="fa fa-check text-success"></i> ' . lang('shift_no_conflicts');
 }
 
 /* NOTES */
 if( $this->hc_modules->exists('notes') )
 {
-	$tabs['notes'] = '<i class="icon-comment-alt"></i> ' . lang('common_notes') . ' [' . $notes_count . ']';
+	$tabs['notes'] = '<i class="fa fa-comment-o"></i> ' . lang('common_notes') . ' [' . $notes_count . ']';
 	$tab_content['notes'] = array(
 		'content'	=> Modules::run('notes/admin/index', $object->my_class(), $object->id),
 		'attr'		=> array(

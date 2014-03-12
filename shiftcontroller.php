@@ -2,14 +2,14 @@
 /**
  * @package ShiftController
  * @author ShiftController
- * @version 2.1.2
+ * @version 2.2.0
  */
 /*
 Plugin Name: ShiftController
 Plugin URI: http://www.shiftcontroller.com/
 Description: Staff scheduling plugin.
 Author: ShiftController
-Version: 2.1.2
+Version: 2.2.0
 Author URI: http://www.shiftcontroller.com/
 */
 
@@ -29,7 +29,7 @@ if( defined('NTS_DEVELOPMENT') )
 	$happ_path = NTS_DEVELOPMENT;
 else
 	$happ_path = dirname(__FILE__) . '/happ';
-include_once( $happ_path . '/application/libraries/hcWpBase.php' );
+include_once( $happ_path . '/hclib/hcWpBase.php' );
 
 class ShiftController extends hcWpBase2
 {

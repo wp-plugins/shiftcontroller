@@ -16,6 +16,11 @@ class Wall_wall_controller extends Front_controller
 		{
 			$this->check_level( $user_level );
 		}
+
+	/* check how many locations do we have */
+		$lm = new Location_Model;
+		$location_count = $lm->count();
+		$this->data['location_count'] = $location_count;
 	}
 
 	private function _load_shifts( $date = 0, $staff_id = 0 )
@@ -70,8 +75,20 @@ class Wall_wall_controller extends Front_controller
 			->order_by( 'start', 'ASC' )
 			->order_by( 'location_show_order', 'ASC' );
 
-		$shift_model->where('user_id IS NOT ', 'NULL', FALSE);
-		$shift_model->where('status', SHIFT_MODEL::STATUS_ACTIVE);
+		$shift_model->group_start();
+			$shift_model->where('status', SHIFT_MODEL::STATUS_ACTIVE);
+			if( 
+				$this->auth->check() && 
+				$this->app_conf->get('staff_pick_shifts')
+				)
+			{
+				$shift_model->or_where('user_id IS ', 'NULL', FALSE);
+			}
+			else
+			{
+				$shift_model->where('user_id IS NOT ', 'NULL', FALSE);
+			}
+		$shift_model->group_end();
 
 		$this->data['shifts'] = $shift_model
 			->get()->all;
@@ -106,6 +123,11 @@ class Wall_wall_controller extends Front_controller
 
 	function day( $date )
 	{
+		$args = $this->parse_args( func_get_args() );
+		$range = isset($args['range']) ? $args['range'] : 'week'; // or month
+
+		$this->data['range'] = $range;
+
 		$this->data['display'] = 'all';
 		$sm = new Shift_Model;
 
@@ -149,10 +171,14 @@ class Wall_wall_controller extends Front_controller
 		return;
 	}
 
-	function index( $date = '', $end_date = '' )
+	function index()
 	{
+		$args = $this->parse_args( func_get_args() );
+
 		$display = 'all';
-		$range = 'month'; // may also be 'week'
+		$range = isset($args['range']) ? $args['range'] : 'week'; // or month
+		$date = isset($args['start']) ? $args['start'] : '';
+		$end_date = '';
 
 	/* check if schedule for this date exists */
 		if( $end_date )
@@ -172,12 +198,22 @@ class Wall_wall_controller extends Front_controller
 				$this->hc_time->setNow();
 			}
 
-//			$this->hc_time->setStartWeek();
-			$this->hc_time->setStartMonth();
-			$start_date = $this->hc_time->formatDate_Db();
-//			$this->hc_time->setEndWeek();
-			$this->hc_time->setEndMonth();
-			$end_date = $this->hc_time->formatDate_Db();
+			switch( $range )
+			{
+				case 'week':
+					$this->hc_time->setStartWeek();
+					$start_date = $this->hc_time->formatDate_Db();
+					$this->hc_time->setEndWeek();
+					$end_date = $this->hc_time->formatDate_Db();
+					break;
+
+				case 'month':
+					$this->hc_time->setStartMonth();
+					$start_date = $this->hc_time->formatDate_Db();
+					$this->hc_time->setEndMonth();
+					$end_date = $this->hc_time->formatDate_Db();
+					break;
+			}
 		}
 
 		$this->data['start_date'] = $start_date;

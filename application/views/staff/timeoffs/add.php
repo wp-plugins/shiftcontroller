@@ -10,7 +10,8 @@ echo $this->hc_form->input(
 ?>
 
 <?php
-echo hc_bootstrap::input(
+echo Hc_html::wrap_input(
+	'&nbsp;',
 	hc_bootstrap::nav_tabs(
 		array(
 			'single'	=> lang('time_single_day'),
@@ -18,8 +19,7 @@ echo hc_bootstrap::input(
 			),
 		$this->hc_form->get_default('repeat'),
 		'repeat'
-		),
-	'&nbsp;'
+		)
 	);
 ?>
 
@@ -27,37 +27,38 @@ echo hc_bootstrap::input(
 echo hc_bootstrap::tab_content(
 	array(
 		'single'	=> 
-			hc_bootstrap::input(
-				$this->hc_form->input( $fields['date'] ),
+			Hc_html::wrap_input(
 				$fields['date']['label'],
-				$this->hc_form->error('date')
+				$this->hc_form->build_input( $fields['date'] )
 				) . 
-			hc_bootstrap::input(
-				$this->hc_form->input( $fields['start'] ) .
-				' - ' .
-				$this->hc_form->input( $fields['end'] ),
+			Hc_html::wrap_input(
 				lang('time'),
-				$this->hc_form->error('start') OR $this->hc_form->error('end')
+				array(
+					$this->hc_form->build_input( $fields['start'] ),
+					' - ',
+					$this->hc_form->build_input( $fields['end'] )
+					)
 				),
 		'multiple'	=> 
-			hc_bootstrap::input(
-				$this->hc_form->input(
-					array(
-						'name'	=> 'date_start',
-						'label'	=> lang('time_date_from'),
-						'type'	=> 'date',
-						)
-					) . 
-				' - ' . 
-				$this->hc_form->input(
-					array(
-						'name'	=> 'date_end',
-						'label'	=> lang('time_date_to'),
-						'type'	=> 'date',
-						)
-					),
+			Hc_html::wrap_input(
 				lang('time_dates'),
-				$this->hc_form->error('date_start') OR $this->hc_form->error('date_end')
+				array(
+					$this->hc_form->build_input(
+						array(
+							'name'	=> 'date_start',
+							'label'	=> lang('time_date_from'),
+							'type'	=> 'date',
+							)
+						),
+					' - ',
+					$this->hc_form->build_input(
+						array(
+							'name'	=> 'date_end',
+							'label'	=> lang('time_date_to'),
+							'type'	=> 'date',
+							)
+						),
+					)
 				),
 		),
 	$this->hc_form->get_default('repeat')
@@ -66,21 +67,22 @@ echo hc_bootstrap::tab_content(
 
 <?php if( $this->hc_modules->exists('notes') ) : ?>
 	<?php
-	echo hc_bootstrap::input(
-		$this->hc_form->input(
+	echo Hc_html::wrap_input(
+		lang('common_notes'),
+		$this->hc_form->build_input(
 			array(
 				'name'	=> 'notes',
 				'type'	=> 'textarea',
 				'rows'	=> 3
 				)
-			),
-		lang('common_notes')
+			)
 		);
 	?>
 <?php endif; ?>
 
 <?php
-echo hc_bootstrap::form_actions(
+echo Hc_html::wrap_input(
+	'',
 	form_submit( 
 		array(
 			'name' => 'submit',

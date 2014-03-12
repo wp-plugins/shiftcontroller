@@ -1,26 +1,31 @@
-<?php echo form_open('auth/forgot_password', array('class' => 'well')); ?>
-<p>Please enter your email address so we can send you an email to reset your password.</p>
+<div class="page-header">
+<h2><?php echo lang('auth_forgot_password'); ?></h2>
+</div>
+
+<?php echo form_open('auth/forgot_password', array('class' => 'form-horizontal form-condensed')); ?>
+
 <p>
-<h2>Forgot Password</h2>
+<?php echo lang('auth_forgot_password_help'); ?>
 </p>
 
 <?php
-$email['placeholder'] = lang('common_email');
-$error = form_error($email['name']);
-$class = $error ? 'control-group error' : 'control-group';
+echo Hc_html::wrap_input(
+	lang('common_email'),
+	$this->hc_form->build_input($email)
+	);
 ?>
 
-<div class="<?php echo $class; ?>">
-<div class="controls">  
-<?php echo form_input( $email ); ?>
-<?php if( $error ) : ?>
-<span class="help-inline"><?php echo $error; ?></span>
-<?php endif; ?>
-</div>  
-</div>
+<?php
+echo Hc_html::wrap_input(
+	'',
+	form_submit( 
+		array(
+			'name' => 'submit',
+			'class' => 'btn btn-default'
+			),
+		lang('auth_forgot_password_send')
+		)
+	);
+?>
 
-<p>
-<?php echo form_submit( array('name' => 'submit', 'class' => 'btn btn-primary'), 'Submit');?>
-</p>
-      
 <?php echo form_close();?>

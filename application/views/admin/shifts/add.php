@@ -4,10 +4,9 @@
 	<?php echo Modules::run('shift_groups/admin/shift_add_form', $object->date); ?>
 <?php else : ?>
 	<?php
-	echo hc_bootstrap::input(
-		$this->hc_form->input($fields['date']),
+	echo Hc_html::wrap_input(
 		$fields['date']['label'],
-		$this->hc_form->error('date')
+		$this->hc_form->build_input($fields['date'])
 		);
 	?>
 <?php endif; ?>
@@ -21,8 +20,10 @@ if( count($shift_templates) )
 	$templates_label[] = '<ul class="dropdown-menu" role="menu">';
 	foreach( $shift_templates as $sht )
 	{
+		$end = ($sht->end > 24*60*60) ? ($sht->end - 24*60*60) : $sht->end;
+
 		$templates_label[] = '<li>';
-		$templates_label[] = '<a href="#" class="hc-shift-templates" data-start="' . $sht->start . '" data-end="' . $sht->end . '">';
+		$templates_label[] = '<a href="#" class="hc-shift-templates" data-start="' . $sht->start . '" data-end="' . $end . '">';
 		$templates_label[] = $sht->name . '<br>' . hc_format_time_of_day($sht->start) . ' - ' . hc_format_time_of_day($sht->end);
 		$templates_label[] = '</a>';
 		$templates_label[] = '</li>';
@@ -36,44 +37,49 @@ else
 	$templates_label = lang('time');
 }
 
-echo hc_bootstrap::input(
-	$this->hc_form->input($fields['start']) . 
-	' - ' .
-	$this->hc_form->input($fields['end'])
-	,
+echo Hc_html::wrap_input(
 	$templates_label,
-	$this->hc_form->error('start') OR $this->hc_form->error('end')
-	);
-?>
-
-<?php
-echo hc_bootstrap::input(
-	$this->hc_form->input($fields['location']),
-	$fields['location']['label'],
-	$this->hc_form->error('location'),
-	$fields['location']
-	);
-?>
-
-<?php
-echo hc_bootstrap::input(
-	$this->hc_form->input($fields['user']),
-	$fields['user']['label'],
-	$this->hc_form->error('user'),
-	$fields['user']
-	);
-?>
-
-<div class="form-actions">
-<?php 
-echo form_submit( 
 	array(
-		'name' => 'submit',
-		'class' => 'btn btn-primary'),
-		lang($this->conf['entity'] . '_add')
+		$this->hc_form->build_input($fields['start']),
+		' - ',
+		$this->hc_form->build_input($fields['end'])
+		)
 	);
 ?>
-</div>
+
+<?php if( $location_count > 1 ) : ?>
+	<?php
+	echo Hc_html::wrap_input(
+		$fields['location']['label'],
+		$this->hc_form->build_input($fields['location'])
+		);
+	?>
+<?php else : ?>
+	<?php
+	echo $this->hc_form->input($fields['location']);
+	?>
+<?php endif; ?>
+
+<?php
+echo Hc_html::wrap_input(
+	$fields['user']['label'],
+	$this->hc_form->build_input($fields['user'])
+	);
+?>
+
+<?php
+echo Hc_html::wrap_input(
+	'',
+	form_submit( 
+		array(
+			'name' => 'submit',
+			'class' => 'btn btn-default'
+			),
+		lang($this->conf['entity'] . '_add')
+		)
+	);
+?>
+
 <?php echo form_close(); ?>
 
 <script language="JavaScript">

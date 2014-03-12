@@ -12,19 +12,17 @@ $ii = 0;
 ?>
 
 <?php foreach( $shifts as $sh ) : ?>
-<?php
-		$ii++;
-?>
+	<?php
+	$ii++;
+	?>
 
 	<?php if( 1 == ($ii % $per_row) ) : ?>
-		<div class="row-fluid">
+		<div class="row">
 		<?php $row_open = TRUE; ?>
 	<?php endif; ?>
 
-	<div class="span3">
-		<div class="alert alert-condensed alert-none">
-			<?php require( dirname(__FILE__) . '/index_child.php' ); ?>
-		</div>
+	<div class="col-sm-3">
+		<?php require( dirname(__FILE__) . '/index_child.php' ); ?>
 	</div>
 
 	<?php if( ! ($ii % $per_row) ) : ?>

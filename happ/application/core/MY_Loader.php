@@ -248,7 +248,7 @@ class MY_Loader extends MX_Loader {
 		{
 			if (file_exists($view_file.$real_file))
 			{
-				$return = TRUE;
+				$return = $view_file.$real_file;
 				break;
 			}
 
@@ -268,6 +268,7 @@ class MY_Loader extends MX_Loader {
 		$ext = pathinfo( $view, PATHINFO_EXTENSION );
 		$real_file = ($ext == '') ? $view . '.php' : $view;
 		$return = $this->no_module_view_exists( $view );
+
 		if( ! $return )
 		{
 		// check in modules
@@ -283,7 +284,7 @@ class MY_Loader extends MX_Loader {
 					$module_file_path = $mod_dir . $module . '/views/' . $file_path;
 					if (file_exists($module_file_path))
 					{
-						$return = TRUE;
+						$return = $module_file_path;
 						break;
 					}
 				}

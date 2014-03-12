@@ -30,21 +30,31 @@ reset( $fields );
 <h2><?php echo $page_title; ?></h2>
 </div>
 
-<?php echo form_open('setup/run', array('class' => 'well form-horizontal form-condensed')); ?>
+<?php echo form_open('setup/run', array('class' => 'form-horizontal form-condensed')); ?>
 <fieldset>
 <legend><?php echo lang('setup_admin'); ?></legend>
 <?php foreach( $fields as $f ) : ?>
-<?php
-		echo hc_bootstrap::input(
-			$this->hc_form->input($f),
-			$f['label'],
-			$this->hc_form->error($f['name'])
-			);
-?>
+	<?php
+	echo Hc_html::wrap_input(
+		$f['label'],
+		$this->hc_form->build_input($f)
+		);
+	?>
 <?php endforeach; ?>
 </fieldset>
 
-<div class="controls">
-<?php echo form_button( array('type' => 'submit', 'name' => 'submit', 'class' => 'btn btn-primary'), lang('setup_setup')); ?>
-</div>
+<?php
+echo Hc_html::wrap_input(
+	'',
+	form_button( 
+		array(
+			'type' => 'submit',
+			'name' => 'submit',
+			'class' => 'btn btn-default'
+			),
+		lang('setup_setup')
+		)
+	);
+?>
+
 <?php echo form_close();?>

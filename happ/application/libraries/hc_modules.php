@@ -11,7 +11,11 @@ class Hc_modules
 
 	function exists( $path )
 	{
-		$return = in_array($path, $this->modules) && Modules::exists($path);
+		$return = 
+			in_array($path, $this->modules) && 
+			$this->module_dir( $path )
+//			Modules::exists($path)
+			;
 		return $return;
 	}
 

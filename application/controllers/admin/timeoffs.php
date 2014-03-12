@@ -42,6 +42,16 @@ class Timeoffs_controller extends Backend_controller_crud
 					}
 					break;
 
+				case 'pending':
+					$msg[] = $this->{$this->model}->prop_text('status', FALSE, TIMEOFF_MODEL::STATUS_PENDING);
+					foreach( $this->{$this->model} as $o )
+					{
+						$o->status = TIMEOFF_MODEL::STATUS_PENDING;
+						if( $o->save() )
+							$ok_count++;
+					}
+					break;
+
 				case 'denied':
 					$msg[] = lang( 'common_reject' );
 					foreach( $this->{$this->model} as $o )
@@ -200,7 +210,6 @@ class Timeoffs_controller extends Backend_controller_crud
 
 		$redirect_to = method_exists($this, 'after_save') ? $this->after_save() : array($this->conf['path']);
 		$this->redirect( $redirect_to );
-//		$this->_save_complete( TRUE, $id, $post, $args );
 		return;
 	}
 
@@ -306,6 +315,32 @@ class Timeoffs_controller extends Backend_controller_crud
 		$this->redirect( $redirect_to );
 		return;
 	}
+
+	protected function after_save()
+	{
+		$this->load->library('user_agent');
+		if( $schedule_view = $this->session->userdata('schedule_view') )
+		{
+			$return = array(
+				'admin/schedules/index'
+				);
+			foreach( $schedule_view as $k => $v )
+			{
+				$return[] = $k;
+				$return[] = $v;
+			}
+		}
+		elseif( $this->agent->is_referral() )
+		{
+			$return = $this->agent->referrer();
+		}
+		else
+		{
+			$return = array( $this->conf['path'] );
+		}
+		return $return;
+	}
+
 }
 
 /* End of file customers.php */

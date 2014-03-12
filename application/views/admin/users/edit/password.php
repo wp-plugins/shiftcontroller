@@ -8,26 +8,28 @@ echo form_open(
 ?>
 
 <?php foreach( $fields as $f ) : ?>
-<?php
-		if( $f['name'] == 'password' )
-			$f['label'] = lang('common_new_password');
-
-		echo hc_bootstrap::input(
-			$this->hc_form->input($f),
-			$f['label'],
-			$this->hc_form->error($f['name'])
-			);
-?>
+	<?php
+	if( $f['name'] == 'password' )
+		$f['label'] = lang('common_new_password');
+	?>
+	<?php
+	echo Hc_html::wrap_input(
+		$f['label'],
+		$this->hc_form->build_input($f)
+		);
+	?>
 <?php endforeach; ?>
 
-<?php 
-echo hc_bootstrap::form_actions(
+<?php
+echo Hc_html::wrap_input(
+	'',
 	form_submit( 
 		array(
 			'name' => 'submit',
-			'class' => 'btn btn-primary'
+			'class' => 'btn btn-default'
 			),
-		lang('common_save'))
+		lang('common_save')
+		)
 	);
 ?>
 

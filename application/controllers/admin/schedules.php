@@ -14,6 +14,19 @@ class Schedules_controller extends Backend_controller
 		$location_count = $lm->count();
 		$this->data['location_count'] = $location_count;
 
+	/* check how many staff do we have */
+		$um = new User_Model;
+		$staff_count = $um->count();
+		$this->data['staff_count'] = $staff_count;
+
+		$um = new User_Model;
+		$staffs = $um->get()->all;
+		$this->data['staffs'] = array();
+		foreach( $staffs as $sta )
+		{
+			$this->data['staffs'][ $sta->id ] = $sta;
+		}
+
 	/* also get all shift templates */
 		$shift_template_titles = array();
 
@@ -182,11 +195,6 @@ class Schedules_controller extends Backend_controller
 			->order_by( 'start', 'ASC' )
 			->order_by( 'location_show_order', 'ASC' );
 
-		if( $this->hc_modules->exists('shift_trades') )
-		{
-			$shift_model->include_related( 'trade', 'id' );
-			$shift_model->include_related( 'trade', 'status' );
-		}
 		$this->data['shifts'] = $shift_model
 			->get()->all;
 
@@ -216,9 +224,19 @@ class Schedules_controller extends Backend_controller
 		}
 	}
 
-	function day_staff( $date, $staff_id )
+	function day_staff()
 	{
-		$this->data['display'] = 'staff';
+		$args = $this->parse_args( func_get_args() );
+
+		$display = isset($args['display']) ? $args['display'] : 'staff';
+		$range = isset($args['range']) ? $args['range'] : 'week'; // or month
+		$date = isset($args['start']) ? $args['start'] : '';
+		$staff_id = isset($args['id']) ? $args['id'] : 0;
+
+		$this->data['display'] = $display;
+		$this->data['range'] = $range;
+		$this->data['date'] = $date;
+
 		$this->data['staff_id'] = $staff_id;
 
 	/* load shifts if needed */
@@ -261,9 +279,19 @@ class Schedules_controller extends Backend_controller
 		$this->load->view( $this->template, $this->data);
 	}
 
-	function day_location( $date, $location_id )
+	function day_location()
 	{
-		$this->data['display'] = 'location';
+		$args = $this->parse_args( func_get_args() );
+
+		$display = isset($args['display']) ? $args['display'] : 'location';
+		$range = isset($args['range']) ? $args['range'] : 'week'; // or month
+		$date = isset($args['start']) ? $args['start'] : '';
+		$location_id = isset($args['id']) ? $args['id'] : 0;
+
+		$this->data['display'] = $display;
+		$this->data['range'] = $range;
+		$this->data['date'] = $date;
+
 		$this->data['location_id'] = $location_id;
 
 	/* load shifts if needed */
@@ -295,9 +323,18 @@ class Schedules_controller extends Backend_controller
 		$this->load->view( $this->template, $this->data);
 	}
 
-	function day( $date )
+	function day()
 	{
-		$this->data['display'] = 'all';
+		$args = $this->parse_args( func_get_args() );
+
+		$display = isset($args['display']) ? $args['display'] : 'all';
+		$range = isset($args['range']) ? $args['range'] : 'week'; // or month
+		$date = isset($args['start']) ? $args['start'] : '';
+
+		$this->data['display'] = $display;
+		$this->data['range'] = $range;
+		$this->data['date'] = $date;
+
 		$sm = new Shift_Model;
 
 	/* load shifts if needed */
@@ -317,14 +354,6 @@ class Schedules_controller extends Backend_controller
 			$this->data['my_shifts'][] = $sh;
 		}
 
-		$um = new User_Model;
-		$staffs = $um->get()->all;
-		$this->data['staffs'] = array();
-		foreach( $staffs as $sta )
-		{
-			$this->data['staffs'][ $sta->id ] = $sta;
-		}
-
 		$this->data['date'] = $date;
 
 		$this->set_include( 'day' );
@@ -335,7 +364,17 @@ class Schedules_controller extends Backend_controller
 	{
 		$start = $this->input->post( 'start' );
 		$end = $this->input->post( 'end' );
-		$redirect_to = array( $this->conf['path'], 'index/browse', $start, $end );
+		$display = $this->input->post( 'display' );
+		if( ! $display )
+			$display = 'browse';
+
+		$redirect_to = array( 
+			$this->conf['path'],
+			'index',
+			'display',	$display,
+			'start',	$start,
+			'end',		$end
+			);
 		$this->redirect( $redirect_to );
 		return;
 	}
@@ -368,7 +407,6 @@ class Schedules_controller extends Backend_controller
 
 	/* duration */
 		$sm->clear();
-//		$sm->include_related( 'user', 'id' );
 		$sm
 			->where( 'date >=', $args['start'] )
 			->where( 'date <=', $args['end'] )
@@ -377,7 +415,7 @@ class Schedules_controller extends Backend_controller
 			->get();
 		$count['duration'] = ($sm->end - $sm->start);
 
-	/* count unpublished shifts */
+	/* ACTIVE	- published with staff */
 		$sm->clear();
 		$sm->include_related( 'user', 'id' );
 		$count['active'] = $sm
@@ -387,14 +425,37 @@ class Schedules_controller extends Backend_controller
 			->where( 'user_id IS NOT ', 'NULL', FALSE )
 			->count();
 
-	/* published */
+	/* OPEN		- published with no staff */
+		$sm->clear();
+		$sm->include_related( 'user', 'id' );
+		$count['open'] = $sm
+			->where( 'date >=', $args['start'] )
+			->where( 'date <=', $args['end'] )
+			->where( 'status', SHIFT_MODEL::STATUS_ACTIVE )
+			->where( 'user_id IS ', 'NULL', FALSE )
+			->count();
+
+	/* PENDING	- not published with staff */
+		$sm->clear();
+		$count['pending'] = $sm
+			->include_related( 'user', 'id' )
+			->where( 'date >=', $args['start'] )
+			->where( 'date <=', $args['end'] )
+			->where( 'status <>', SHIFT_MODEL::STATUS_ACTIVE )
+			->where( 'user_id IS NOT ', 'NULL', FALSE )
+			->count();
+
+	/* DRAFT	- not published with no staff */
 		$sm->clear();
 		$sm->include_related( 'user', 'id' );
 		$count['draft'] = $sm
 			->where( 'date >=', $args['start'] )
 			->where( 'date <=', $args['end'] )
 			->where( 'status <>', SHIFT_MODEL::STATUS_ACTIVE )
-			->where( 'user_id IS NOT ', 'NULL', FALSE )
+			->group_start()
+				->or_where( 'user_id IS ', 'NULL', FALSE )
+				->or_where( 'user_id', 0 )
+			->group_end()
 			->count();
 
 	/* total */
@@ -402,15 +463,6 @@ class Schedules_controller extends Backend_controller
 		$count['total'] = $sm
 			->where( 'date >=', $args['start'] )
 			->where( 'date <=', $args['end'] )
-			->count();
-
-	/* not assigned */
-		$sm->clear();
-		$sm->include_related( 'user', 'id' );
-		$count['not_assigned'] = $sm
-			->where( 'date >=', $args['start'] )
-			->where( 'date <=', $args['end'] )
-			->where( 'user_id IS ', 'NULL', FALSE )
 			->count();
 
 		$this->data['count'] = $count;
@@ -421,9 +473,14 @@ class Schedules_controller extends Backend_controller
 		$this->load->view( $this->template, $this->data);
 	}
 
-	function index( $display = 'all', $date = '', $end_date = '' )
+	function index()
 	{
-		$range = 'month'; // may also be 'week'
+		$args = $this->parse_args( func_get_args() );
+
+		$display = isset($args['display']) ? $args['display'] : 'all';
+		$range = isset($args['range']) ? $args['range'] : 'week'; // or month
+		$date = isset($args['start']) ? $args['start'] : '';
+		$end_date = isset($args['end']) ? $args['end'] : '';
 
 	/* check if schedule for this date exists */
 		if( $end_date )
@@ -465,17 +522,17 @@ class Schedules_controller extends Backend_controller
 		$this->data['end_date'] = $end_date;
 		$this->data['range'] = $range;
 
-		$um = new User_Model;
-		if( $display == 'staff' )
+	/* remove inactive staff */
+		if( in_array($display, array('staff', 'stats', 'exportstats')) )
 		{
-			$um->where('active', USER_MODEL::STATUS_ACTIVE);
-		}
-		$staffs = $um->get()->all;
-
-		$this->data['staffs'] = array();
-		foreach( $staffs as $sta )
-		{
-			$this->data['staffs'][ $sta->id ] = $sta;
+			$staff_ids = array_keys( $this->data['staffs'] );
+			foreach( $staff_ids as $staff_id )
+			{
+				if( $this->data['staffs'][$staff_id]->active != USER_MODEL::STATUS_ACTIVE )
+				{
+					unset( $this->data['staffs'][$staff_id] );
+				}
+			}
 		}
 
 		$lm = new Location_Model;
@@ -492,6 +549,13 @@ class Schedules_controller extends Backend_controller
 	/* load shifts so that they can be reused in module displays to save queries */
 		$this->_load_shifts( array($start_date, $end_date) );
 
+	/* save view */
+		$this->session->set_userdata( 
+			array(
+				'schedule_view' => $args
+				)
+			);
+
 	/* decide which view */
 		switch( $display )
 		{
@@ -500,10 +564,28 @@ class Schedules_controller extends Backend_controller
 				break;
 
 			case 'location':
+				if( isset($args['id']) && $args['id'] )
+					$location_id = $args['id'];
+				else
+				{
+					$ids = array_keys( $this->data['locations'] );
+					$location_id = $ids[0];
+				}
+				$this->data['current_location'] = $this->data['locations'][$location_id];
+
 				$view = 'index_location';
 				break;
 
 			case 'staff':
+				if( isset($args['id']) && $args['id'] )
+					$staff_id = $args['id'];
+				else
+				{
+					$ids = array_keys( $this->data['staffs'] );
+					$staff_id = $ids[0];
+				}
+				$this->data['current_staff'] = $this->data['staffs'][$staff_id];
+
 				$view = 'index_staff';
 				break;
 
@@ -511,8 +593,66 @@ class Schedules_controller extends Backend_controller
 				$view = 'index_browse';
 				break;
 
-			case 'export':
-				return $this->export();
+			case 'exportbrowse':
+				return $this->export_browse();
+				break;
+
+			case 'exportstats':
+			case 'stats':
+				$stats_shifts = array();
+				$stats_drafts = array();
+
+				reset( $this->data['staffs'] );
+				foreach( $this->data['staffs'] as $sta )
+				{
+					$stats_shifts[$sta->id] = array( 0, 0 );
+					$stats_drafts[$sta->id] = array( 0, 0 );
+				}
+
+				reset( $this->data['shifts'] );
+				foreach( $this->data['shifts'] as $sh )
+				{
+					if( ! $sh->user_id )
+						continue;
+
+					if( ! isset($stats_shifts[$sh->user_id]) )
+					{
+						continue;
+//						$stats_shifts[$sh->user_id] = array( 0, 0 );
+//						$stats_drafts[$sh->user_id] = array( 0, 0 );
+					}
+
+					if( $sh->status == SHIFT_MODEL::STATUS_ACTIVE )
+					{
+						$stats_shifts[$sh->user_id][0] += 1;
+						$stats_shifts[$sh->user_id][1] += $sh->get_duration();
+					}
+					else
+					{
+						$stats_drafts[$sh->user_id][0] += 1;
+						$stats_drafts[$sh->user_id][1] += $sh->get_duration();
+					}
+				}
+
+				$this->data['stats_shifts'] = $stats_shifts;
+				$this->data['stats_drafts'] = $stats_drafts;
+
+			/* sort by duration */
+				uasort( $this->data['stats_shifts'],
+					create_function(
+						'$a, $b',
+						'return ($b[1] - $a[1]);'
+						)
+					);
+
+				if( $display == 'exportstats' )
+				{
+					return $this->export_stats();
+				}
+				else
+				{
+					$view = 'index_stats';
+				}
 				break;
 
 			default:
@@ -525,7 +665,7 @@ class Schedules_controller extends Backend_controller
 		return;
 	}
 
-	function export()
+	function export_browse()
 	{
 		$separator = $this->app_conf->get( 'csv_separator' );
 
@@ -584,17 +724,13 @@ class Schedules_controller extends Backend_controller
 
 		// status
 			$conflicts = $sh->conflicts( $this->data['shifts'], $this->data['timeoffs'] );
-			if( $sh->user_id )
+			if( $sh->user_id && count($conflicts) )
 			{
-				$status = ( $sh->status == SHIFT_MODEL::STATUS_ACTIVE ) ? lang('shift_status_active') : lang('shift_status_draft');
-				if( count($conflicts) )
-				{
-					$status = lang('shift_conflict');
-				}
+				$status = lang('shift_conflict');
 			}
 			else
 			{
-				$status = lang('shift_not_assigned');
+				$status = $sh->prop_text('status', FALSE, $sh->get_status());
 			}
 			$values[] = $status;
 
@@ -607,6 +743,43 @@ class Schedules_controller extends Backend_controller
 
 		$file_name = isset( $this->conf['export'] ) ? $this->conf['export'] : 'export';
 		$file_name .= '-' . date('Y-m-d_H-i') . '.csv';
+
+		$this->load->helper('download');
+		force_download($file_name, $out);
+		return;
+	}
+
+	function export_stats()
+	{
+		$separator = $this->app_conf->get( 'csv_separator' );
+
+	// header
+		$headers = array(
+			lang('user_level_staff'),
+			lang('shifts'),
+			lang('time_duration'),
+			);
+
+		$data = array();
+		$data[] = join( $separator, $headers );
+
+	// shifts
+		foreach( $this->data['stats_shifts'] as $staff_id => $array )
+		{
+			$staff = $this->data['staffs'][ $staff_id ];
+			$values = array();
+			$values[] = $staff->title();
+			$values[] = $this->data['stats_shifts'][$staff->id][0];
+			$values[] = $this->hc_time->formatPeriodShort($this->data['stats_shifts'][$staff->id][1], 'hour');
+
+			$data[] = hc_build_csv( array_values($values), $separator );
+		}
+
+	// output
+		$out = join( "\n", $data );
+
+		$file_name = 'stats-';
+		$file_name .= $this->data['start_date'] . '-' . $this->data['end_date'] . '.csv';
 
 		$this->load->helper('download');
 		force_download($file_name, $out);

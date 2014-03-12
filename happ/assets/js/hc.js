@@ -334,14 +334,44 @@ jQuery(document).on( 'change', '.hc-radio-more-info', function(event)
 
 jQuery(document).ready( function()
 {
-//	jQuery('.hc-tooltip').tooltip();
-
 	jQuery('.hc-radio-more-info:checked').each( function()
 	{
 		var my_container = jQuery( this ).closest('label');
 		var my_info = my_container.find('.hc-radio-info');
 		my_info.show();
 	});
+	document.getElementById("nts").scrollIntoView();
+});
 
-	jQuery('.hc')[0].scrollIntoView();
+jQuery(document).on( 'click', '.hc-all-checker', function(event)
+{
+	var thisLink = jQuery( this );
+	var firstFound = false;
+	var whatSet = true;
+
+	var moreCollect = thisLink.data('collect');
+	if( moreCollect )
+	{
+		var myParent = thisLink.closest('.hc-ajax-container');
+		if( myParent.length > 0 )
+			myParent.first();
+		else
+			myParent = jQuery('#nts');
+
+		myParent.find("input[name^='" + moreCollect + "']").each( function()
+		{
+			if( 
+				( jQuery(this).attr('type') == 'checkbox' )
+				)
+			{
+				if( ! firstFound )
+				{
+					whatSet = ! this.checked;
+					firstFound = true;
+				}
+				this.checked = whatSet;
+			}
+		});
+	}
+	return false;
 });

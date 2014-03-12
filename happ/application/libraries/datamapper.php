@@ -6585,7 +6585,6 @@ class DataMapper implements IteratorAggregate {
 	 */
 	protected function _load_languages()
 	{
-
 		// Load the DataMapper language file
 		$this->lang->load('datamapper');
 	}

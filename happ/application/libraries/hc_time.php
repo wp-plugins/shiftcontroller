@@ -57,6 +57,103 @@ class Hc_time extends DateTime {
 			$this->dateFormat = $date_format;
 		}
 
+	function formatDateRange( $date1, $date2 )
+	{
+		$return = array();
+		$skip = array();
+
+		$this->setDateDb( $date1 );
+		$year1 = $this->getYear();
+		$month1 = $this->getMonth();
+
+		$this->setDateDb( $date2 );
+		$year2 = $this->getYear();
+		$month2 = $this->getMonth();
+
+		if( $year2 == $year1 )
+			$skip['year'] = TRUE;
+		if( $month2 == $month1 )
+			$skip['month'] = TRUE;
+
+		if( $skip )
+		{
+			$date_format = $this->dateFormat;
+			$date_format_short = $date_format;
+
+			$tags = array('m', 'n', 'M');
+			foreach( $tags as $t )
+			{
+				$pos_m_original = strpos($date_format_short, $t);
+				if( $pos_m_original !== FALSE )
+					break;
+			}
+
+			if( isset($skip['year']) )
+			{
+				$pos_y = strpos($date_format_short, 'Y');
+				if( $pos_y == 0 )
+				{
+					$date_format_short = substr_replace( $date_format_short, '', $pos_y, 2 );
+				}
+				else
+				{
+					$date_format_short = substr_replace( $date_format_short, '', $pos_y - 1, 2 );
+				}
+			}
+			if( isset($skip['month']) )
+			{
+				$tags = array('m', 'n', 'M');
+				foreach( $tags as $t )
+				{
+					$pos_m = strpos($date_format_short, $t);
+					if( $pos_m !== FALSE )
+						break;
+				}
+
+				if( $pos_m_original == 0 ) // month going first, do not replace
+				{
+//					$date_format_short = substr_replace( $date_format_short, '', $pos_m, 2 );
+				}
+				else
+				{
+					if( $pos_m == 0 ) // month going first, do not replace
+					{
+						$date_format_short = substr_replace( $date_format_short, '', $pos_m, 2 );
+					}
+					else
+					{
+						$date_format_short = substr_replace( $date_format_short, '', $pos_m - 1, 2 );
+					}
+				}
+			}
+
+			if( $pos_y == 0 ) // skip year in the second part
+			{
+				$date_format1 = $date_format;
+				$date_format2 = $date_format_short;
+			}
+			else
+			{
+				$date_format1 = $date_format_short;
+				$date_format2 = $date_format;
+			}
+
+			$this->setDateDb( $date1 );
+			$return[] = $this->formatDate( $date_format1 );
+			$this->setDateDb( $date2 );
+			$return[] = $this->formatDate( $date_format2 );
+		}
+		else
+		{
+			$this->setDateDb( $date1 );
+			$return[] = $this->formatDate();
+			$this->setDateDb( $date2 );
+			$return[] = $this->formatDate();
+		}
+		$return = join( ' - ', $return );
+		return $return;
+	}
+
 	function formatToDatepicker( $dateFormat = '' )
     {
 		if( ! $dateFormat )
@@ -190,10 +287,20 @@ class Hc_time extends DateTime {
 		$this->setTimestamp( time() );
 		}
 
-	function differ( $other ){
-		$other_date = $other->formatDate_Db();
-		$this_date = $this->formatDate_Db();
+	function differ( $other )
+	{
+		if( ! is_object($other) )
+		{
+			$other_date = $other;
+			$other = new Hc_time;
+			$other->setDateDb( $other_date );
+		}
+		else
+		{
+			$other_date = $other->formatDate_Db();
+		}
 
+		$this_date = $this->formatDate_Db();
 		if( $this_date == $other_date ){
 			$delta = 0;
 			}
@@ -208,8 +315,8 @@ class Hc_time extends DateTime {
 			$return = floor( $delta / (24 * 60 * 60) );
 			}
 		return $return;
-		}
-	
+	}
+
 	function getDatesOfMonth(){
 		$return = array();
 

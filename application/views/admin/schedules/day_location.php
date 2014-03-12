@@ -1,4 +1,7 @@
 <?php
+if( $range == 'week' )
+	$wide_view = TRUE;
+
 $this->hc_time->setDateDb( $date );
 $this_weekday = $this->hc_time->getWeekday();
 
@@ -13,10 +16,11 @@ foreach( $my_shifts as $sh )
 }
 ?>
 
-<ul class="nav nav-list nav-list-condensed">
+<ul class="nav nav-stacked">
 <li>
 	<h4>
-	<?php echo $this->hc_time->formatWeekdayShort(); ?><br><small><?php echo $this->hc_time->formatDate(); ?></small>
+		<?php echo $this->hc_time->formatWeekdayShort(); ?> 
+		<small><?php echo $this->hc_time->formatDate(); ?></small>
 	</h4>
 </li>
 
@@ -26,12 +30,14 @@ foreach( $my_shifts as $sh )
 	<?php
 		list( $this_start, $this_end ) = explode( '_', $key );
 	?>
-	<li class="nav-header">
-		<?php echo $this->hc_time->formatTimeOfDay($this_start); ?> - <?php echo $this->hc_time->formatTimeOfDay($this_end); ?>
-	</li>
 
 	<?php foreach( $shs as $sh ) : ?>
-		<?php require( dirname(__FILE__) . '/_shift_dropdown.php' ); ?>
+		<li>
+			<?php
+			$titles = array('staff', 'time');
+			require( dirname(__FILE__) . '/_shift_dropdown.php' );
+			?>
+		</li>
 	<?php endforeach; ?>
 
 	<li class="divider"></li>

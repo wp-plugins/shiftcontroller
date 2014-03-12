@@ -287,7 +287,7 @@ $this->conf = array(
 		reset( $related_fields );
 		foreach( $related_fields as $fname => $rel_props )
 		{
-			if( isset($this->data['supplied'][$fname]) && $this->data['supplied'][$fname] )
+			if( isset($this->data['supplied'][$fname]) && strlen($this->data['supplied'][$fname]) )
 			{
 				$supplied = $this->data['supplied'][$fname];
 			}
@@ -304,6 +304,11 @@ $this->conf = array(
 				}
 			}
 
+//			if( ($supplied === 0) OR ($supplied === '0') ) // delete relation
+//			{
+//				$relations[$fname] = NULL;
+//			}
+//			elseif( $supplied !== FALSE )
 			if( $supplied !== FALSE )
 			{
 				$model_class = $rel_props['class'];

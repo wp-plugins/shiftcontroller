@@ -26,12 +26,12 @@
 if( $include_submenu )
 {
 	$per_row = 3;
-	$span = 'span4';
+	$span = 'col-sm-4';
 }
 else
 {
 	$per_row = 4;
-	$span = 'span3';
+	$span = 'col-sm-3';
 }
 $row_open = FALSE;
 ?>
@@ -39,7 +39,7 @@ $row_open = FALSE;
 <?php for( $ii = 1; $ii <= count($entries); $ii++ ) : ?>
 
 <?php if( 1 == ($ii % $per_row) ) : ?>
-	<div class="row-fluid">
+	<div class="row">
 	<?php $row_open = TRUE; ?>
 <?php endif; ?>
 

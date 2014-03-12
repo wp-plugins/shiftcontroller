@@ -59,6 +59,22 @@ class MY_model extends DataMapper
 		{
 			$this->has_one( $c, $rel );
 		}
+
+		/* fill in defaults */
+		if( ! $id )
+		{
+			if( $my_class == 'shift' )
+			{
+				$my_fields = $this->get_fields();
+				foreach( $my_fields as $mf )
+				{
+					if( isset($mf['default']) )
+					{
+						$this->{$mf['name']} = $mf['default'];
+					}
+				}
+			}
+		}
 	}
 
 	function title(){
@@ -259,7 +275,7 @@ class MY_model extends DataMapper
 		{
 			if( in_array($f['name'], $skip) )
 				continue;
-//			$headers[ $f['name'] ] = hc_parse_lang( $f['label'] );
+//			$headers[ $f['name'] ] = Hc_lib::parse_lang( $f['label'] );
 			$headers[ $f['name'] ] = $f['name'];
 		}
 
@@ -410,15 +426,54 @@ class MY_model extends DataMapper
 		return $return;
 	}
 
-	function view_text()
+	function prop_name( $pname )
+	{
+		if( substr($pname, -3) == '_id' )
+		{
+			$short_pname = substr($pname, 0, -3);
+			if(
+				isset($this->has_one[$short_pname]) OR
+				isset($this->has_many[$short_pname])
+			)
+			{
+				$pname = $short_pname;
+			}
+		}
+		return $pname;
+	}
+
+	function prop_label( $pname )
+	{
+		$return = '';
+		$pname = $this->prop_name( $pname );
+
+		$field = $this->get_field( $pname );
+		if( ! $field )
+			return;
+
+		if( isset($field['label']) )
+		{
+			$return = $field['label'];
+			$return = Hc_lib::parse_lang( $return );
+		}
+		else
+		{
+			$return = $field['name'];
+		}
+		return $return;
+	}
+
+	function view_text( $skip = array() )
 	{
 		$return = array();
 		$fields = $this->get_fields();
 		reset( $fields );
 		foreach( $fields as $f )
 		{
+			if( in_array($f['name'], $skip) )
+				continue;
 			$label = isset($f['label']) ? $f['label'] : $f['name'];
-			$label = hc_parse_lang( $label );
+			$label = Hc_lib::parse_lang( $label );
 			$return[ $f['name'] ] = array( $label, $this->prop_text($f['name']) );
 		}
 		return $return;
@@ -458,7 +513,7 @@ class MY_model extends DataMapper
 		if( isset($this->prop_text[$pname][$value][1]) )
 		{
 			$class = $this->prop_text[$pname][$value][1];
-			$title = hc_parse_lang( $this->prop_text[$pname][$value][0] );
+			$title = Hc_lib::parse_lang( $this->prop_text[$pname][$value][0] );
 			if( $add_title )
 				$title = $add_title . ': ' . $title;
 			$return = '<span title="' . $title . '" class="label label-' . $class . '">' . $return . '</span>';
@@ -489,7 +544,7 @@ class MY_model extends DataMapper
 		if( (! is_object($value)) && isset($this->prop_text[$pname][$value])  )
 		{
 			$return = is_array($this->prop_text[$pname][$value]) ? $this->prop_text[$pname][$value][0] : $this->prop_text[$pname][$value]; 
-			$return = hc_parse_lang( $return );
+			$return = Hc_lib::parse_lang( $return );
 			if( $decorate && is_array($this->prop_text[$pname][$value]) )
 			{
 				$class = $this->prop_text[$pname][$value][1];
@@ -506,11 +561,16 @@ class MY_model extends DataMapper
 		switch( $type )
 		{
 			case 'date':
+				$CI->load->library( 'hc_time' );
 				$CI->hc_time->setDateDb( $value );
 				$return = $CI->hc_time->formatDateFull();
 				break;
 			case 'time':
+				$CI->load->library( 'hc_time' );
 				$return = $CI->hc_time->formatTimeOfDay( $value );
+				break;
+			case 'boolean':
+				$return = $value ? lang('common_yes') : lang('common_no');
 				break;
 			default:
 				if( is_object($value) )
@@ -556,7 +616,7 @@ class MY_model extends DataMapper
 		$return = parent::save($object, $related_field);
 		if( $return )
 		{
-			$this->trigger_event( 'after_save', $this, $object );
+			$this->trigger_event( 'after_save', $this );
 		}
 		return $return;
 	}
@@ -602,9 +662,9 @@ class MY_model extends DataMapper
 
 		foreach( $new as $k => $v )
 		{
-			if( isset($this->_old[$k]) )
+			if( array_key_exists($k, $this->_old) )
 			{
-				if( $this->_old[$k] != $v )
+				if( $this->_old[$k] !== $v )
 					$return[$k] = $this->_old[$k];
 			}
 			else
@@ -731,24 +791,30 @@ class MY_model extends DataMapper
 		return $this->{$me} < $this->{$other};
 	}
 
-	protected function _add_log( $log )
+	protected function _after_save()
 	{
-		$defaults = array(
-			'action_name'		=> 'create',
-			'user_id'			=> 0,
-			'object_class'		=> $this->my_class(),
-			'object_id'			=> $this->id,
-			'action_time'		=> time(),
-			'action_details'	=> ''
-			);
-		reset( $defaults );
-		foreach( $defaults as $k => $v )
+/*
+		$CI =& ci_get_instance();
+		if( $this->keep_log && $CI->hc_modules->exists('logaudit') )
 		{
-			if( ! isset($log[$k]) )
+			$log_changes = array();
+			$changes = $this->get_changes();
+			reset( $changes );
+			foreach( $changes as $property_name => $old_value )
 			{
-				$log[$k] = $v;
+				if( in_array($property_name, $this->keep_log) )
+				{
+					$log_changes[ $property_name ] = $old_value;
+				}
+			}
+
+			if( $log_changes )
+			{
+				$log = new Logaudit_model;
+				$log->log( $this, $log_changes );
 			}
 		}
+*/
 	}
 }
 
@@ -788,7 +854,7 @@ class MY_Model_Virtual
 		$return = parent::save($object, $related_field);
 		if( $return )
 		{
-			$this->trigger_event( 'after_save', $this, $object );
+			$this->trigger_event( 'after_save', $this );
 		}
 		return $return;
 	}

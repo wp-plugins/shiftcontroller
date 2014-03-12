@@ -13,13 +13,30 @@ class Hc_events
 	function trigger( $event, $payload )
 	{
 		$CI =& ci_get_instance();
-		if( isset($this->events[$event]) )
+
+		$check_events = array();
+		$check_events[] = $event;
+
+		/* also check events for all objects */
+		list( $class, $short_event ) = explode( '.', $event );
+		if( $class != '*' )
 		{
+			$generic_event = '*.' . $short_event;
+			$check_events[] = $generic_event;
+		}
+
+		foreach( $check_events as $this_event )
+		{
+			if( ! isset($this->events[$this_event]) )
+			{
+				continue;
+			}
+
 			$args = func_get_args();
 			array_shift( $args );
 
-			reset( $this->events[$event] );
-			foreach( $this->events[$event] as $call )
+			reset( $this->events[$this_event] );
+			foreach( $this->events[$this_event] as $call )
 			{
 				if( $CI->load->module_file($call['file']) )
 				{
@@ -29,6 +46,10 @@ class Hc_events
 						// could be just a helper function
 						if(is_callable($call['method']))
 						{
+							if( isset($call['attr']) )
+							{
+								$args[] = $call['attr'];
+							}
 							call_user_func_array( $call['method'], $args );
 						}
 						continue;
@@ -40,6 +61,11 @@ class Hc_events
 					{
 						unset($class);
 						continue;
+					}
+
+					if( isset($call['attr']) )
+					{
+						$args[] = $call['attr'];
 					}
 					call_user_func_array( array($class, $call['method']), $args );
 					unset($class);

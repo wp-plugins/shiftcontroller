@@ -11,6 +11,11 @@ class Shifts_controller extends Backend_controller_crud
 			'after_save'	=> 'shift',
 			);
 		parent::__construct( User_model::LEVEL_MANAGER );
+
+	/* check how many locations do we have */
+		$lm = new Location_Model;
+		$location_count = $lm->count();
+		$this->data['location_count'] = $location_count;
 	}
 
 	function publish( $id )
@@ -22,7 +27,8 @@ class Shifts_controller extends Backend_controller_crud
 		if( ! $this->{$this->model}->exists() )
 		{
 			$this->session->set_flashdata( 'message', sprintf(lang('not_found'), $id) );
-			ci_redirect( $this->conf['path'] );
+			$redirect_to = $this->after_save();
+			$this->redirect( $redirect_to );
 			return;
 		}
 
@@ -53,7 +59,7 @@ class Shifts_controller extends Backend_controller_crud
 			}
 		}
 
-		$redirect_to = method_exists($this, 'after_save') ? $this->after_save() : array($this->conf['path']);
+		$redirect_to = $this->after_save();
 		$this->redirect( $redirect_to );
 		return;
 	}
@@ -158,9 +164,7 @@ class Shifts_controller extends Backend_controller_crud
 		$msg = lang('common_add') . ': ' . $result_count . ' ' . lang('shifts');
 		$this->session->set_flashdata( 'message', $msg . ': ' . lang('common_ok') );
 
-//		$redirect_to = method_exists($this, 'after_save') ? $this->after_save() : array($this->conf['path']);
-		$date_return = $dates ? $dates[0] : $this->{$this->model}->date;
-		$redirect_to = array( 'admin/schedules/index/all', $date_return );
+		$redirect_to = $this->after_save();
 		$this->redirect( $redirect_to );
 		return;
 	}
@@ -168,10 +172,25 @@ class Shifts_controller extends Backend_controller_crud
 	protected function after_save()
 	{
 		$this->load->library('user_agent');
-		if ($this->agent->is_referral())
+		if( $schedule_view = $this->session->userdata('schedule_view') )
+		{
+			$return = array(
+				'admin/schedules/index'
+				);
+			foreach( $schedule_view as $k => $v )
+			{
+				$return[] = $k;
+				$return[] = $v;
+			}
+		}
+		elseif( $this->agent->is_referral() )
+		{
 			$return = $this->agent->referrer();
+		}
 		else
-			$return = array( 'admin/schedules/index', $this->{$this->model}->date );
+		{
+			$return = array( 'admin/schedules/index', 'start', $this->{$this->model}->date );
+		}
 		return $return;
 	}
 }

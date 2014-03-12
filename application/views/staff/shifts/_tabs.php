@@ -5,8 +5,7 @@ $tabs = array(
 
 if( $this->hc_modules->exists('shift_trades') )
 {
-	$tabs['trades'] = lang('trades_my');
-	$tabs['pickup'] = lang('trades_to_pick_up');
+	$tabs['pickup'] = lang('shift_pick_up');
 }
 
 ?>

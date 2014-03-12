@@ -1,30 +1,34 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+$app = isset($GLOBALS['NTS_APP']) ? $GLOBALS['NTS_APP'] : '';
+if( ! $app )
+{
+	echo 'app is not defined!';
+	exit;
+}
+
 $check_dir = APPPATH . 'config';
 $check_files = array(
-	'app-shiftexec-pro.php',
-	'app-shiftcontroller-premium.php',
-	'app-shiftexec.php',
-	'app-shiftcontroller.php',
+	'pro',
+	'premium',
+	''
 	);
 
-$app = '';
 reset( $check_files );
 foreach( $check_files as $cf )
 {
-	if( file_exists($check_dir . '/'. $cf) )
+	$check_file = 'app-' . $app;
+	if( $cf )
+		$check_file .= '-' . $cf;
+	$check_file .= '.php';
+
+	if( file_exists($check_dir . '/'. $check_file) )
 	{
-		require($check_dir . '/'. $cf);
-		$app = $config['nts_app'];
+		require($check_dir . '/'. $check_file);
 		break;
 	}
 }
-
-if( ! $app )
-{
-	echo 'Cannot find app config file!';
-	exit;
-}
+$config['nts_app'] = $app;
 
 $dev_file = $GLOBALS['NTS_APPPATH'] . '/../developer.php';
 if( file_exists($dev_file) )
@@ -125,6 +129,7 @@ $config['url_suffix'] = '';
 |
 */
 $config['language']	= 'english';
+//$config['language']	= 'german';
 
 /*
 |--------------------------------------------------------------------------

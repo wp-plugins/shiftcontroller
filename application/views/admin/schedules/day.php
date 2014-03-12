@@ -1,4 +1,7 @@
 <?php
+if( $range == 'week' )
+	$wide_view = TRUE;
+
 $this->hc_time->setDateDb( $date );
 $this_weekday = $this->hc_time->getWeekday();
 
@@ -17,10 +20,11 @@ foreach( $my_shifts as $shift )
 }
 ?>
 
-<ul class="nav nav-list nav-list-condensed">
+<ul class="nav nav-stacked">
 <li>
 	<h4>
-	<?php echo $this->hc_time->formatWeekdayShort(); ?><br><small><?php echo $this->hc_time->formatDate(); ?></small>
+		<?php echo $this->hc_time->formatWeekdayShort(); ?> 
+		<small><?php echo $this->hc_time->formatDate(); ?></small>
 	</h4>
 </li>
 
@@ -28,34 +32,28 @@ foreach( $my_shifts as $shift )
 
 <?php foreach( $grouped_shifts as $key => $sha ) : ?>
 	<?php
-		list( $this_start, $this_end ) = explode( '_', $key );
+	list( $this_start, $this_end ) = explode( '_', $key );
 	?>
-	<li class="nav-header">
-		<?php
-		$time_key = $this_start . '-' . $this_end;
-		$time_title = isset($shift_template_titles[$time_key]) ? $shift_template_titles[$time_key] : $this->hc_time->formatTimeOfDay($this_start) . ' - ' . $this->hc_time->formatTimeOfDay($this_end);
-		?>
-		<?php echo $time_title; ?>
-	</li>
 
 	<?php foreach( $sha as $lid => $shs ) : ?>
-		<?php if( $location_count > 1 ) : ?>
-			<li>
-				<i class="icon-home"></i> <?php echo $shs[0]->location_name; ?>
-			</li>
-		<?php endif; ?>
 
 		<?php foreach( $shs as $sh ) : ?>
 			<?php
-				$delete_url = ci_site_url( 
-					array(
-						'admin/shifts/delete/' . $sh->id,
-						)
-					);
+			$delete_url = ci_site_url( 
+				array(
+					'admin/shifts/delete/' . $sh->id,
+					)
+				);
 			?>
-
-			<li class="dropdown">
-				<?php require( dirname(__FILE__) . '/_shift_dropdown.php' ); ?>
+			<li>
+				<?php 
+				$titles = array();
+				if( $location_count > 1 )
+					$titles[] = 'location';
+				$titles[] = 'staff';
+				$titles[] = 'time';
+				require( dirname(__FILE__) . '/_shift_dropdown.php' );
+				?>
 			</li>
 		<?php endforeach; ?>
 

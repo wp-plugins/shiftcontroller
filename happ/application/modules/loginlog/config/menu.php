@@ -1,8 +1,7 @@
 <?php
-//$config = array();
-$config[User_model::LEVEL_ADMIN]['conf']['loginlog'] = array(
-	'Login Log',
-	'loginlog/admin',
-	100
+$config = array();
+$config[ USER_MODEL::LEVEL_ADMIN . '/conf/loginlog' ] = array(
+	'title'	=> '<i class="fa fa-list"></i> ' . 'Login Log',
+	'link'	=> 'loginlog/admin',
 	);
 ?>

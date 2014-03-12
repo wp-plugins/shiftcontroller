@@ -15,13 +15,17 @@ class Shift_model extends _Timeblock_model
 			),
 		);
 
-	const STATUS_ACTIVE = 1;
-	const STATUS_DRAFT = 2;
+	const STATUS_ACTIVE = 1; // Published, With Staff
+	const STATUS_DRAFT = 2; // Not Published, No Staff
+	const STATUS_OPEN = 3; // not saved - Published, No Staff
+	const STATUS_PENDING = 4; // not saved - Not Published, With Staff
 
 	var $prop_text = array(
 		'status'	=> array(
 			self::STATUS_ACTIVE 	=> array( 'lang:shift_status_active',	'success' ),
 			self::STATUS_DRAFT		=> array( 'lang:shift_status_draft',	'warning' ),
+			self::STATUS_OPEN		=> array( 'lang:shift_status_open',		'danger' ),
+			self::STATUS_PENDING	=> array( 'lang:shift_status_pending',	'info' ),
 			),
 		);
 
@@ -85,11 +89,42 @@ class Shift_model extends _Timeblock_model
 			'label'		=> 'lang:shift_status',
 			'hide'		=> TRUE,
 			),
+		array(
+			'name'		=> 'has_trade',
+			'label'		=> 'lang:trade_request',
+			'type'		=> 'boolean',
+			'hide'		=> TRUE,
+			'default'	=> 0,
+			),
 		);
 
-	public function view_text()
+	public function get_status()
 	{
-		$return = parent::view_text();
+		/* ACTIVE	- published with staff */
+		/* OPEN		- published with no staff */
+		/* PENDING	- not published with staff */
+		/* DRAFT	- not published with no staff */
+
+		if( $this->status == self::STATUS_ACTIVE )
+		{
+			if( $this->user_id )
+				$return = self::STATUS_ACTIVE;
+			else
+				$return = self::STATUS_OPEN;
+		}
+		else
+		{
+			if( $this->user_id )
+				$return = self::STATUS_PENDING;
+			else
+				$return = self::STATUS_DRAFT;
+		}
+		return $return;
+	}
+
+	public function view_text( $skip = array() )
+	{
+		$return = parent::view_text( $skip );
 		unset( $return['start'] );
 		unset( $return['end'] );
 		unset( $return['status'] );
@@ -111,7 +146,7 @@ class Shift_model extends _Timeblock_model
 		$return = '';
 		if( $html )
 		{
-			$return .= '<i class="icon-time"></i> ';
+			$return .= '<i class="fa fa-clock-o"></i> ';
 		}
 		else
 		{
@@ -250,25 +285,6 @@ class Shift_model extends _Timeblock_model
 		if( $CI->hc_modules->exists('notes') )
 		{
 			$this->note->get()->delete_all();
-		}
-
-	/* delete trades */
-		if( $CI->hc_modules->exists('shift_trades') )
-		{
-			$this->trade->get()->delete_all();
-		}
-	}
-
-	protected function _after_save()
-	{
-		$changes = $this->get_changes();
-		if( isset($changes['id']) )
-		{
-			$log = array(
-				'action_name'		=> 'create',
-				'action_details'	=> ''
-				);
-			$this->_add_log( $log );
 		}
 	}
 }

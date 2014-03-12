@@ -12,10 +12,10 @@ if(
 	)
 )
 {
-	$config[USER_MODEL::LEVEL_STAFF]['wall'] = array(
-		lang('everyone_schedule'),
-		'wall',
-		50
+	$config[ USER_MODEL::LEVEL_STAFF . '/wall' ] = array(
+		'title'	=> '<i class="fa fa-calendar"></i> ' . lang('everyone_schedule'),
+		'link'	=> 'wall',
+		'order'	=> 50
 		);
 }
 ?>

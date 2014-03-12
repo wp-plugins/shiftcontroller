@@ -158,7 +158,18 @@ class CI_Config {
 							{
 								if (isset($this->config[$file][$k][$k2]))
 								{
-									$this->config[$file][$k][$k2] = array_merge($this->config[$file][$k][$k2], $v2);
+									foreach( $v2 as $k3 => $v3 )
+									{
+										if( isset($this->config[$file][$k][$k2][$k3]) && is_array($v3) )
+										{
+											$this->config[$file][$k][$k2][$k3] = array_merge($this->config[$file][$k][$k2][$k3], $v3);
+										}
+										else
+										{
+											$this->config[$file][$k][$k2][$k3] = $v3;
+										}
+									}
+//									$this->config[$file][$k][$k2] = array_merge($this->config[$file][$k][$k2], $v2);
 								}
 								else
 								{

@@ -54,7 +54,7 @@
 		<td>
 		<?php if( $ds['shift_count'] > 0 ): ?>
 			[<?php echo $ds['shift_count']; ?>]
-			<i class="icon-time"></i> <?php echo $this->hc_time->formatPeriodShort($ds['shift_duration'], 'hour'); ?> 
+			<i class="fa fa-clock-o"></i> <?php echo $this->hc_time->formatPeriodShort($ds['shift_duration'], 'hour'); ?> 
 			
 		<?php else : ?>
 			-

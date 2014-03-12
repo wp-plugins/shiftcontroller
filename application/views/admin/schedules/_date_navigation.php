@@ -1,4 +1,22 @@
 <?php
+$base_link_params = array(
+	$this->conf['path'], 'index',
+	'display',	$display,
+	'range',	$range
+	);
+
+switch( $display )
+{
+	case 'staff':
+		$base_link_params[] = 'id';
+		$base_link_params[] = $current_staff->id;
+		break;
+	case 'location':
+		$base_link_params[] = 'id';
+		$base_link_params[] = $current_location->id;
+		break;
+}
+
 $this->hc_time->setDateDb( $start_date );
 $month_matrix = $this->hc_time->getMonthMatrix( $end_date );
 
@@ -25,10 +43,38 @@ switch( $range )
 }
 ?>
 
-<div class="pagination">
-	<ul>
-		<li><a href="<?php echo ci_site_url(array($this->conf['path'], 'index', $display, $prev_date)); ?>">&lt;&lt;</a></li>
-		<li><a href="#"><strong><?php echo $nav_title; ?></strong></a></li>
-		<li><a href="<?php echo ci_site_url(array($this->conf['path'], 'index', $display, $next_date)); ?>">&gt;&gt;</a></li>
-	</ul>
-</div>
+<ul class="pagination">
+	<li>
+		<?php
+		$link_params = array(
+			'start', $prev_date
+			);
+		$link_params = array_merge( $base_link_params, $link_params );
+		?>
+		<a href="<?php echo ci_site_url($link_params); ?>">
+			&lt;&lt;
+		</a>
+	</li>
+	<li class="active">
+		<?php
+		$link_params = array(
+			'start', $start_date
+			);
+		$link_params = array_merge( $base_link_params, $link_params );
+		?>
+		<a href="<?php echo ci_site_url($link_params); ?>">
+			<?php echo $nav_title; ?>
+		</a>
+	</li>
+	<li>
+		<?php
+		$link_params = array(
+			'start', $next_date
+			);
+		$link_params = array_merge( $base_link_params, $link_params );
+		?>
+		<a href="<?php echo ci_site_url($link_params); ?>">
+			&gt;&gt;
+		</a>
+	</li>
+</ul>

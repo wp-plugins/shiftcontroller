@@ -51,7 +51,7 @@ class Schedule_model extends MY_Model_Virtual
 			}
 			else
 			{
-				$error = $this->{$this->model}->error->string;
+				$error = $sh->error->string;
 			}
 		}
 		return $count;
@@ -70,7 +70,7 @@ class Schedule_model extends MY_Model_Virtual
 			}
 			else
 			{
-				$error = $this->{$this->model}->error->string;
+				$error = $sh->error->string;
 			}
 		}
 		return $count;

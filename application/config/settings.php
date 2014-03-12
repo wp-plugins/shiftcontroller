@@ -57,3 +57,15 @@ $config['csv_separator'] = array(
 		';'	=> ';',
 		),
 	);
+
+$config['staff_pick_shifts'] = array(
+	'default' 	=> 1,
+	'label'		=> lang('staff_can_pick_up_shifts'),
+	'type'		=> 'checkbox',
+	);
+
+$config['approve_pick_shifts'] = array(
+	'default' 	=> 1,
+	'label'		=> lang('approve_shifts_pick_up'),
+	'type'		=> 'checkbox',
+	);

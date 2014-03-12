@@ -151,7 +151,7 @@ class User_model extends MY_model
 		$return = '';
 		if( $html )
 		{
-			$return .= '<i class="icon-user"></i> ';
+			$return .= '<i class="fa fa-user"></i> ';
 		}
 		$return .= $this->first_name . ' ' . $this->last_name;
 //		$return .= ' [' . $this->email . ']';

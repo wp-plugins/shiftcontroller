@@ -1,13 +1,7 @@
 <?php
 $config = array();
-$config[User_model::LEVEL_ADMIN]['conf'] = array(
-	lang('menu_conf'),
-	'',
-	100,
-	'wordpress' => array(
-		'Shortcode',
-		'wordpress/admin/shortcode',
-		100
-		),
+$config[USER_MODEL::LEVEL_ADMIN . '/conf/wordpress'] = array(
+	'title'	=> '<i class="fa fa-cog"></i> ' . 'Shortcode',
+	'link'	=> 'wordpress/admin/shortcode',
 	);
 ?>

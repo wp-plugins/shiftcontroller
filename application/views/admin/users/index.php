@@ -69,8 +69,10 @@ foreach( $entries as $e ){
 	if( $actions )
 	{
 		$action =<<<EOT
-<div class="dropdown navbar" style="margin: 0 0;">
-	$status_label <a class="dropdown-toggle" data-toggle="dropdown" href="#"><b class="caret"></b></a>
+<div class="dropdown">
+	$status_label <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+		<b class="caret"></b>
+	</a>
 	<ul class="dropdown-menu">
 		$actions
 	</ul>
@@ -86,7 +88,7 @@ EOT;
 	}
 ?>
 
-<ul class="nav nav-tabs">
+<ul class="nav nav-pills">
 <?php foreach( $statuses as $t => $count ) : ?>
 <?php
 			$tab_class = isset($status_classes[$t]) ? 'tab-' . $status_classes[$t] : '';
@@ -118,15 +120,16 @@ EOT;
 
 <?php if( count($entries) ) : ?>
 
-<?php echo $this->table->generate(); ?>
-<div class="row-fluid">
-<?php echo $this->pagination->create_links(); ?>
-</div>
+	<?php echo $this->table->generate(); ?>
+
+	<div class="row">
+	<?php echo $this->pagination->create_links(); ?>
+	</div>
 
 <?php else : ?>
 
-<p>
-<?php echo lang('common_none'); ?>
-</p>
+	<p>
+	<?php echo lang('common_none'); ?>
+	</p>
 
 <?php endif; ?>

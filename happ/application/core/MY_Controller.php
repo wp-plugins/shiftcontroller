@@ -18,7 +18,7 @@ class MY_Controller extends MX_Controller
 		{
 			if( ! ($this->input->is_ajax_request() OR $this->is_module()) )
 			{
-				$this->output->enable_profiler(TRUE);
+//				$this->output->enable_profiler(TRUE);
 			}
 		}
 
@@ -49,10 +49,12 @@ class MY_Controller extends MX_Controller
 		$this->load->library( array('form_validation', 'session', 'hc_bootstrap') );
 		$this->load->library( 'hc_modules' );
 		$this->load->library( 'conf/app_conf' );
+		$this->load->library('user_agent');
 
 	/* add module models paths for autoloading */
 		$modules = $this->config->item('modules');
 		$modules_locations = $this->config->item('modules_locations');
+
 		if( is_array($modules) )
 		{
 			reset($modules);
@@ -178,12 +180,25 @@ class MY_Controller extends MX_Controller
 			$inherit = $this->inherit_views ? $this->inherit_views . '/' . $file : '';
 			$builtin = $this->builtin_views . '/' . $file;
 
-			if( $inherit && $this->load->view_exists($inherit) )
-				$include_header = $inherit;
-			elseif( $this->load->view_exists($my) )
-				$include_header = $my;
-			elseif( $this->load->view_exists($builtin) )
-				$include_header = $builtin;
+			$conf = array();
+			if( strlen($view) )
+			{
+				$my_conf = $path . '/_conf.php';
+				if( $full_my_conf = $this->load->view_exists($my_conf) )
+				{
+					require( $full_my_conf );
+				}
+			}
+
+			if( ! (isset($conf['header']) && (! $conf['header'])) )
+			{
+				if( $inherit && $this->load->view_exists($inherit) )
+					$include_header = $inherit;
+				elseif( $this->load->view_exists($my) )
+					$include_header = $my;
+				elseif( $this->load->view_exists($builtin) )
+					$include_header = $builtin;
+			}
 
 		/* submenu */
 //			$no_submenu = $path . '/' . $view . '_nomenu';
@@ -261,6 +276,21 @@ class MY_Controller extends MX_Controller
 	function fix_path( $path )
 	{
 		$return = str_replace( '-', '_', $path );
+		return $return;
+	}
+
+	protected function parse_args( $args )
+	{
+		$return = array();
+		for( $ii = 0; $ii < count($args); $ii = $ii + 2 )
+		{
+			if( isset($args[$ii + 1]) )
+			{
+				$k = $args[$ii];
+				$v = $args[$ii + 1];
+				$return[ $k ] = $v;
+			}
+		}
 		return $return;
 	}
 

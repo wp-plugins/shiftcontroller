@@ -11,6 +11,7 @@ $lang['common_change_password'] = 'Change Password';
 $lang['common_list'] = 'List';
 $lang['common_view'] = 'View';
 $lang['common_edit'] = 'Edit';
+$lang['common_create'] = 'Create';
 $lang['common_update'] = 'Update';
 $lang['common_save'] = 'Save';
 $lang['common_go'] = 'Go';
@@ -61,9 +62,12 @@ $lang['common_approve'] = 'Approve';
 $lang['common_reject'] = 'Reject';
 $lang['common_nobody'] = 'Nobody';
 $lang['common_everyone'] = 'Everyone';
-$lang['common_csv_export'] = 'CSV Export';
+$lang['common_download'] = 'Download';
 $lang['common_sync_from'] = 'Sync From';
 $lang['common_not_allowed'] = 'You are not allowed to access this page';
+$lang['common_history'] = 'History';
+$lang['common_changed_attribute'] = 'Changed Attribute';
+$lang['common_na'] = 'N/A';
 
 $lang['profile_updated'] = 'Profile Updated';
 
@@ -123,6 +127,9 @@ $lang['conf_import_ok'] = '%s records imported';
 /* AUTH */
 $lang['auth_profile'] = 'Profile';
 $lang['auth_if_change_password'] = 'If changing password';
+$lang['auth_forgot_password'] = 'Forgot Password';
+$lang['auth_forgot_password_send'] = 'Send New Password';
+$lang['auth_forgot_password_help'] = 'Please enter your email address so we can send you an email to reset your password';
 $lang['auth_login_form_forgot_password'] = 'Forgot your password?';
 $lang['auth_password_change_successful'] = 'Password Successfully Changed';
 $lang['auth_forgot_password_successful'] = 'Password Reset Email Sent';
@@ -220,17 +227,32 @@ $lang['shift_delete'] = 'Delete Shift';
 $lang['shift_repeat_options'] = 'Repeat Options';
 $lang['shift_repeat_no'] = 'No Repeat';
 $lang['shift_status'] = 'Status';
+
 $lang['shift_status_active'] = 'Active';
+$lang['shift_status_active_help'] = 'Published, Staff Assigned';
+$lang['shift_status_open'] = 'Open';
+$lang['shift_status_open_help'] = 'Published, No Staff Assigned';
 $lang['shift_status_draft'] = 'Draft';
+$lang['shift_status_draft_help'] = 'Not Published, No Staff Assigned';
+$lang['shift_status_pending'] = 'Pending';
+$lang['shift_status_pending_help'] = 'Not Published, Staff Assigned';
+
 $lang['shift_publish'] = 'Publish';
 $lang['shift_unpublish'] = 'Unpublish';
 $lang['shift_conflict'] = 'Conflict';
 $lang['shift_conflicts'] = 'Conflicts';
 $lang['shift_no_conflicts'] = 'No Conflicts';
-$lang['shifts_published'] = 'Shifts Posted';
+
+$lang['shifts_published'] = 'Your Shift Posted';
+$lang['shifts_cancelled'] = 'Your Shift Cancelled';
+$lang['shifts_changed'] = 'Your Shift Changed';
+
 $lang['shift_list_trade'] = 'List For Trade';
 $lang['shift_has_trade'] = 'Listed For Trade';
 $lang['shift_pick_up'] = 'Pick Up';
+$lang['staff_can_pick_up_shifts'] = 'Staff Can Pick Up Free Shifts';
+$lang['approve_shifts_pick_up'] = 'Shifts Pick Up Approval Required';
+
 
 $lang['shift_group'] = 'This shift is a part of a series';
 $lang['shift_group_this_date'] = 'This Date Only';
@@ -239,18 +261,12 @@ $lang['shift_group_upcoming'] = 'All Upcoming Shifts In The Series';
 
 /* SHIFT TRADES */
 $lang['trade'] = 'Shift Trade';
+$lang['trade_request'] = 'Trade Request';
 $lang['trades'] = 'Shift Trades';
 $lang['trade_status'] = 'Status';
-$lang['trade_status_pending'] = 'Pending';
-$lang['trade_status_approved'] = 'Published';
-$lang['trade_status_denied'] = 'Denied';
-$lang['trade_status_accepted'] = 'Accepted';
-$lang['trade_status_completed'] = 'Completed';
-$lang['trade_recall'] = 'Recall';
+$lang['trade_recall'] = 'Recall Trade';
 $lang['trade_complete'] = 'Complete';
-$lang['trades_to_pick_up'] = 'Trades To Pick Up';
-$lang['trade_pick_up'] = 'Pick Up';
-$lang['trades_my'] = "My Trades";
+$lang['trade_list_approval_required'] = 'List For Trade Approval Required';
 
 /* SCHEDULES */
 $lang['schedule'] = 'Schedule';
@@ -261,8 +277,6 @@ $lang['schedules'] = 'Schedules';
 $lang['schedule_add'] = 'New Schedule';
 $lang['schedule_start'] = 'Start Date';
 $lang['schedule_end'] = 'End Date';
-$lang['schedule_by_staff'] = 'By Staff';
-$lang['schedule_by_location'] = 'By Location';
 $lang['schedule_publish'] = 'Publish Schedule';
 $lang['schedule_unpublish'] = 'Unpublish Schedule';
 $lang['schedule_published'] = 'Schedule Posted';

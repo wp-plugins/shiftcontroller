@@ -6,7 +6,7 @@ $ri = $CI->remote_integration();
 <?php	require( dirname(__FILE__) . '/head.php' ); ?>
 <?php endif; ?>
 
-<div class="hc">
+<div id="nts">
 <?php if( $ri ) : ?>
 	<div class="container-fluid">
 <?php else : ?>

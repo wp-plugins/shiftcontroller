@@ -1,8 +1,14 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class MY_Session extends CI_Session {
 	/* here we overwrite flash data operations */
-
 	var $my_prefix = 'nts_';
+	var $builtin_props = array(
+		'session_id',
+		'ip_address',
+		'user_agent',
+		'last_activity',
+		'user_data'
+		);
 
 	public function __construct($params = array())
 	{
@@ -50,7 +56,8 @@ class MY_Session extends CI_Session {
 		{
 			foreach ($newdata as $key => $val)
 			{
-				if(  substr($key, 0, strlen($this->flashdata_key)) == $this->flashdata_key )
+//				if( substr($key, 0, strlen($this->flashdata_key)) == $this->flashdata_key )
+				if( ! in_array($key, $this->builtin_props) )
 				{
 					$my_key = $this->my_prefix . $key;
 					unset($_SESSION[$my_key]);
@@ -81,7 +88,7 @@ class MY_Session extends CI_Session {
 			$parent_newdata = array();
 			foreach ($newdata as $key => $val)
 			{
-				if(  substr($key, 0, strlen($this->flashdata_key)) == $this->flashdata_key )
+				if( ! in_array($key, $this->builtin_props) )
 				{
 					$my_key = $this->my_prefix . $key;
 					$_SESSION[$my_key] = $val;

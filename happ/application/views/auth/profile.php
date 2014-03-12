@@ -5,15 +5,23 @@
 <?php echo form_open('', array('class' => 'form-horizontal form-condensed')); ?>
 
 <?php
-echo hc_bootstrap::input(
-	$this->hc_form->input($email),
+echo Hc_html::wrap_input(
 	lang('common_email'),
-	$this->hc_form->error($email['name'])
+	$this->hc_form->build_input($email)
 	);
 ?>
 
-<div class="form-actions">
-<?php echo form_submit( array('name' => 'submit', 'class' => 'btn btn-primary'), lang('common_save'));?>
-</div>
+<?php
+echo hc_html::wrap_input(
+	'',
+	form_submit( 
+		array(
+			'name' => 'submit',
+			'class' => 'btn btn-default'
+			),
+		lang('common_save')
+		)
+	);
+?>
 
 <?php echo form_close();?>

@@ -3,6 +3,10 @@ class Timeoffs_notify
 {
 	function save( $object, $relations = NULL )
 	{
+		$CI =& ci_get_instance();
+		if( ! isset($CI->hc_notifier) )
+			return;
+
 		$changes = $object->get_changes( $relations );
 
 	/* published? */
@@ -17,7 +21,6 @@ class Timeoffs_notify
 	private function _send( $timeoff, $relations = NULL )
 	{
 		$CI =& ci_get_instance();
-
 		$staff = NULL;
 
 		if( $relations && isset($relations['user']) )

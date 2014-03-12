@@ -108,7 +108,7 @@ class Timeoff_model extends _Timeblock_model
 		$return = '';
 		if( $html )
 		{
-			$return .= '<i class="icon-coffee"></i> ';
+			$return .= '<i class="fa-fw fa fa-coffee"></i> ';
 		}
 		else
 		{
@@ -119,9 +119,9 @@ class Timeoff_model extends _Timeblock_model
 		return $return;
 	}
 
-	public function view_text()
+	public function view_text( $skip = array() )
 	{
-		$return = parent::view_text();
+		$return = parent::view_text( $skip );
 		unset( $return['date_end'] );
 		unset( $return['start'] );
 		unset( $return['end'] );
@@ -181,6 +181,20 @@ class Timeoff_model extends _Timeblock_model
 	public function conflicts( $shifts = NULL, $timeoffs = NULL, $force_date = NULL )
 	{
 		return parent::conflicts( TRUE, FALSE, $shifts, $timeoffs, $force_date );
+	}
+
+	public function get_duration()
+	{
+		if( $this->date_end == $this->date )
+			$return = $this->end - $this->start;
+		else
+		{
+			$CI =& ci_get_instance();
+			$CI->hc_time->setDateDb( $this->date_end );
+			$days_differ = $CI->hc_time->differ( $this->date );
+			$return = 24*60*60 * ($days_differ + 1);
+		}
+		return $return;
 	}
 
 	protected function _before_delete()

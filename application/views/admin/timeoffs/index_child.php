@@ -27,90 +27,86 @@ if( in_array($status, array(TIMEOFF_MODEL::STATUS_ACTIVE, TIMEOFF_MODEL::STATUS_
 	$conflicts = $e->conflicts();
 	if( count($conflicts) > 0 )
 	{
-		$class .= ' alert-error';
+		$class .= ' alert-danger';
 	}
 }
 
 $this->hc_time->setDateDb( $e->date );
-
-$date_view = $this->hc_time->formatDate();
 if( $e->date != $e->date_end )
 {
-	$this->hc_time->setDateDb( $e->date_end );
-	$date_view .= ' - ' . $this->hc_time->formatDate();
+	$date_view = $this->hc_time->formatDateRange( $e->date, $e->date_end );
 }
 else
 {
-	$date_view .= ' [' . $this->hc_time->formatPeriodOfDay($e->start, $e->end) . ']';
+	$date_view = $this->hc_time->formatDate();
 }
+$time_view = $this->hc_time->formatPeriodOfDay($e->start, $e->end)
 ?>
+
+<div class="pull-right" style="margin: 0.5em 0.5em;">
+	<?php
+	echo $this->hc_form->input( 
+		array(
+			'name'	=> 'id[]',
+			'type'	=> 'checkbox',
+			'value'	=> $e->id,
+			),
+		FALSE
+		);
+	?>
+</div>
+
 <div class="<?php echo $class; ?>">
 
-<?php echo ci_anchor( array($this->conf['path'], 'delete', $e->id), '&times;', 'class="close text-error hc-confirm" title="' . lang('common_delete') . '"' ); ?>
-
-<ul class="unstyled">
-
-<li>
-<?php echo ci_anchor( array($this->conf['path'], 'edit', $e->id), '<strong>' . $date_view . '</strong>' ); ?>
-</li>
-
-<li>
-<i class="icon-user"></i> <?php echo $e->user->get()->full_name(); ?>
-</li>
-
-<li>
-<?php if( count($conflicts) > 0 ) : ?>
-	<i class="icon-exclamation-sign text-error"></i> <?php echo lang('shift_conflicts'); ?>
-<?php else : ?>
-	<i class="icon-ok text-success"></i> <?php echo lang('shift_no_conflicts'); ?>
+<?php if( 0 ) : ?>
+	<?php echo ci_anchor( array($this->conf['path'], 'delete', $e->id), '&times;', 'class="close text-danger hc-confirm" title="' . lang('common_delete') . '"' ); ?>
 <?php endif; ?>
 
-<?php if( count($notes) > 0 ) : ?>
-<?php
+<ul class="list-unstyled list-separated">
+	<li class="dropdown">
+		<i class="fa-fw fa fa-calendar"></i> 
+		<a class="" href="#" data-toggle="dropdown">
+			<?php echo $date_view; ?> <b class="caret"></b>
+		</a>
+
+		<?php
+		$to = $e;
+		$_skip_title = TRUE;
+		require( dirname(__FILE__) . '/../schedules/_timeoff_dropdown.php' );
+		?>
+	</li>
+
+	<li>
+		<i class="fa-fw fa fa-clock-o"></i> <?php echo $time_view; ?>
+	</li>
+
+	<li>
+		<i class="fa-fw fa fa-user"></i> <?php echo $e->user->get()->full_name(); ?>
+	</li>
+
+	<li>
+		<?php if( count($conflicts) > 0 ) : ?>
+			<i class="fa-fw fa fa-exclamation-circle text-danger"></i> <?php echo lang('shift_conflicts'); ?>
+		<?php else : ?>
+			<i class="fa-fw fa fa-check text-success"></i> <?php echo lang('shift_no_conflicts'); ?>
+		<?php endif; ?>
+	</li>
+
+	<?php if( count($notes) > 0 ) : ?>
+		<?php
 		$notes_text = array();
 		reset( $notes );
 		foreach( $notes as $n )
 		{
 			$notes_text[] = $n->content;
 		}
-		$notes_text = join( "\n", $notes_text );
-?>
-	<div class="pull-right">
-	<i class="icon-comment-alt" title="<?php echo $notes_text; ?>"></i> <?php echo count($notes); ?>
-	</div>
-<?php endif; ?>
-</li>
-
-<!-- actions -->
-<li>
-	<ul class="inline">
-		<li>
-		<?php 
-		echo hc_form_input( 
-			array(
-				'name'	=> 'id[]',
-				'type'	=> 'checkbox',
-				'value'	=> $e->id,
-				),
-			array(),
-			array(),
-			FALSE
-			);
+		$notes_text = join( ";<br>", $notes_text );
 		?>
+		<li style="font-style: italic;">
+			<i class="fa-fw fa fa-comment-o"></i> 
+			<?php echo $notes_text; ?>
 		</li>
-		<li>
-			<ul class="unstyled">
-			<?php 
-				$to = $e;
-				$_dropdown_decorate = FALSE;
-				$_dropdown_toggler = 'btn';
-				require( dirname(__FILE__) . '/../schedules/_timeoff_dropdown.php' );
-			?>
-			</ul>
-		</li>
-	</ul>
-</li>
-
+	<?php endif; ?>
 </ul>
 
 </div>
