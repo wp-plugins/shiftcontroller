@@ -12,6 +12,7 @@ Author: ShiftController
 Version: 2.2.0
 Author URI: http://www.shiftcontroller.com/
 */
+error_reporting( E_ERROR & ~E_NOTICE );
 
 global $wp_version;
 if (version_compare($wp_version, "3.3", "<"))
@@ -57,6 +58,7 @@ class ShiftController extends hcWpBase2
 			array(),
 			TRUE
 			);
+		$this->query_prefix = '?/';
 
 		require( $this->happ_path . '/assets/files.php' );
 		reset( $css_files );
@@ -112,6 +114,7 @@ class ShiftController extends hcWpBase2
 		{
 			if( parent::front_init() )
 			{
+				$GLOBALS['NTS_CONFIG'][$this->app]['FORCE_USER_LEVEL'] = 0;
 			// action
 				require( $this->happ_path . '/application/index_action.php' );
 				$GLOBALS['NTS_CONFIG'][$this->app]['ACTION_STARTED'] = 1;

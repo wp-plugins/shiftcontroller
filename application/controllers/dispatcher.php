@@ -5,10 +5,10 @@ class Dispatcher_controller extends Front_controller
 	function __construct()
 	{
 		parent::__construct();
+		$app = $this->config->item('nts_app');
 
 		if ( ! $this->auth->check() )
 		{
-			$app = $this->config->item('nts_app');
 			if( isset($GLOBALS['NTS_CONFIG'][$app]['FORCE_LOGIN_ID']) )
 			{
 				$id = $GLOBALS['NTS_CONFIG'][$app]['FORCE_LOGIN_ID'];
@@ -40,9 +40,14 @@ class Dispatcher_controller extends Front_controller
 				$user_level = $test_user->level;
 			}
 		}
+
+		if( isset($GLOBALS['NTS_CONFIG'][$app]['FORCE_USER_LEVEL']) )
+		{
+			$user_level = $GLOBALS['NTS_CONFIG'][$app]['FORCE_USER_LEVEL'];
+		}
+
 		$wall_schedule_display = $this->app_conf->get('wall_schedule_display');
 		$allowed = FALSE;
-
 		switch( $user_level )
 		{
 			case 0:

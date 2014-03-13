@@ -180,6 +180,27 @@ class hcWpBase2
 
 		if( is_admin() )
 			return $return;
+
+		if( ! (isset($post) && $post) )
+			return $return;
+
+		$pattern = '\[' . $this->slug . '\]';
+		if(
+			preg_match('/'. $pattern .'/s', $post->post_content, $matches)
+			)
+		{
+			$return = TRUE;
+		}
+		return $return;
+	}
+
+	public function is_me_front_()
+	{
+		global $post;
+		$return = FALSE;
+
+		if( is_admin() )
+			return $return;
 		$pattern = get_shortcode_regex();
 		if(
 			$post && 

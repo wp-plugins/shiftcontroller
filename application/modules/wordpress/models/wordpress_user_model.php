@@ -29,6 +29,7 @@ class Wordpress_User_Model
 
 			$k = 'wordpress_' . 'role_' . $wp_role;
 			$user_level = $CI->app_conf->get( $k );
+
 			if( ! $user_level )
 				return;
 
@@ -44,6 +45,31 @@ class Wordpress_User_Model
 		else
 		{
 			$user->first_name = $wuser->display_name;
+		}
+
+		if( $wuser->user_email )
+		{
+			if( $is_new OR ($wuser->user_email != $user->email) )
+			{
+				// check if this email already exists
+				$um = new User_Model;
+				$um->where( 'email', $wuser->user_email )->get();
+				if( $um->exists() )
+				{
+					if( $is_new )
+					{
+						// update id in our table
+						$um->where('id', $um->id)->update('id', $id);
+						$user->id = $id;
+					}
+					else
+					{
+						$user->id = $um->id;
+					}
+					$is_new = FALSE;
+				}
+				$user->email = $wuser->user_email;
+			}
 		}
 
 		if( 
