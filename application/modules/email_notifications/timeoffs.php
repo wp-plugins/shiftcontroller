@@ -66,7 +66,6 @@ class Timeoffs_notify
 	// send to all admins too
 		$um = new User_model;
 		$um
-//			->where( 'level',	USER_MODEL::LEVEL_ADMIN )
 			->where_in( 'level',	array(USER_MODEL::LEVEL_MANAGER, USER_MODEL::LEVEL_ADMIN) )
 			->where( 'active',	USER_MODEL::STATUS_ACTIVE )
 			;

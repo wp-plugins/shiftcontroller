@@ -36,6 +36,12 @@ if( file_exists($dev_file) )
 	require( $dev_file );
 }
 
+$custom_file = $GLOBALS['NTS_APPPATH'] . '/../config.php';
+if( file_exists($custom_file) )
+{
+	require( $custom_file );
+}
+
 include( APPPATH . 'version.php' );
 
 $config['controller_suffix'] = '_controller';

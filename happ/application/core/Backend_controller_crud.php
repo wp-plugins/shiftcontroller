@@ -312,9 +312,22 @@ $this->conf = array(
 			if( $supplied !== FALSE )
 			{
 				$model_class = $rel_props['class'];
-				$r = new $model_class;
-				$r->get_by_id( $supplied );
-				$relations[$fname] = $r;
+				if( is_array($supplied) )
+				{
+					$relations[$fname] = array();
+					foreach( $supplied as $this_supplied )
+					{
+						$r = new $model_class;
+						$r->get_by_id( $this_supplied );
+						$relations[$fname][] = $r;
+					}
+				}
+				else
+				{
+					$r = new $model_class;
+					$r->get_by_id( $supplied );
+					$relations[$fname] = $r;
+				}
 //				$this->{$this->model}->{$fname} = $supplied;
 			}
 			else
@@ -371,7 +384,8 @@ $this->conf = array(
 
 	protected function _load( $id )
 	{
-		$related_fields = array_merge( $this->{$this->model}->has_one, $this->{$this->model}->has_many );
+//		$related_fields = array_merge( $this->{$this->model}->has_one, $this->{$this->model}->has_many );
+		$related_fields = array_merge( $this->{$this->model}->has_one );
 		if( ! $this->{$this->model}->id )
 		{
 			reset( $related_fields );

@@ -138,6 +138,11 @@ class Hc_auth
 		return $this->user;
 	}
 
+	public function reset_user()
+	{
+		$this->user = NULL;
+	}
+
 	public function logout()
 	{
 		$this->session->unset_userdata('user_id');

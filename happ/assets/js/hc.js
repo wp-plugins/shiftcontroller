@@ -57,15 +57,44 @@ function hc_click_ajax_loader( obj ){
 	}
 
 /* search in children */
+
 	var myParent = obj.closest( '.hc-ajax-parent' );
 	var targetDiv = myParent.find('.hc-ajax-container');
 
-	targetDiv.show();
-	targetDiv.addClass( 'hc-loading' );
-	targetDiv.data( 'targetUrl', targetUrl );
-	targetDiv.load( targetUrl, function(){
-		targetDiv.removeClass( 'hc-loading' );
-		});
+	if( targetDiv.length )
+	{
+		var highlightTarget = ( targetDiv.is(':visible') && (targetDiv.html().length > 0) );
+		if( highlightTarget )
+		{
+			targetDiv.addClass( 'hc-loading' );
+		}
+		else
+		{
+			targetDiv.show();
+			myParent.addClass( 'hc-loading' );
+		}
+
+		targetDiv.data( 'targetUrl', targetUrl );
+		targetDiv.load( targetUrl, function(){
+			if( highlightTarget )
+			{
+				targetDiv.removeClass( 'hc-loading' );
+			}
+			else
+			{
+				myParent.removeClass( 'hc-loading' );
+			}
+			});
+	}
+	else // append after parent
+	{
+		myParent.addClass( 'hc-loading' );
+		jQuery.get( targetUrl, function(data){
+			myParent.after( data );
+			myParent.removeClass( 'hc-loading' );
+			});
+	}
+
 	return false;
 }
 

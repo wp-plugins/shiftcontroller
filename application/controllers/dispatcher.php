@@ -26,6 +26,7 @@ class Dispatcher_controller extends Front_controller
 				$model_name = $ri . '_User_Model';
 				$um = new $model_name;
 				$um->sync( $id );
+				$this->auth->reset_user();
 			}
 		}
 

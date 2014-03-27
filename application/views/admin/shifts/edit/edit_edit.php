@@ -40,12 +40,32 @@ echo Hc_html::wrap_input(
 	echo $this->hc_form->input($fields['location']);
 	?>
 <?php endif; ?>
+
 <?php
+/*
 echo Hc_html::wrap_input(
 	$fields['user']['label'],
 	$this->hc_form->build_input( $fields['user'] )
 	);
+*/
 ?>
+
+<?php if( $object->user_id ) : ?>
+	<?php
+	echo Hc_html::wrap_input(
+		$fields['user']['label'],
+		$object->user->title(TRUE)
+		);
+	?>
+<?php else : ?>
+	<?php
+	echo Hc_html::wrap_input(
+		$fields['user']['label'],
+		lang('shift_not_assigned')
+		);
+	?>
+<?php endif; ?>
+
 <?php
 $btns = array();
 $btns[] = form_submit(

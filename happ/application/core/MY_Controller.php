@@ -18,7 +18,7 @@ class MY_Controller extends MX_Controller
 		{
 			if( ! ($this->input->is_ajax_request() OR $this->is_module()) )
 			{
-//				$this->output->enable_profiler(TRUE);
+				$this->output->enable_profiler(TRUE);
 			}
 		}
 

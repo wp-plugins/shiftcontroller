@@ -264,7 +264,17 @@ function hc_form_input(
 				break;
 
 			case 'dropdown':
-				$out .= form_dropdown($f['name'], $f['options'], set_value($f['name'], $default), $extra);
+				if( isset($f['id']) )
+					$extra .= ' id="' . $f['id'] . '"';
+
+				$this_name = $f['name'];
+				$multiple = (strpos($extra, 'multiple') !== FALSE);
+				if( $multiple )
+				{
+					$this_name = $f['name'] . '[]';
+				}
+				$out .= form_dropdown($this_name, $f['options'], set_value($f['name'], $default), $extra);
+
 				if( $text_after )
 					$out .= '&nbsp' . $text_after;
 				break;
@@ -326,6 +336,37 @@ function hc_form_input(
 				{
 					$out .= form_checkbox( $f['name'], $value, $checked, $extra );
 				}
+
+				if( $text_after )
+					$out .= '&nbsp' . $text_after;
+				break;
+
+			case 'checkbox_set':
+				if( $text_before )
+					$out .= $text_before . '&nbsp';
+
+				$value = isset($f['value']) ? $f['value'] : $default;
+				if( ! is_array($value) )
+					$value = array($value);
+				$this_out = array();
+				foreach( $f['options'] as $option_value => $option_label )
+				{
+					$checkbox_field = array(
+						'name'		=> $f['name'] . '[]',
+						'type'		=> 'checkbox',
+						'value'		=> $option_value,
+						);
+
+					$checked = in_array($option_value, $value) ? TRUE : FALSE;
+					$this_out[] = '<div class="checkbox checkbox-inline">';
+					$this_out[] = 
+						'<label>' . 
+						form_checkbox( $checkbox_field, $option_value, $checked ) .
+						$option_label .
+						'</label>';
+					$this_out[] = '</div>';
+				}
+				$out .= join( ' ', $this_out );
 
 				if( $text_after )
 					$out .= '&nbsp' . $text_after;

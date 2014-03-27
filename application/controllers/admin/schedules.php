@@ -16,7 +16,7 @@ class Schedules_controller extends Backend_controller
 
 	/* check how many staff do we have */
 		$um = new User_Model;
-		$staff_count = $um->count();
+		$staff_count = $um->count_staff();
 		$this->data['staff_count'] = $staff_count;
 
 		$um = new User_Model;
@@ -522,18 +522,9 @@ class Schedules_controller extends Backend_controller
 		$this->data['end_date'] = $end_date;
 		$this->data['range'] = $range;
 
-	/* remove inactive staff */
-		if( in_array($display, array('staff', 'stats', 'exportstats')) )
-		{
-			$staff_ids = array_keys( $this->data['staffs'] );
-			foreach( $staff_ids as $staff_id )
-			{
-				if( $this->data['staffs'][$staff_id]->active != USER_MODEL::STATUS_ACTIVE )
-				{
-					unset( $this->data['staffs'][$staff_id] );
-				}
-			}
-		}
+	/* working staff */
+		$um = new User_Model;
+		$this->data['working_staff'] = $um->get_staff();
 
 		$lm = new Location_Model;
 		$locations = $lm

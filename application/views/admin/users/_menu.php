@@ -11,7 +11,10 @@ if( ! $ri )
 }
 else
 {
-	$menu['add'] = ci_anchor( array($ri, $this->conf['path'], 'add'), '<i class="fa fa-plus-square-o"></i>' . ' ' . lang('common_add') . ' [' . ucfirst($ri) . ']', '' );
+	if( ! $CI->config->item('ri_disable_add_user') )
+	{
+		$menu['add'] = ci_anchor( array($ri, $this->conf['path'], 'add'), '<i class="fa fa-plus-square-o"></i>' . ' ' . lang('common_add') . ' [' . ucfirst($ri) . ']', '' );
+	}
 	$menu['sync'] = ci_anchor( array($ri, $this->conf['path'], 'sync'), '<i class="fa fa-download"></i>' . ' ' . lang('common_sync_from') . ' ' . ucfirst($ri), '' );
 }
 

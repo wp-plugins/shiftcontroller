@@ -13,12 +13,20 @@ if( ! $ri )
 }
 else
 {
-	$menu[$ri . '_edit']	= ci_anchor( array($ri, 'admin/users', 'edit', $object->id), '<i class="fa fa-edit"></i>' . ' ' . lang('common_edit') . ' [' . ucfirst($ri) . ']', '' );
+	if( ! $CI->config->item('ri_disable_edit_user') )
+	{
+		$menu[$ri . '_edit']	= ci_anchor( array($ri, 'admin/users', 'edit', $object->id), '<i class="fa fa-edit"></i>' . ' ' . lang('common_edit') . ' [' . ucfirst($ri) . ']', '' );
+	}
 }
 
 if( $this->hc_modules->exists('loginlog') )
 {
-	$menu['loginlog'] = ci_anchor( array('loginlog/admin', 'index', $object->id), '<i class="fa fa-list"></i>' . ' ' . 'Login Log' );
+	$CI =& ci_get_instance();
+	$ri = $CI->remote_integration();
+	if( (! $ri) OR (! $CI->config->item('ri_disable_loginlog')) )
+	{
+		$menu['loginlog'] = ci_anchor( array('loginlog/admin', 'index', $object->id), '<i class="fa fa-list"></i>' . ' ' . 'Login Log' );
+	}
 }
 
 $menu['delete'] = ci_anchor( array('admin/users',	'delete', $object->id), '<i class="fa fa-times text-danger"></i>' . ' ' . lang('common_delete') );

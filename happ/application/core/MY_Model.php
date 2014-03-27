@@ -141,20 +141,25 @@ class MY_model extends DataMapper
 		$class = get_class($this);
 		if( ! isset(self::$titles[$class]) )
 		{
-			$return = array();
-			$this->clear();
-			$select = $this->_build_title_select();
-			$this->select( 'id' );
-			$this->select( 'CONCAT(' . $select . ') AS title', FALSE );
-			$this->get();
-
-			foreach( $this as $u )
-			{
-				$return[ $u->id ] = $u->title;
-			}
-			self::$titles[$class] = $return;
+			self::$titles[$class] = $this->_load_titles();
 		}
 		return self::$titles[$class];
+	}
+
+	protected function _load_titles()
+	{
+		$return = array();
+		$this->clear();
+		$select = $this->_build_title_select();
+		$this->select( 'id' );
+		$this->select( 'CONCAT(' . $select . ') AS title', FALSE );
+		$this->get();
+
+		foreach( $this as $u )
+		{
+			$return[ $u->id ] = $u->title;
+		}
+		return $return;
 	}
 
 	function csv_upload( $file_name = 'userfile', $separator = ',' )
@@ -403,9 +408,13 @@ class MY_model extends DataMapper
 					$other_ids = array_keys( $other_titles );
 					$return[$fn]['type'] = 'hidden';
 					$return[$fn]['default'] = $other_ids[0];
+					$options = NULL;
 				}
 			}
-			$return[$fn]['options'] = $options;
+			if( $options === NULL )
+				unset( $return[$fn]['options'] );
+			else
+				$return[$fn]['options'] = $options;
 		}
 		return $return;
 	}

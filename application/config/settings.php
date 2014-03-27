@@ -58,6 +58,19 @@ $config['csv_separator'] = array(
 		),
 	);
 
+$config['working_levels'] = array(
+	'default' 	=> array(USER_MODEL::LEVEL_STAFF, USER_MODEL::LEVEL_MANAGER, USER_MODEL::LEVEL_ADMIN),
+	'label'		=> lang('staff_who_can_work'),
+	'type'		=> 'checkbox_set',
+	'options'	=> array(
+		USER_MODEL::LEVEL_STAFF		=> lang('user_level_staff'),
+		USER_MODEL::LEVEL_MANAGER	=> lang('user_level_manager'),
+		USER_MODEL::LEVEL_ADMIN		=> lang('user_level_admin'),
+		),
+	'rules'		=> 'required'
+	);
+
+
 $config['staff_pick_shifts'] = array(
 	'default' 	=> 1,
 	'label'		=> lang('staff_can_pick_up_shifts'),

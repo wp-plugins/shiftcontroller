@@ -135,7 +135,7 @@ class Timeoff_model extends _Timeblock_model
 		$CI =& ci_get_instance();
 		$CI->hc_time->setDateDb( $this->date );
 
-		$return .= $CI->hc_time->formatDate();
+		$return .= $CI->hc_time->formatWeekdayShort() . ', ' . $CI->hc_time->formatDate();
 		if( $this->date == $this->date_end )
 		{
 			$return .= ' [' . $CI->hc_time->formatPeriodOfDay($this->start, $this->end) . ']';
@@ -143,7 +143,7 @@ class Timeoff_model extends _Timeblock_model
 		else
 		{
 			$CI->hc_time->setDateDb( $this->date_end );
-			$return .= ' - ' . $CI->hc_time->formatDate();;
+			$return .= ' - ' . $CI->hc_time->formatWeekdayShort() . ', ' . $CI->hc_time->formatDate();;
 		}
 		return $return;
 	}

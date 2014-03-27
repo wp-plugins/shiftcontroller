@@ -39,18 +39,30 @@ require( dirname(__FILE__) . '/edit_edit.php' );
 $tab_content['edit'] = ob_get_contents();
 ob_end_clean();
 
+/* ASSIGN STAFF */
+$label = $object->user_id ? lang('shift_change_staff') : lang('shift_assign_staff');
+$tabs['assign'] = '<i class="fa fa-user"></i> ' . $label;
+$tab_content['assign'] = 
+	'<ul class="list-unstyled list-separated">' . 
+	Modules::run('admin/shifts/edit/assign', $object->id) .
+	'</u>'
+	;
+
 /* CONFLICTS */
-if( $conflicts )
+if( $object->user_id )
 {
-	$tabs['conflicts'] = '<i class="fa fa-exclamation-circle text-danger"></i> ' . lang('shift_conflicts');
-	ob_start();
-	require( dirname(__FILE__) . '/edit_conflicts.php' );
-	$tab_content['conflicts'] = ob_get_contents();
-	ob_end_clean();
-}
-else
-{
-	$tabs['_conflicts'] = '<i class="fa fa-check text-success"></i> ' . lang('shift_no_conflicts');
+	if( $conflicts )
+	{
+		$tabs['conflicts'] = '<i class="fa fa-exclamation-circle text-danger"></i> ' . lang('shift_conflicts');
+		ob_start();
+		require( dirname(__FILE__) . '/edit_conflicts.php' );
+		$tab_content['conflicts'] = ob_get_contents();
+		ob_end_clean();
+	}
+	else
+	{
+		$tabs['_conflicts'] = '<i class="fa fa-check text-success"></i> ' . lang('shift_no_conflicts');
+	}
 }
 
 /* NOTES */

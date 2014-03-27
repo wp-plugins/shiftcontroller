@@ -22,11 +22,13 @@ class Shifts_notify
 			'msg'		=> 'shifts_cancelled',
 			'to'		=> 'old',
 			'change'	=> array('user_id'),
+			'nochange'	=> array('id'),
 			),
 		array(
 			'msg'		=> 'shifts_cancelled',
 			'to'		=> 'current',
 			'change'	=> array('status'),
+			'nochange'	=> array('id'),
 			'when'		=> array(
 				'status'	=> SHIFT_MODEL::STATUS_DRAFT
 				)
@@ -34,7 +36,7 @@ class Shifts_notify
 		array(
 			'msg'		=> 'shifts_changed',
 			'to'		=> 'current',
-			'nochange'	=> array('user_id'),
+			'nochange'	=> array('user_id', 'status'),
 			'when'		=> array(
 				'status'	=> SHIFT_MODEL::STATUS_ACTIVE
 				)
@@ -56,8 +58,10 @@ class Shifts_notify
 
 		$msgs = array();
 		reset( $this->notifications );
+		$nii = -1;
 		foreach( $this->notifications as $n )
 		{
+			$nii++;
 			$skip = FALSE;
 			if( isset($n['change']) )
 			{
@@ -125,16 +129,20 @@ class Shifts_notify
 
 			foreach( $staffs as $staff_type )
 			{
+				$staff = NULL;
 				if( $staff_type == 'old' )
 				{
-					$staff = new User_Model;
-					$staff->get_by_id( $changes['user_id'] );
+					if( $changes['user_id'] )
+					{
+						$staff = new User_Model;
+						$staff->get_by_id( $changes['user_id'] );
+					}
 				}
 				else
 				{
 					$staff = $object->user->get();
 				}
-				if( ! $staff->exists() )
+				if( (! $staff) OR (! $staff->exists()) )
 					continue;
 
 				$CI->hc_notifier->enqueue_message( $msg_id, $staff, $key );

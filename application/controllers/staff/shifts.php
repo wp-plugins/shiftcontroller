@@ -108,16 +108,24 @@ class Shifts_controller extends Backend_controller_crud
 							->where( 'user_id <> ', $my_user_id )
 							->where( 'has_trade <>', 0 )
 						->group_end()
+					;
 
+				$staff_can_pickup = $this->app_conf->get('staff_pick_shifts');
+				if( $staff_can_pickup )
+				{
+					$sm
 						->or_group_start()
 							->or_where( 'user_id IS ', 'NULL', FALSE )
 							->or_where( 'user_id', 0 )
-						->group_end()
-					->group_end()
-					;
+						->group_end();
+				}
+					$sm->group_end();
+
 				break;
 		}
+
 		$this->data['shifts'] = $sm->get()->all;
+
 	// timeoffs
 		$this->data['timeoffs'] = $this->auth->user()->timeoff
 			->where( 'date_end >=', $today )

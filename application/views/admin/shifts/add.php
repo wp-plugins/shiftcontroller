@@ -61,9 +61,74 @@ echo Hc_html::wrap_input(
 <?php endif; ?>
 
 <?php
+echo $this->hc_form->input(
+	array(
+		'name'	=> 'assign',
+		'type'	=> 'hidden'
+		)
+	);
+?>
+
+<?php
 echo Hc_html::wrap_input(
 	$fields['user']['label'],
-	$this->hc_form->build_input($fields['user'])
+	array(
+		'',
+		Hc_bootstrap::nav_tabs(
+			array(
+				'later'	=> lang('common_select_later'),
+				'now'	=> lang('common_select_now'),
+				),
+			$this->hc_form->get_default('assign'),
+			'assign',
+			'',
+			'style="margin: 0 0;"'
+			)
+		)
+	);
+?>
+
+<?php
+$more_user_field = '';
+if( $fields['user']['type'] == 'hidden' )
+{
+	$default_user = new User_Model;
+	$default_user->get_by_id( $fields['user']['default'] );
+	$more_user_field = $default_user->title( TRUE );
+}
+else
+{
+	unset( $fields['user']['options'][0] );
+	$fields['user']['extra']['multiple'] = 'multiple';
+	$fields['user']['extra']['class'] = 'hc-multiselect';
+}
+
+echo hc_bootstrap::tab_content(
+	array(
+		'later'	=> 
+			Hc_html::wrap_input(
+				lang('shift_staff_count'),
+				$this->hc_form->build_input(
+					array(
+						'name'		=> 'count',
+						'type'		=> 'text',
+						'size'		=> 4,
+						'default'	=> 1,
+						)
+					)
+				)
+		,
+		'now'	=> 
+			Hc_html::wrap_input(
+				'',
+				array(
+					$this->hc_form->build_input($fields['user']),
+					$more_user_field
+					)
+				)
+		,
+		),
+	$this->hc_form->get_default('assign')
 	);
 ?>
 

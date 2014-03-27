@@ -4,7 +4,7 @@ Contributors: HitCode
 Tags: staff scheduling, shift scheduling, employee scheduling, rota shift scheduling
 License: GPLv2 or later
 
-Stable tag: 2.2.1
+Stable tag: 2.2.2
 Requires at least: 3.3
 Tested up to: 3.7
 
@@ -40,6 +40,12 @@ Author URI: http://www.shiftcontroller.com
 The upgrade is simply - upload everything up again to your `/wp-content/plugins/` directory, then go to the ShiftController menu item in the admin panel. It will automatically start the upgrade process if any needed.
 
 == Changelog ==
+
+= 2.2.2 =
+* Configure which user levels can take shifts
+* Assign employees to shifts from the calendar view
+* Fixed a problem with irrelevant email notifications
+* Select multiple staff members or define the required number of employees when creating a shift
 
 = 2.2.1 =
 * Fixed problem when shortcode was not working properly

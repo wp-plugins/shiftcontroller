@@ -73,11 +73,9 @@ $tabs['all'] = '<i class="fa fa-sitemap"></i> ' .  lang('common_overall');
 
 		<?php
 		$dmenu = array();
-		foreach( $staffs as $staff )
+		foreach( $working_staff as $staff )
 		{
 			if( ('staff' == $display) && ($staff->id == $current_staff->id) )
-				continue;
-			if( ! in_array($staff->active, array(USER_MODEL::STATUS_ACTIVE) ) )
 				continue;
 
 			$link_params = array(

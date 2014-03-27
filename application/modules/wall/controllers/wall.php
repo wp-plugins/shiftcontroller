@@ -221,9 +221,7 @@ class Wall_wall_controller extends Front_controller
 		$this->data['range'] = $range;
 
 		$um = new User_Model;
-		$staffs = $um
-			->where('active', USER_MODEL::STATUS_ACTIVE)
-			->get()->all;
+		$staffs = $um->get_staff();
 		$this->data['staffs'] = array();
 		foreach( $staffs as $sta )
 		{

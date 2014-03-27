@@ -127,6 +127,54 @@ class User_model extends MY_model
 		return $this->prop_text('active', TRUE);
 	}
 
+	public function count_staff()
+	{
+		$CI =& ci_get_instance();
+		$working_levels = $CI->app_conf->get('working_levels');
+
+		$this->clear();
+	/* get those users who can be assigned to shifts */
+		$this->where('active', self::STATUS_ACTIVE);
+		if( $working_levels )
+		{
+			if( ! is_array($working_levels) )
+				$working_levels = array( $working_levels );
+			$this->where_in('level', $working_levels);
+		}
+		$return = $this->count();
+		return $return;
+	}
+
+	public function get_staff()
+	{
+		$CI =& ci_get_instance();
+		$working_levels = $CI->app_conf->get('working_levels');
+
+		$this->clear();
+	/* get those users who can be assigned to shifts */
+		$this->where('active', self::STATUS_ACTIVE);
+		if( $working_levels )
+		{
+			if( ! is_array($working_levels) )
+				$working_levels = array( $working_levels );
+			$this->where_in('level', $working_levels);
+		}
+		$return = $this->get()->all;
+		return $return;
+	}
+
+	/* redefine the drop down in forms */
+	protected function _load_titles()
+	{
+		$return = array();
+		$staff = $this->get_staff();
+		foreach( $staff as $sta )
+		{
+			$return[ $sta->id ] = $sta->title();
+		}
+		return $return;
+	}
+
 	public function delete($object = '', $related_field = '')
 	{
 	// if something is given, then just pass it over, the caller must be knowing what he's doing

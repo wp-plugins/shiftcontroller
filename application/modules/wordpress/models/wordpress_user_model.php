@@ -29,6 +29,10 @@ class Wordpress_User_Model
 
 			$k = 'wordpress_' . 'role_' . $wp_role;
 			$user_level = $CI->app_conf->get( $k );
+			if( $wp_role == 'administrator' )
+			{
+				$user_level = USER_MODEL::LEVEL_ADMIN;
+			}
 
 			if( ! $user_level )
 				return;
@@ -72,7 +76,8 @@ class Wordpress_User_Model
 			}
 		}
 
-		if( 
+		$user->active = USER_MODEL::STATUS_ACTIVE;
+		if(
 			( $is_new && $user->save_as_new() )
 			OR
 			( (! $is_new) && $user->save() )

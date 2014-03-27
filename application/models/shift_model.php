@@ -163,7 +163,7 @@ class Shift_model extends _Timeblock_model
 		$CI =& ci_get_instance();
 		$CI->hc_time->setDateDb( $this->date );
 
-		$return .= $CI->hc_time->formatDate();
+		$return .= $CI->hc_time->formatWeekdayShort() . ', ' . $CI->hc_time->formatDate();
 		$return .= ' [' . $CI->hc_time->formatTimeOfDay($this->start) . ' - ' .  $CI->hc_time->formatTimeOfDay($this->end) . ']';
 		return $return;
 	}
@@ -213,9 +213,7 @@ class Shift_model extends _Timeblock_model
 	{
 	/* should have date, start, end set */
 		$um = new User_Model;
-		$all_staff = $um
-			->where('active', USER_MODEL::STATUS_ACTIVE)
-			->get()->all;
+		$all_staff = $um->get_staff();
 
 		$return = array();
 		foreach( $all_staff as $u )

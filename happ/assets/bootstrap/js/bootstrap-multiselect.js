@@ -89,7 +89,8 @@
 			// If more than 3 options are selected, the number of selected options is printed.
 			text: function(options) {
 				if (options.length == 0) {
-					return 'None selected';
+//					return 'None selected';
+					return '______';
 				}
 				else if (options.length > 3) {
 					return options.length + ' selected';

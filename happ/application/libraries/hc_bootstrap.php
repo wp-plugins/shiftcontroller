@@ -1,7 +1,7 @@
 <?php
 class Hc_bootstrap
 {
-	static function nav_tabs( $tabs, $shown = '', $field = '', $id = '' )
+	static function nav_tabs( $tabs, $shown = '', $field = '', $id = '', $extra = '' )
 	{
 		if( ! $shown )
 		{
@@ -11,7 +11,13 @@ class Hc_bootstrap
 
 		$id = $id ? $id : hc_random();
 		$out = array();
-		$out[] = '<ul class="nav nav-tabs" id="' . $id . '">';
+
+		$startup = '<ul class="nav nav-tabs" id="' . $id . '"';
+		if( $extra )
+			$startup .= ' ' . $extra;
+		$startup .= '>';
+		$out[] = $startup;
+
 		reset( $tabs );
 
 		reset( $tabs );

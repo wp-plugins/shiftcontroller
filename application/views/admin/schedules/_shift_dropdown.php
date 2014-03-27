@@ -148,24 +148,19 @@ if( $sh->user_id )
 		'href'	=> ci_site_url( array('admin/shifts/deleterel', $sh->id, 'user', $sh->user_id) ),
 		'title'	=> '<i class="fa fa-sign-out text-warning"></i> ' . lang('shift_remove_staff'),
 		);
+	$menu[] = array(
+		'href'	=> ci_site_url( array('admin/shifts/assign', $sh->id) ),
+		'title'	=> '<i class="fa fa-sign-in"></i> ' . lang('shift_change_staff'),
+		'class'	=> 'hc-ajax-loader'
+		);
 }
 else
 {
-	$free_staff = $sh->find_staff();
-	if( $free_staff )
-	{
-		$menu[] = array(
-			'href'	=> ci_site_url( array('admin/shifts/edit', $sh->id) ),
-			'title'	=> '<i class="fa fa-sign-in"></i> ' . lang('shift_assign_staff') . ': ' . count($free_staff) . ' ' . lang('users'),
-			'class'	=> 'hc-parent-loader'
-			);
-	}
-	else
-	{
-		$menu[] = array(
-			'title'	=> '<i class="fa fa-exclamation-circle text-danger"></i> ' . lang('shift_no_staff'),
-			);
-	}
+	$menu[] = array(
+		'href'	=> ci_site_url( array('admin/shifts/assign', $sh->id) ),
+		'title'	=> '<i class="fa fa-sign-in"></i> ' . lang('shift_assign_staff'),
+		'class'	=> 'hc-ajax-loader'
+		);
 }
 
 /* PUBLISH */

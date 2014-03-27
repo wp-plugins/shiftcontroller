@@ -93,6 +93,17 @@ class Shifts_controller extends Backend_controller_crud
 		return;
 	}
 
+	function assign( $id )
+	{
+		if( ! $this->_load($id) )
+			return;
+
+		$this->data['object'] = $this->{$this->model};
+
+		$this->set_include( 'edit/assign' );
+		$this->load->view( $this->template, $this->data);
+	}
+
 	function save()
 	{
 		$args = func_get_args();
@@ -106,7 +117,11 @@ class Shifts_controller extends Backend_controller_crud
 
 	/* new one */
 		$post = call_user_func_array( array($this, 'save_prepare'), $args );
+		$post['count'] = $this->input->post('count');
+		$post['assign'] = $this->input->post('assign');
+
 		$this->hc_form->set_defaults( $post );
+
 		$relations = $this->save_prepare_relations();
 
 		$dates = array( $this->{$this->model}->date );
@@ -117,6 +132,22 @@ class Shifts_controller extends Backend_controller_crud
 			list( $this->{$this->model}, $this->hc_form ) = Modules::run('shift_groups/admin/save', $this->{$this->model}, $this->hc_form );
 			$dates = $this->{$this->model}->date;
 			$this->{$this->model}->date = $date;
+		}
+
+		if( $post['assign'] == 'now' )
+		{
+			$this->{$this->model}->validation['user'] = array(
+				'label'	=> lang('user_level_staff'),
+				'rules'	=> array('required'),
+				);
+		}
+		else
+		{
+			$this->{$this->model}->count = $post['count'];
+			$this->{$this->model}->validation['count'] = array(
+				'label'	=> lang('shift_staff_count'),
+				'rules'	=> array('required', 'trim', 'is_natural_no_zero'),
+				);
 		}
 
 		$this->{$this->model}->validate($relations);
@@ -134,29 +165,49 @@ class Shifts_controller extends Backend_controller_crud
 			return;
 		}
 
+		if( isset($post['user']) && is_array($post['user']) )
+		{
+			$assigned = TRUE;
+			$create_qty = count($post['user']);
+			$users = $relations['user'];
+			unset($relations['user']);
+		}
+		else
+		{
+			$assigned = FALSE;
+			$create_qty = $post['count'];
+		}
+
 		$result_count = 0;
 		reset( $dates );
 		foreach( $dates as $date )
 		{
-			$this->{$this->model}->id = 0;
-			$this->{$this->model}->date = $date;
-			if( $this->{$this->model}->save($relations) )
+			for( $cc = 0; $cc < $create_qty; $cc++ )
 			{
-				$result_count++;
-			}
-			else
-			{
-				$this->hc_form->set_errors( $this->{$this->model}->error->all );
-				$this->hc_form->set_defaults( $post );
-
-				if( $this->{$this->model}->id )
-					$this->edit( $this->{$this->model}->id );
+				$this->{$this->model}->id = 0;
+				$this->{$this->model}->date = $date;
+				if( $assigned )
+				{
+					$relations['user'] = $users[$cc];
+				}
+				if( $this->{$this->model}->save($relations) )
+				{
+					$result_count++;
+				}
 				else
 				{
-					array_shift( $args );
-					call_user_func_array( array($this, 'add'), $args );
+					$this->hc_form->set_errors( $this->{$this->model}->error->all );
+					$this->hc_form->set_defaults( $post );
+
+					if( $this->{$this->model}->id )
+						$this->edit( $this->{$this->model}->id );
+					else
+					{
+						array_shift( $args );
+						call_user_func_array( array($this, 'add'), $args );
+					}
+					return;
 				}
-				return;
 			}
 		}
 
