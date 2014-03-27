@@ -66,7 +66,7 @@ class Hc_Main_Menu
 			/* check if current */
 			if( $this->current )
 			{
-				$slug = $this->menu[$k]['slug'];
+				$slug = isset($this->menu[$k]['slug']) ? $this->menu[$k]['slug'] : '';
 				$current = $this->current;
 				if(
 					(

@@ -1,4 +1,5 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+$config = array();
 
 /* this file defines model relationships runtime if needed */
 $CI =& ci_get_instance();
