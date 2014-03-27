@@ -77,6 +77,44 @@ class Schedules_controller extends Backend_controller
 		return;
 	}
 
+	function publishdraft()
+	{
+		$args = hc_parse_args( func_get_args() );
+
+		$sm = new Schedule_Model;
+		$sm->start = $args['start'];
+		$sm->end = $args['end'];
+		$sm->staff_id = isset($args['staff']) ? $args['staff'] : 0;
+		$sm->location_id = isset($args['location']) ? $args['location'] : 0;
+
+		$count = $sm->publishdraft();
+
+		if( $count > 0 )
+		{
+			$msg = array();
+			$label = $count . ' ';
+			$label .= ($count > 1) ? lang('shifts') : lang('shift');
+
+			$msg[] = $label;
+			$msg[] = lang('shift_publish');
+			$msg[] = lang('common_ok');
+			$msg = join( ': ', $msg );
+			$this->session->set_flashdata( 'message', $msg );
+		}
+
+		$this->load->library('user_agent');
+		if ($this->agent->is_referral())
+		{
+			$redirect_to = $this->agent->referrer();
+		}
+		else
+		{
+			$redirect_to = array('admin/schedules/index/all', $start_date);
+		}
+		$this->redirect( $redirect_to );
+		return;
+	}
+
 	function unpublish( $start_date, $end_date )
 	{
 		$args = hc_parse_args( func_get_args() );

@@ -38,7 +38,7 @@
 		</a>
 		<ul class="dropdown-menu">
 			<li>
-				<a href="<?php echo ci_site_url( array($this->conf['path'], 'publish', 'start', $start_date, 'end', $end_date, 'staff', $staff_id, 'location', $location_id) ); ?>">
+				<a href="<?php echo ci_site_url( array($this->conf['path'], 'publishdraft', 'start', $start_date, 'end', $end_date, 'staff', $staff_id, 'location', $location_id) ); ?>">
 				<i class="fa fa-check text-success"></i> <?php echo lang('shift_publish'); ?>
 				</a>
 			</li>

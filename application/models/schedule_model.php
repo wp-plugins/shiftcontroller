@@ -33,7 +33,8 @@ class Schedule_model extends MY_Model_Virtual
 			->order_by( 'date', 'ASC' )
 			->order_by( 'start', 'ASC' )
 			->include_related( 'user', 'id' )
-			->where( 'user_id IS NOT ', 'NULL', FALSE );
+//			->where( 'user_id IS NOT ', 'NULL', FALSE )
+			;
 
 		return $sm->get();
 	}
@@ -63,6 +64,29 @@ class Schedule_model extends MY_Model_Virtual
 		foreach( $this->shifts() as $sh )
 		{
 			if( $sh->status == SHIFT_MODEL::STATUS_ACTIVE )
+				continue;
+			if( ! $sh->user_id )
+				continue;
+			if( $sh->publish() )
+			{
+				$count++;
+			}
+			else
+			{
+				$error = $sh->error->string;
+			}
+		}
+		return $count;
+	}
+
+	function publishdraft()
+	{
+		$count = 0;
+		foreach( $this->shifts() as $sh )
+		{
+			if( $sh->status == SHIFT_MODEL::STATUS_ACTIVE )
+				continue;
+			if( $sh->user_id )
 				continue;
 			if( $sh->publish() )
 			{
