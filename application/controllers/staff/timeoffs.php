@@ -198,6 +198,10 @@ class Timeoffs_controller extends Backend_controller_crud
 			return;
 		}
 
+//		$this->{$this->model}->user_id = $this->auth->user()->id;
+//		unset( $relations['user'] );
+		unset( $this->{$this->model}->user );
+
 		if( $this->{$this->model}->save($relations) )
 		{
 			$notes = $this->input->post( 'notes' );

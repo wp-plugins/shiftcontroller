@@ -1,25 +1,5 @@
-<ul class="nav nav-tabs">
-	<?php require( dirname(__FILE__) . '/_tabs.php' ); ?>
-
-	<li class="pull-right">
-		<?php require( dirname(__FILE__) . '/_date_navigation.php' ); ?>
-	</li>
-
-	<li class="pull-right">
-		<?php require( dirname(__FILE__) . '/_range.php' ); ?>
-	</li>
-</ul>
-
-<div class="hc-page-status" data-src="<?php echo ci_site_url( array('admin/schedules/status', 'start', $start_date, 'end', $end_date, 'location', $current_location->id) ); ?>">
-	<?php 
-	echo Modules::run(
-		'admin/schedules/status',
-		'start', $start_date,
-		'end', $end_date,
-		'location', $current_location->id
-		);
-	?>
-</div>
+<?php require( dirname(__FILE__) . '/_control.php' ); ?>
+<?php require( dirname(__FILE__) . '/_status.php' ); ?>
 
 <?php
 $container_class = 'hc_cal';

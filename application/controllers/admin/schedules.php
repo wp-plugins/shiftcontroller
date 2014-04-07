@@ -365,7 +365,7 @@ class Schedules_controller extends Backend_controller
 	{
 		$args = $this->parse_args( func_get_args() );
 
-		$display = isset($args['display']) ? $args['display'] : 'all';
+		$display = isset($args['display']) ? $args['display'] : 'calendar';
 		$range = isset($args['range']) ? $args['range'] : 'week'; // or month
 		$date = isset($args['start']) ? $args['start'] : '';
 
@@ -403,16 +403,29 @@ class Schedules_controller extends Backend_controller
 		$start = $this->input->post( 'start' );
 		$end = $this->input->post( 'end' );
 		$display = $this->input->post( 'display' );
+		$filter = $this->input->post( 'filter' );
+		$id = $this->input->post( 'id' );
 		if( ! $display )
-			$display = 'browse';
+			$display = 'stats';
 
 		$redirect_to = array( 
 			$this->conf['path'],
 			'index',
 			'display',	$display,
 			'start',	$start,
-			'end',		$end
+			'end',		$end,
 			);
+		if( $filter )
+		{
+			$redirect_to[] = 'filter';
+			$redirect_to[] = $filter;
+		}
+		if( $id )
+		{
+			$redirect_to[] = 'id';
+			$redirect_to[] = $id;
+		}
+
 		$this->redirect( $redirect_to );
 		return;
 	}
@@ -420,7 +433,6 @@ class Schedules_controller extends Backend_controller
 	function status()
 	{
 		$args = hc_parse_args( func_get_args() );
-
 		$count = array();
 		$this->data['location_id'] = 0;
 		$this->data['staff_id'] = 0;
@@ -515,10 +527,13 @@ class Schedules_controller extends Backend_controller
 	{
 		$args = $this->parse_args( func_get_args() );
 
-		$display = isset($args['display']) ? $args['display'] : 'all';
+		$display = isset($args['display']) ? $args['display'] : 'calendar';
+		$filter = isset($args['filter']) ? $args['filter'] : 'all';
 		$range = isset($args['range']) ? $args['range'] : 'week'; // or month
 		$date = isset($args['start']) ? $args['start'] : '';
 		$end_date = isset($args['end']) ? $args['end'] : '';
+
+		$this->data['id'] = isset($args['id']) ? $args['id'] : 0;
 
 	/* check if schedule for this date exists */
 		if( $end_date )
@@ -574,9 +589,11 @@ class Schedules_controller extends Backend_controller
 		}
 
 		$this->data['display'] = $display;
+		$this->data['filter'] = $filter;
 
 	/* load shifts so that they can be reused in module displays to save queries */
-		$this->_load_shifts( array($start_date, $end_date) );
+		$filter_staff_id = ($filter == 'staff') ? $this->data['id'] : 0;
+		$this->_load_shifts( array($start_date, $end_date), $filter_staff_id );
 
 	/* save view */
 		$this->session->set_userdata( 
@@ -585,13 +602,8 @@ class Schedules_controller extends Backend_controller
 				)
 			);
 
-	/* decide which view */
-		switch( $display )
+		switch( $filter )
 		{
-			case 'all':
-				$view = 'index';
-				break;
-
 			case 'location':
 				if( isset($args['id']) && $args['id'] )
 					$location_id = $args['id'];
@@ -601,8 +613,6 @@ class Schedules_controller extends Backend_controller
 					$location_id = $ids[0];
 				}
 				$this->data['current_location'] = $this->data['locations'][$location_id];
-
-				$view = 'index_location';
 				break;
 
 			case 'staff':
@@ -614,8 +624,27 @@ class Schedules_controller extends Backend_controller
 					$staff_id = $ids[0];
 				}
 				$this->data['current_staff'] = $this->data['staffs'][$staff_id];
+				break;
+		}
 
-				$view = 'index_staff';
+	/* decide which view */
+		switch( $display )
+		{
+			case 'calendar':
+				switch( $filter )
+				{
+					case 'location':
+						$view = 'index_location';
+						break;
+
+					case 'staff':
+						$view = 'index_staff';
+						break;
+
+					default:
+						$view = 'index';
+						break;
+				}
 				break;
 
 			case 'browse':
@@ -634,6 +663,11 @@ class Schedules_controller extends Backend_controller
 				reset( $this->data['staffs'] );
 				foreach( $this->data['staffs'] as $sta )
 				{
+					if( $filter == 'staff' )
+					{
+						if( $sta->id != $this->data['current_staff']->id )
+							continue;
+					}
 					$stats_shifts[$sta->id] = array( 0, 0 );
 					$stats_drafts[$sta->id] = array( 0, 0 );
 				}
@@ -643,6 +677,18 @@ class Schedules_controller extends Backend_controller
 				{
 					if( ! $sh->user_id )
 						continue;
+
+					if( $filter == 'location' )
+					{
+						if( $sh->location_id != $this->data['current_location']->id )
+							continue;
+					}
+
+					if( $filter == 'staff' )
+					{
+						if( $sh->user_id != $this->data['current_staff']->id )
+							continue;
+					}
 
 					if( ! isset($stats_shifts[$sh->user_id]) )
 					{

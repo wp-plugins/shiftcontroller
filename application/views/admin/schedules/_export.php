@@ -7,6 +7,8 @@ $link = ci_site_url(
 		'display',	$target_display,
 		'start',	$start_date,
 		'end',		$end_date,
+		'filter',	$filter,
+		'id',		$id
 		)
 	);
 ?>

@@ -62,7 +62,7 @@ $lang['common_reject'] = 'ablehnen';
 $lang['common_nobody'] = 'Niemand';
 $lang['common_everyone'] = 'Alle';
 $lang['common_csv_export'] = 'CSV Export';
-$lang['common_sync_from'] = 'Sync From';
+$lang['common_sync_from'] = 'Sync';
 $lang['common_not_allowed'] = 'Sie sind nicht berechtigt diese Seite zu betreten';
 
 $lang['profile_updated'] = 'Profil aktualisiert';

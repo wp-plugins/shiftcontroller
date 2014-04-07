@@ -2,6 +2,7 @@
 class Hc_Main_Menu
 {
 	var $menu = array();
+	var $disabled = array();
 	var $current = '';
 	var $engine = 'ci'; // can also be 'nts'
 
@@ -13,6 +14,12 @@ class Hc_Main_Menu
 	public function set_menu( $menu )
 	{
 		$this->menu = $menu;
+	}
+
+	public function set_disabled( $disabled = array() )
+	{
+		if( $disabled )
+			$this->disabled = $disabled;
 	}
 
 	public function set_current( $current )
@@ -60,6 +67,15 @@ class Hc_Main_Menu
 						$this->menu[$k]['slug'] = $this->menu[$k]['panel'];
 						$this->menu[$k]['href'] = ntsLink::makeLink( $this->menu[$k]['panel'], '', array(), FALSE, TRUE );
 						break;
+				}
+			}
+
+			if( $this->disabled )
+			{
+				if( in_array($this->menu[$k]['slug'], $this->disabled) )
+				{
+//					echo "DISABLE " . $this->menu[$k]['slug'] . '<br>';
+					unset( $this->menu[$k] );
 				}
 			}
 

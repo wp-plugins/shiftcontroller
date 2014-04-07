@@ -106,6 +106,7 @@ class MY_Controller extends MX_Controller
 
 	/* menu */
 		$this->config->load('menu', TRUE, TRUE );
+//		$this->config->load('config', TRUE, TRUE );
 
 		$this->session->set_flashdata('referrer', current_url());
 		$this->set_include( '' );

@@ -300,6 +300,9 @@
 #nts .checkbox {
 	display: inline-block;
 }
+#nts .checkbox input[type="checkbox"]{
+	margin-top: 5px;
+	}
 
 #nts .text-big {
 	font-size: 1.1em;
@@ -403,6 +406,10 @@
 #nts .page-header {
 	margin-top: 0;
 	}
+#nts .page-header h2 {
+	margin-top: 0;
+	margin-bottom: 0;
+	}
 
 #nts-footer {
 	margin: 1em 0;
@@ -473,4 +480,28 @@
 #nts .radio-vertical label,
 #nts .checkbox-vertical label {
 	display: block;
+}
+
+#nts .nav>li>.nav-item {
+	position: relative;
+	display: block;
+	padding: 10px 15px;
+}
+
+#nts .hc-time-link {
+	text-align: center;	
+	}
+#nts .hc-time-link>a {
+	color: #000;
+	display: block;
+}
+
+
+#nts .dropdown-menu>li>span {
+	display: block;
+	padding: 3px 20px;
+	clear: both;
+	font-weight: 400;
+	line-height: 1.428571429;
+	white-space: nowrap;
 }

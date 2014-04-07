@@ -254,6 +254,34 @@ if ( ! function_exists('get_config'))
 			}
 		}
 
+		/* also load modules config files */
+		if( 
+			isset($config['modules']) && $config['modules'] && is_array($config['modules']) &&
+			isset($config['modules_locations']) && $config['modules_locations'] && is_array($config['modules_locations']) 
+			)
+		{
+			$full_config = $config;
+			$modules = $config['modules'];
+			$modules_locations = $config['modules_locations'];
+
+			reset( $modules );
+			foreach( $modules as $module )
+			{
+				reset( $modules_locations );
+				foreach( $modules_locations as $ml )
+				{
+					$mod_file = $ml . $module . '/config/config.php';
+					if( file_exists($mod_file) )
+					{
+						$config = array();
+						require( $mod_file );
+						$full_config = array_merge( $full_config, $config );
+					}
+				}
+			}
+			$config = $full_config;
+		}
+
 		return $_config[0] =& $config;
 	}
 }

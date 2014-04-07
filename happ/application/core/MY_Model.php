@@ -151,7 +151,8 @@ class MY_model extends DataMapper
 		$return = array();
 		$this->clear();
 		$select = $this->_build_title_select();
-		$this->select( 'id' );
+//		$this->select( 'id' );
+		$this->select( '*' );
 		$this->select( 'CONCAT(' . $select . ') AS title', FALSE );
 		$this->get();
 

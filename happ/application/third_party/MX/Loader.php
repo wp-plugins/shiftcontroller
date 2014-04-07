@@ -97,9 +97,9 @@ class MX_Loader extends CI_Loader
 
 		require_once BASEPATH.'database/DB'.EXT;
 
-		if ($return === TRUE) return DB($params, $active_record);
+		if ($return === TRUE) return HC_DB($params, $active_record);
 			
-		CI::$APP->db = DB($params, $active_record);
+		CI::$APP->db = HC_DB($params, $active_record);
 		
 		return CI::$APP->db;
 	}

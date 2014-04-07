@@ -3,6 +3,8 @@ $defaults = array(
 	'start'		=> $start_date,
 	'end'		=> $end_date,
 	'display'	=> $display,
+	'filter'	=> $filter,
+	'id'		=> $id
 	);
 $this->hc_form->set_defaults( $defaults );
 $errors = array();
@@ -37,6 +39,18 @@ echo $this->hc_form->input(
 echo $this->hc_form->input( 
 	array(
 		'name'	=> 'display',
+		'type'	=> 'hidden',
+		)
+	);
+echo $this->hc_form->input( 
+	array(
+		'name'	=> 'filter',
+		'type'	=> 'hidden',
+		)
+	);
+echo $this->hc_form->input( 
+	array(
+		'name'	=> 'id',
 		'type'	=> 'hidden',
 		)
 	);

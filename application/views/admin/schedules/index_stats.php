@@ -1,16 +1,4 @@
-<ul class="nav nav-tabs">
-	<?php require( dirname(__FILE__) . '/_tabs.php' ); ?>
-
-	<li class="pull-right">
-		<?php require( dirname(__FILE__) . '/_date_range.php' ); ?>
-	</li>
-
-	<li class="pull-right list-item-hori-separated">
-		<div>
-			<?php require( dirname(__FILE__) . '/_export.php' ); ?>
-		</div>
-	</li>
-</ul>
+<?php require( dirname(__FILE__) . '/_control.php' ); ?>
 
 <table class="table table-striped">
 	<tr>

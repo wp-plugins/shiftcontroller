@@ -64,7 +64,7 @@ $lang['common_reject'] = 'Reject';
 $lang['common_nobody'] = 'Nobody';
 $lang['common_everyone'] = 'Everyone';
 $lang['common_download'] = 'Download';
-$lang['common_sync_from'] = 'Sync From';
+$lang['common_sync_from'] = 'Sync';
 $lang['common_not_allowed'] = 'You are not allowed to access this page';
 $lang['common_history'] = 'History';
 $lang['common_changed_attribute'] = 'Changed Attribute';
@@ -139,6 +139,7 @@ $lang['auth_email_new_password_subject'] = 'New Password';
 
 /* TIME */
 $lang['time'] = 'Time';
+$lang['time_calendar'] = 'Calendar';
 $lang['time_date'] = 'Date';
 $lang['time_dates'] = 'Dates';
 $lang['time_date_from'] = 'From Date';

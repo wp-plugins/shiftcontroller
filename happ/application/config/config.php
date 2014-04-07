@@ -424,6 +424,9 @@ $config['rewrite_short_tags'] = FALSE;
 */
 $config['proxy_ips'] = '';
 
+/* time zone */
+$tz = date_default_timezone_get();
+date_default_timezone_set( $tz );
 
 /*
 | -------------------------------------------------------------------

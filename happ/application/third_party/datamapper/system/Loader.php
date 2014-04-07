@@ -41,7 +41,7 @@ class DM_Loader extends $name
 
 		if (\$return === TRUE)
 		{
-			return DB(\$params, \$active_record);
+			return HC_DB(\$params, \$active_record);
 		}
 
 		// Initialize the db variable.  Needed to prevent
@@ -49,7 +49,7 @@ class DM_Loader extends $name
 		\$CI->db = '';
 
 		// Load the DB class
-		\$CI->db =& DB(\$params, \$active_record);
+		\$CI->db =& HC_DB(\$params, \$active_record);
 	}
 }
 CODE;

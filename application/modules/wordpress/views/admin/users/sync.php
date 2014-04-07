@@ -12,12 +12,12 @@ echo form_open(
 ?>
 
 <fieldset>
-	<legend>Copy WordPress User Accounts</legend>
+	<legend>Copy User Accounts</legend>
 
 	<table class="table table-striped table-condensed">
 		<tr>
 			<th>
-				WordPress
+				
 			</th>
 			<th>
 				<?php echo $app_title; ?>
@@ -71,6 +71,22 @@ echo form_open(
 				</td>
 			</tr>
 		<?php endforeach; ?>
+
+		<tr>
+			<td>
+				&nbsp;
+			</td>
+			<td>
+				<?php
+				echo $this->hc_form->input(
+					array(
+						'type'	=> 'checkbox',
+						'name'	=> 'append_role_name',
+						)
+					);
+				?> Append Original Role Name To Staff Name
+			</td>
+		</tr>
 
 		<tr>
 			<td>

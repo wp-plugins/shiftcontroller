@@ -2,7 +2,9 @@
 $base_link_params = array(
 	$this->conf['path'], 'index',
 	'display',	$display,
-	'range',	$range
+	'range',	$range,
+	'filter',	$filter,
+	'id',		$id,
 	);
 
 switch( $display )

@@ -76,6 +76,7 @@ class Wordpress_setup_controller extends Setup_controller
 				}
 
 			/* users */
+				$append_role_name = $this->input->post('append_role_name');
 				$count_users = 0;
 
 				/* this user */
@@ -92,6 +93,12 @@ class Wordpress_setup_controller extends Setup_controller
 				else
 				{
 					$user->first_name = $current_user->display_name;
+				}
+				if( $append_role_name )
+				{
+					$wp_role = ( $current_user->roles && is_array($current_user->roles) && isset($current_user->roles[0]) ) ? $current_user->roles[0] : '';
+					if( strlen($wp_role) )
+						$user->first_name = '[' . $wp_role . '] ' . $user->first_name;
 				}
 
 				$user->password = hc_random();
@@ -151,6 +158,14 @@ class Wordpress_setup_controller extends Setup_controller
 							{
 								$user->first_name = $wuser->display_name;
 							}
+
+							if( $append_role_name )
+							{
+								$wp_role = ( $wuser->roles && is_array($wuser->roles) && isset($wuser->roles[0]) ) ? $wuser->roles[0] : '';
+								if( strlen($wp_role) )
+									$user->first_name = '[' . $wp_role . '] ' . $user->first_name;
+							}
+
 							$user->password = hc_random();
 							$user->level = $our_level;
 

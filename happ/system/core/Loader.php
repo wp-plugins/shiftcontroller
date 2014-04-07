@@ -334,7 +334,7 @@ class CI_Loader {
 
 		if ($return === TRUE)
 		{
-			return DB($params, $active_record);
+			return HC_DB($params, $active_record);
 		}
 
 		// Initialize the db variable.  Needed to prevent
@@ -342,7 +342,7 @@ class CI_Loader {
 		$CI->db = '';
 
 		// Load the DB class
-		$CI->db =& DB($params, $active_record);
+		$CI->db =& HC_DB($params, $active_record);
 	}
 
 	// --------------------------------------------------------------------
