@@ -1,11 +1,20 @@
 <?php
 if( ! $menu )
 	return;
+if( ! $class )
+	$class = 'dropdown-menu';
 ?>
-<ul class="dropdown-menu">
+<ul class="<?php echo $class; ?>">
 	<?php foreach( $menu as $k2 => $m2 ) : ?>
-		<?php if( ((! is_array($m2)) && ($m2 == '-divider-')) OR ($m2['title'] == '-divider-') ) : ?>
-			<li class="divider"></li>
+		<?php if( ((! is_array($m2))) OR ($m2['title'] == '-divider-') ) : ?>
+			<?php if( ((! is_array($m2)) && ($m2 == '-divider-')) OR ($m2['title'] == '-divider-') ) : ?>
+				<li class="divider"></li>
+			<?php else : ?>
+				<?php list( $link_title, $link_icon ) = Hc_lib::parse_icon($m2); ?>
+				<li>
+					<span title="<?php echo $link_title; ?>"><?php echo $m2; ?></span>
+				</li>
+			<?php endif; ?>
 		<?php else : ?>
 			<?php
 			list( $link_title, $link_icon ) = Hc_lib::parse_icon( $m2['title'] );

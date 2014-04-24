@@ -17,7 +17,15 @@ class Auth_controller extends Front_Controller {
 			$GLOBALS['NTS_CONFIG'][$app]['REMOTE_INTEGRATION']
 			)
 			{
-				Modules::run( $GLOBALS['NTS_CONFIG'][$app]['REMOTE_INTEGRATION'] . '/auth/login' );
+				$user_id = 0;
+				if( $test_user = $this->auth->user() )
+				{
+					$user_id = $test_user->id;
+				}
+				if( ! $user_id )
+				{
+					Modules::run( $GLOBALS['NTS_CONFIG'][$app]['REMOTE_INTEGRATION'] . '/auth/login' );
+				}
 			}
 	}
 

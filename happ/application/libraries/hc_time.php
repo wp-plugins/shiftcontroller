@@ -562,18 +562,21 @@ class Hc_time extends DateTime {
 		return $this->formatTime();
 		}
 
-	function formatTime( $duration = 0, $displayTimezone = 0 ){
+	function formatTime( $duration = 0, $displayTimezone = 0 )
+	{
 		$return = $this->format( $this->timeFormat );
-		if( $duration ){
+		if( $duration )
+		{
 			$this->modify( '+' . $duration . ' seconds' );
 			$return .= ' - ' . $this->format( $this->timeFormat );
-			}
-
-		if( $displayTimezone ){
-			$return .= ' [' . Hc_time::timezoneTitle($this->timezone) . ']';
-			}
-		return $return;
 		}
+
+		if( $displayTimezone )
+		{
+			$return .= ' [' . Hc_time::timezoneTitle($this->timezone) . ']';
+		}
+		return $return;
+	}
 
 	function formatDate( $format = '' ){
 		global $NTS_TIME_MONTH_NAMES, $NTS_TIME_MONTH_NAMES_REPLACE;

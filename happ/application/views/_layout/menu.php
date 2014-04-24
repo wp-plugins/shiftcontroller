@@ -31,6 +31,12 @@ if(
 	$this->auth->user()->active
 	)
 {
-	echo $menu->display( $this->auth->user()->level . '/' );
+	$user_level = $this->auth->user()->level;
+	$app = $this->config->item('nts_app');
+	if( isset($GLOBALS['NTS_CONFIG'][$app]['FORCE_USER_LEVEL']) )
+	{
+		$user_level = $GLOBALS['NTS_CONFIG'][$app]['FORCE_USER_LEVEL'];
+	}
+	echo $menu->display( $user_level . '/' );
 }
 ?>

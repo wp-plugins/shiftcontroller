@@ -165,11 +165,19 @@ class Shifts_controller extends Backend_controller_crud
 			return;
 		}
 
-		if( isset($post['user']) && is_array($post['user']) )
+		if( isset($post['user']) )
 		{
 			$assigned = TRUE;
-			$create_qty = count($post['user']);
-			$users = $relations['user'];
+			if( is_array($post['user']) )
+			{
+				$create_qty = count($post['user']);
+				$users = $relations['user'];
+			}
+			else
+			{
+				$create_qty = 1;
+				$users = $relations['user'];
+			}
 			unset($relations['user']);
 		}
 		else
@@ -188,7 +196,7 @@ class Shifts_controller extends Backend_controller_crud
 				$this->{$this->model}->date = $date;
 				if( $assigned )
 				{
-					$relations['user'] = $users[$cc];
+					$relations['user'] = is_object($users) ? $users : $users[$cc];
 				}
 				if( $this->{$this->model}->save($relations) )
 				{
@@ -223,7 +231,8 @@ class Shifts_controller extends Backend_controller_crud
 	protected function after_save()
 	{
 		$this->load->library('user_agent');
-		if( $schedule_view = $this->session->userdata('schedule_view') )
+		$schedule_view = $this->session->userdata('schedule_view');
+		if( is_array($schedule_view) )
 		{
 			$return = array(
 				'admin/schedules/index'

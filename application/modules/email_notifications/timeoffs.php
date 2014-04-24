@@ -7,6 +7,10 @@ class Timeoffs_notify
 		if( ! isset($CI->hc_notifier) )
 			return;
 
+		$disable_email = $CI->app_conf->get('disable_email');
+		if( $disable_email )
+			return;
+
 		$changes = $object->get_changes( $relations );
 
 	/* published? */

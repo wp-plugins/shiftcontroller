@@ -1,6 +1,6 @@
 <?php
 $config['wall_schedule_display'] = array(
-	'default' 	=> USER_MODEL::LEVEL_ADMIN,
+	'default' 	=> USER_MODEL::LEVEL_STAFF,
 	'label'		=> lang('everyone_schedule_display'),
 	'type'		=> 'dropdown',
 	'options'	=> array(

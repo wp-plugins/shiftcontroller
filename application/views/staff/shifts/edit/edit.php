@@ -1,4 +1,6 @@
 <?php
+$show_end_time_for_staff = $this->app_conf->get( 'show_end_time_for_staff' );
+
 $conflicts = $object->conflicts();
 $notes_count = 0;
 if( $this->hc_modules->exists('notes') )
@@ -11,6 +13,11 @@ $tab_content = array();
 $tabs['edit'] = '<i class="fa fa-edit"></i> ' . lang('common_view');
 
 $this->hc_time->setDateDb( $object->date );
+$time_view = $this->hc_time->formatTimeOfDay($object->start);
+if( $show_end_time_for_staff )
+{
+	$time_view .= ' - ' .  $this->hc_time->formatTimeOfDay($object->end);
+}
 
 $tab_content['edit'] = array();
 $tab_content['edit'][] = 
@@ -19,10 +26,10 @@ $tab_content['edit'][] =
 			$object->prop_text('status', TRUE) .
 		'</li>' . 
 		'<li>' . 
-			'<i class="fa-fw fa fa-calendar"></i> ' . $this->hc_time->formatDate() . 
+			'<i class="fa-fw fa fa-calendar"></i> ' . $this->hc_time->formatDateFull() . 
 		'</li>' . 
 		'<li>' . 
-			'<i class="fa-fw fa fa-clock-o"></i> ' . $this->hc_time->formatTimeOfDay($object->start) . ' - ' .  $this->hc_time->formatTimeOfDay($object->end) . 
+			'<i class="fa-fw fa fa-clock-o"></i> ' . $time_view . 
 		'</li>' . 
 		'<li>' . 
 			'<i class="fa-fw fa fa-home"></i> ' . $object->location->get()->title() .

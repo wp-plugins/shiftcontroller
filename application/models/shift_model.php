@@ -3,7 +3,11 @@ include_once( dirname(__FILE__) . '/_timeblock_model.php');
 class Shift_model extends _Timeblock_model
 {
 	var $table = 'shifts';
-	var $default_order_by = array('date' => 'ASC', 'start' => 'ASC', 'id' => 'ASC');
+	var $default_order_by = array(
+		'date' => 'ASC',
+		'start' => 'ASC',
+		'id' => 'ASC'
+		);
 	var $has_one = array(
 		'user' => array(
 			'class'			=> 'user_model',
@@ -128,7 +132,7 @@ class Shift_model extends _Timeblock_model
 		unset( $return['start'] );
 		unset( $return['end'] );
 		unset( $return['status'] );
-		$return['date'][1] = $this->date_view();
+		$return['date'][1] = $this->date_view($skip);
 
 	/* optimize it sometime later */
 		$lm = new Location_Model;
@@ -157,14 +161,20 @@ class Shift_model extends _Timeblock_model
 		return $return;
 	}
 
-	public function date_view()
+	public function date_view( $skip = array() )
 	{
 		$return = '';
 		$CI =& ci_get_instance();
 		$CI->hc_time->setDateDb( $this->date );
 
 		$return .= $CI->hc_time->formatWeekdayShort() . ', ' . $CI->hc_time->formatDate();
-		$return .= ' [' . $CI->hc_time->formatTimeOfDay($this->start) . ' - ' .  $CI->hc_time->formatTimeOfDay($this->end) . ']';
+		
+		$return .= ' [' . $CI->hc_time->formatTimeOfDay($this->start);
+		if( ! in_array('end', $skip) )
+		{
+			$return .= ' - ' .  $CI->hc_time->formatTimeOfDay($this->end);
+		}
+		$return .= ']';
 		return $return;
 	}
 

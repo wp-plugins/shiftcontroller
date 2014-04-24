@@ -23,6 +23,9 @@ class Shifts_notify
 			'to'		=> 'old',
 			'change'	=> array('user_id'),
 			'nochange'	=> array('id'),
+			'when'		=> array(
+				'status'	=> SHIFT_MODEL::STATUS_ACTIVE
+				)
 			),
 		array(
 			'msg'		=> 'shifts_cancelled',
@@ -47,6 +50,10 @@ class Shifts_notify
 	{
 		$CI =& ci_get_instance();
 		if( ! isset($CI->hc_notifier) )
+			return;
+
+		$disable_email = $CI->app_conf->get('disable_email');
+		if( $disable_email )
 			return;
 
 		$changes = $object->get_changes( $relations );
@@ -114,7 +121,12 @@ class Shifts_notify
 			$msgs[$n['msg']][] = $n['to'];
 		}
 
-		$text = $object->view_text( array('user', 'has_trade') );
+		$skip_keys = array('user', 'has_trade');
+		$show_end_time_for_staff = $CI->app_conf->get('show_end_time_for_staff');
+		if( ! $show_end_time_for_staff )
+			$skip_keys[] = 'end';
+
+		$text = $object->view_text( $skip_keys );
 		foreach( $msgs as $key => $staffs )
 		{
 		/* compile message */

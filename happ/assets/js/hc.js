@@ -57,7 +57,6 @@ function hc_click_ajax_loader( obj ){
 	}
 
 /* search in children */
-
 	var myParent = obj.closest( '.hc-ajax-parent' );
 	var targetDiv = myParent.find('.hc-ajax-container');
 
@@ -90,6 +89,11 @@ function hc_click_ajax_loader( obj ){
 	{
 		myParent.addClass( 'hc-loading' );
 		jQuery.get( targetUrl, function(data){
+			var wrap_with = myParent.data('wrap-ajax-child');
+			if( wrap_with )
+			{
+				data = '<' + wrap_with + '>' + '<span>' + data + '</span>' + '</' + wrap_with + '>';
+			}
 			myParent.after( data );
 			myParent.removeClass( 'hc-loading' );
 			});
@@ -229,7 +233,28 @@ jQuery(document).on( 'click', 'a.hc-form-submit', function(event)
 	var thisForm = thisLink.closest('form');
 	var myAction = thisLink.prop('hash').substr(1);
 
-	var addInput = jQuery("<input>").attr("type", "hidden").attr("name", "action").val( myAction );
+	var moreCollect = thisLink.data('collect');
+	if( moreCollect )
+	{
+		var moreAppend = [];
+		jQuery("input[name^='" + moreCollect + "']").each( function()
+		{
+			var appendValue = jQuery(this).val();
+			if( 
+				( jQuery(this).attr('type') != 'checkbox' )
+				|| 
+				( jQuery(this).is(':checked') )
+				)
+			{
+				moreAppend.push( appendValue );
+			}
+		});
+
+		var addInput2 = jQuery("<input>").attr("type", "hidden").attr("name", moreCollect).val( moreAppend.join('-') );
+		thisForm.append( addInput2 );
+	}
+
+	var addInput = jQuery("<input>").attr("type", "hidden").attr("name", "nts-action").val( myAction );
 	thisForm.append( addInput );
 
 	thisForm.submit();
@@ -243,7 +268,7 @@ jQuery(document).on( 'click', 'a.hc-form-submit', function(event)
 jQuery(document).on( 'click', '.hc-target a:not(.hc-ajax-loader,.hc-modal,.hc-parent-loader)', function(event)
 {
 	if( event.isPropagationStopped() )
-		return FALSE;
+		return false;
 
 	var targetUrl = jQuery(this).attr('href');
 	if(
@@ -369,6 +394,11 @@ jQuery(document).ready( function()
 		var my_info = my_container.find('.hc-radio-info');
 		my_info.show();
 	});
+
+	/* add icon for external links */
+	jQuery('#nts a[target="_blank"]').append( '<i class="fa fa-fw fa-external-link"></i>' );
+
+	/* scroll into view */
 	document.getElementById("nts").scrollIntoView();
 });
 
@@ -402,5 +432,18 @@ jQuery(document).on( 'click', '.hc-all-checker', function(event)
 			}
 		});
 	}
+	return false;
+});
+
+/* collapse next */
+jQuery(document).on('click', '[data-toggle=collapse-next]', function(e)
+{
+	var this_target = jQuery(this).parents('.collapse-panel').find('.collapse');
+	this_target.collapse('toggle');
+	return false;
+});
+
+jQuery(document).on('click', '.dropdown-menu select', function()
+{
 	return false;
 });

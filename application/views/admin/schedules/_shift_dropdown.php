@@ -1,4 +1,5 @@
 <?php
+$use_color_code = $this->app_conf->get( 'color_code_staff' );
 if( ! isset($wide_view) )
 {
 	$wide_view = FALSE;
@@ -216,9 +217,24 @@ $menu[] = array(
 	'title'	=> '<i class="fa fa-times text-danger"></i> ' . lang('shift_delete'),
 	'class'	=> 'hc-confirm',
 	);
+
+/* add color to border to highlight different staff */
+$more_style = '';
+if( $use_color_code )
+{
+	if( (! isset($current_staff)) && ($staff_count > 1) )
+	{
+		$more_style = '';
+		if( $sh->user_id )
+		{
+			$random_color = Hc_lib::random_html_color( $sh->user_id );
+			$more_style = 'border-left: ' . $random_color . ' 5px solid;';
+		}
+	}
+}
 ?>
 
-<a class="<?php echo $class; ?>" href="#" data-toggle="dropdown">
+<a class="<?php echo $class; ?>" href="#" data-toggle="dropdown" style="<?php echo $more_style; ?>">
 	<?php echo $title; ?>
 </a>
 

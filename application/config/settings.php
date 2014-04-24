@@ -48,6 +48,12 @@ $config['email_from_name'] = array(
 	'rules'		=> 'trim|required'
 	);
 
+$config['disable_email'] = array(
+	'default' 	=> 0,
+	'label'		=> lang('disable_email'),
+	'type'		=> 'checkbox',
+	);
+
 $config['csv_separator'] = array(
 	'default' 	=> ',',
 	'label'		=> lang('conf_csv_separator'),
@@ -70,6 +76,11 @@ $config['working_levels'] = array(
 	'rules'		=> 'required'
 	);
 
+$config['color_code_staff'] = array(
+	'default' 	=> 0,
+	'label'		=> lang('color_code_staff'),
+	'type'		=> 'checkbox',
+	);
 
 $config['staff_pick_shifts'] = array(
 	'default' 	=> 1,
@@ -80,5 +91,11 @@ $config['staff_pick_shifts'] = array(
 $config['approve_pick_shifts'] = array(
 	'default' 	=> 1,
 	'label'		=> lang('approve_shifts_pick_up'),
+	'type'		=> 'checkbox',
+	);
+
+$config['show_end_time_for_staff'] = array(
+	'default' 	=> 1,
+	'label'		=> lang('show_end_time_for_staff'),
 	'type'		=> 'checkbox',
 	);

@@ -1,11 +1,17 @@
 <?php
 class Hc_html
 {
-	static function dropdown_menu( $menu )
+	static function dropdown_menu( $menu, $class = 'dropdown-menu' )
 	{
 		$renderer = new Hc_renderer;
 		$view_file = dirname(__FILE__) . '/view/dropdown_menu.php';
-		return $renderer->render( $view_file, array('menu' => $menu) );
+		return $renderer->render( 
+			$view_file, 
+			array(
+				'menu'	=> $menu,
+				'class'	=> $class,
+				)
+			);
 	}
 
 	/*
@@ -46,7 +52,8 @@ class Hc_html
 		{
 			if( $aligned )
 			{
-				$return .= '<div class="col-sm-10 col-sm-offset-2">';
+//				$return .= '<div class="col-sm-10 col-sm-offset-2">';
+				$return .= '<div class="control-holder">';
 			}
 			else
 			{
@@ -55,11 +62,13 @@ class Hc_html
 		}
 		else
 		{
-			$return .= '<label class="col-sm-2 control-label">';
+//			$return .= '<label class="col-sm-2 control-label">';
+			$return .= '<label class="control-label">';
 			$return .= $label;
 			$return .= '</label>';
 
-			$return .= '<div class="col-sm-10">';
+//			$return .= '<div class="col-sm-10">';
+			$return .= '<div class="control-holder">';
 		}
 
 		foreach( $inputs as $input )

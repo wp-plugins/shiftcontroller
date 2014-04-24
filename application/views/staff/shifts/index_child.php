@@ -24,12 +24,14 @@ $date_view .= $this->hc_time->formatWeekdayShort();
 $date_view .= ', ';
 $date_view .= $this->hc_time->formatDate();
 
-$time_view =  hc_format_time_of_day($sh->start) . ' - ' . hc_format_time_of_day($sh->end);
+$show_end_time_for_staff = $this->app_conf->get( 'show_end_time_for_staff' );
+$time_view = hc_format_time_of_day($sh->start);
+if( $show_end_time_for_staff )
+	$time_view .= ' - ' . hc_format_time_of_day($sh->end);
 
 $conflicts = $sh->conflicts();
 $container_class = $conflicts ? 'alert-danger' : 'alert-none';
 ?>
-
 <div class="alert alert-condensed <?php echo $container_class; ?>">
 	<ul class="list-unstyled list-separated">
 		<li>

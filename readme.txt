@@ -4,7 +4,7 @@ Contributors: HitCode
 Tags: staff scheduling, shift scheduling, employee scheduling, rota shift scheduling
 License: GPLv2 or later
 
-Stable tag: 2.2.3
+Stable tag: 2.2.4
 Requires at least: 3.3
 Tested up to: 3.7
 
@@ -40,6 +40,13 @@ Author URI: http://www.shiftcontroller.com
 The upgrade is simply - upload everything up again to your `/wp-content/plugins/` directory, then go to the ShiftController menu item in the admin panel. It will automatically start the upgrade process if any needed.
 
 == Changelog ==
+
+= 2.2.4 =
+* Fixed an issue with shortcode that might be moving into infinite loop for admin and staff users
+* An option to color code shifts in the calendar according to the employee
+* An option to hide the shift end time for the employees 
+* An option to disable shift email notifications
+* Minor fixes and code updates
 
 = 2.2.3 =
 * Reworked the calendar view controls - now the list and stats display can also be filtered by location and by employee. 

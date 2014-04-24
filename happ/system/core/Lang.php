@@ -32,6 +32,7 @@ class CI_Lang {
 	 * @var array
 	 */
 	var $language	= array();
+	var $default_language	= array();
 	/**
 	 * List of loaded language files
 	 *
@@ -134,10 +135,26 @@ class CI_Lang {
 			return $lang;
 		}
 
-		$this->is_loaded[] = $langfile;
 		$this->language = array_merge($this->language, $lang);
-		unset($lang);
 
+	/* also load default language in case some strings are missing */
+		if( $idiom != 'english' )
+		{
+			// also load default enlgish file to fetch text which may not be translated yet
+			$default_idiom = 'english';
+			$args = func_get_args();
+			$default_langfile = $args[0];
+			$default_lang = $this->load($default_langfile, $default_idiom, TRUE, $add_suffix, $alt_path);
+
+			$diff = array_diff_key( $default_lang, $lang );
+			if( $diff )
+			{
+				$this->default_language = array_merge($this->default_language, $diff);
+			}
+		}
+
+		$this->is_loaded[] = $langfile;
+		unset($lang);
 		log_message('debug', 'Language file loaded: language/'.$idiom.'/'.$langfile);
 		return TRUE;
 	}
@@ -153,7 +170,22 @@ class CI_Lang {
 	 */
 	function line($line = '')
 	{
-		$value = ($line == '' OR ! isset($this->language[$line])) ? FALSE : $this->language[$line];
+		$value = FALSE;
+		if( $line == '' )
+			$value = FALSE;
+
+		if( isset($this->language[$line]) )
+		{
+			$value = $this->language[$line];
+		}
+		elseif( isset($this->default_language[$line]) )
+		{
+			$value = $this->default_language[$line];
+		}
+		else
+		{
+			$value = $line;
+		}
 
 		// Because killer robots like unicorns!
 		if ($value === FALSE)

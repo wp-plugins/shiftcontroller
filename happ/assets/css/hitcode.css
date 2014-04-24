@@ -88,7 +88,13 @@
 #nts .list-inline>li {
 	margin-left: 0;
 	margin-right: 0;
+	padding: 0 0;
+	vertical-align: middle;
 }
+
+#nts .btn input {
+	margin: 2px 1px;
+	}
 
 #nts .form-control {
 	display: inline;
@@ -169,6 +175,26 @@
 	background-color: #f8f8f8;
 	border-color: #ddd;
 }
+
+#nts .btn-archive {
+	color: #fff;
+	background-color: #999;
+	border-color: #888;
+}
+
+#nts .btn-danger-o {
+	border-color: #d43f3a;
+	color: #a40f0a;
+}
+#nts .btn-success-o {
+	border-color: #4cae4c;
+	color: #1c7e1c;
+}
+#nts .btn-warning-o {
+	border-color: #eea236;
+	color: #be7206;
+}
+
 
 #nts .alert-archive2 {
 	border-color: #ddd;
@@ -261,7 +287,7 @@
 #nts dt,
 #nts dd {
 	margin: 0 0;
-	line-height: 32px;
+	line-height: 2em;
 }
 
 #nts dt.dl-header,
@@ -283,6 +309,15 @@
 	}
 #nts .dropdown-menu-hori>li>a {
 	padding: 3px 10px;
+	}
+#nts .dropdown-menu-hori>li.dropdown-header {
+	display: block;
+	max-width: 100%;
+	width: 100%;
+	clear: both;
+	float: none;
+	padding: 3px 10px;
+	border-bottom: #ddd 1px solid;
 	}
 
 #nts .btn-label {
@@ -307,9 +342,23 @@
 #nts .text-big {
 	font-size: 1.1em;
 	}
+#nts .text-small {
+	font-size: 0.9em;
+	}
+#nts .text-underline {
+	text-decoration: underline;
+	}
 
 #nts .list-separated>li {
 	margin-bottom: 0.5em;
+}
+#nts .list-inline.list-separated>li {
+	margin-right: 0.25em;
+	margin-left: 0.25em;
+}
+
+#nts .list-padded>li {
+	padding: 0.5em 1em;
 }
 
 #nts .list-hori-separated>li {
@@ -359,11 +408,11 @@
 	filter: alpha(opacity=80);
 }
 
+#nts .list-inline>.divider, 
 #nts .nav-pills>.divider, 
 #nts .nav-tabs>.divider {
 	width: 1px;
 	margin: 0 9px;
-	overflow: hidden;
 	background-color: #ddd;
 	padding: 10px 0px;
 }
@@ -504,4 +553,67 @@
 	font-weight: 400;
 	line-height: 1.428571429;
 	white-space: nowrap;
+	color: #333;
+}
+
+#nts span.btn {
+	cursor: auto;
+	}
+#nts .btn:active,
+#nts .btn.active {
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	}
+
+#nts .panel-condensed .panel-heading,
+#nts .panel-condensed .panel-body,
+#nts .panel-condensed .panel-footer{
+	padding: 3px 6px;
+}
+
+#nts .panel {
+	margin-bottom: 5px;
+}
+
+#nts .list-striped>li:nth-child(odd) {
+	background-color: #f9f9f9;
+}
+
+#nts .text-strong {
+	font-weight: bold;
+}
+#nts .text-italic {
+	font-style: italic;
+}
+#nts dl {
+	margin-bottom: 0.5em;
+	}
+
+#nts hr {
+	margin-top: 0.5em;
+	margin-bottom: 1em;
+}
+
+/* the same as dt */
+@media (min-width: 768px) {
+	#nts .form-horizontal .control-label {
+		float: left;
+		width: 160px;
+		clear: left;
+		text-align: right;
+	}
+	#nts .form-horizontal .control-holder {
+		margin-left: 180px;
+	}
+}
+
+#nts .form-horizontal .form-group {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+#nts i.btn {
+	font-style: normal;
+	display: inline;
+	margin-right: 0.25em;
 }

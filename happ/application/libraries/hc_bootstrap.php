@@ -74,6 +74,13 @@ jQuery('#$id a[data-toggle="tab"]').on('shown.bs.tab', function (e)
 	jQuery(this).closest('form').find('[name=$field]').val( active_tab );
 });
 EOT;
+
+			if( $shown )
+			{
+			$out[] = <<<EOT
+	jQuery('#{$id}').closest('form').find('[name=$field]').val( "$shown" );
+EOT;
+			}
 			$out[] = '</script>';
 		}
 

@@ -3,6 +3,7 @@
 $lang['common_overall'] = 'Overall';
 $lang['common_home'] = 'Home';
 $lang['common_email'] = 'Email';
+$lang['disable_email'] = 'Disable Email';
 $lang['common_me'] = 'Me';
 $lang['common_password'] = 'Password';
 $lang['common_new_password'] = 'New Password';
@@ -256,7 +257,8 @@ $lang['shift_pick_up'] = 'Pick Up';
 $lang['staff_who_can_work'] = 'Who Can Work';
 $lang['staff_can_pick_up_shifts'] = 'Staff Can Pick Up Free Shifts';
 $lang['approve_shifts_pick_up'] = 'Shifts Pick Up Approval Required';
-
+$lang['color_code_staff'] = 'Color Code Staff Members In Calendar';
+$lang['show_end_time_for_staff'] = 'Show Shift End Time For Staff Members';
 
 $lang['shift_group'] = 'This shift is a part of a series';
 $lang['shift_group_this_date'] = 'This Date Only';

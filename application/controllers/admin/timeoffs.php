@@ -14,7 +14,7 @@ class Timeoffs_controller extends Backend_controller_crud
 
 	function action()
 	{
-		$action = $this->input->post('action');
+		$action = $this->input->post('nts-action');
 		$ids = $this->input->post('id');
 
 		if( $ids && $action )
