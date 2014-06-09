@@ -765,6 +765,8 @@ class Schedules_controller extends Backend_controller
 				continue;
 			if( $sh->date > $this->data['end_date'] )
 				continue;
+			if( ($this->data['filter'] == 'location') && ($sh->location_id != $this->data['current_location']->id) )
+				continue;
 
 			$values = array();
 

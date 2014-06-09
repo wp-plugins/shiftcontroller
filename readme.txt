@@ -4,7 +4,7 @@ Contributors: HitCode
 Tags: staff scheduling, shift scheduling, employee scheduling, rota shift scheduling
 License: GPLv2 or later
 
-Stable tag: 2.2.4
+Stable tag: 2.2.5
 Requires at least: 3.3
 Tested up to: 3.7
 
@@ -40,6 +40,10 @@ Author URI: http://www.shiftcontroller.com
 The upgrade is simply - upload everything up again to your `/wp-content/plugins/` directory, then go to the ShiftController menu item in the admin panel. It will automatically start the upgrade process if any needed.
 
 == Changelog ==
+
+= 2.2.5 =
+* BUG: In the schedule list view, if you choose filtering by location, the shifts for all locations were still displayed as if there were no filter applied. 
+* BUG: When creating a new shift, if you selected one or several employees to assign right now, but there was a validation error (no location selected, or the start and end times were incorrect), it showed a database error. 
 
 = 2.2.4 =
 * Fixed an issue with shortcode that might be moving into infinite loop for admin and staff users

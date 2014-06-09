@@ -299,6 +299,18 @@ class CI_URI {
 			// Filter segments for security
 			$val = trim($this->_filter_uri($val));
 
+			// if we happen to have & or = then drop everything after that
+			$pos = strpos($val, '&');
+			if( $pos !== FALSE )
+			{
+				$val = substr( $val, 0, $pos );
+			}
+			$pos = strpos($val, '=');
+			if( $pos !== FALSE )
+			{
+				$val = substr( $val, 0, $pos );
+			}
+
 			if ($val != '')
 			{
 				$this->segments[] = $val;

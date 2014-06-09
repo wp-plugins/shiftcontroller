@@ -22,6 +22,13 @@ $style_loaded = ( isset($GLOBALS['NTS_STYLE_LOADED']) && $GLOBALS['NTS_STYLE_LOA
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title><?php echo (isset($page_title)) ? $page_title : ''; ?></title>
 
+<?php
+if( $force_head )
+{
+	require( $force_head );
+}
+?>
+
 <?php foreach( $css_files as $f ) : ?>
 	<?php if( is_array($f) ) : ?>
 		<!--[if <?php echo $f[1]; ?>]>

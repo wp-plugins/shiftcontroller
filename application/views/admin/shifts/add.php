@@ -84,7 +84,7 @@ echo $this->hc_form->input(
 	);
 ?>
 
-<?php if( $default_user_id ) : ?>
+<?php if( $default_user_id && (! is_array($default_user_id)) ) : ?>
 	<?php
 	$default_user = new User_Model;
 	$default_user->get_by_id( $default_user_id );

@@ -166,7 +166,7 @@ class Hc_lib {
 			}
 		}
 
-//		$link_icon = trim( $link_icon );
+		$link_icon = trim( $link_icon );
 		$return = array( $link_title, $link_icon );
 		return $return;
 	}

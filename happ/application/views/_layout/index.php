@@ -1,11 +1,28 @@
 <?php
 $CI =& ci_get_instance();
 $ri = $CI->remote_integration();
-?>
-<?php if( ! $ri ) : ?>
-<?php	require( dirname(__FILE__) . '/head.php' ); ?>
-<?php endif; ?>
 
+/* check if forced header or footer exist */
+$force_head = $GLOBALS['NTS_APPPATH'] . '/../theme/head.php';
+if( ! file_exists($force_head) )
+	$force_head = '';
+$force_header = $GLOBALS['NTS_APPPATH'] . '/../theme/header.php';
+if( ! file_exists($force_header) )
+	$force_header = '';
+$force_footer = $GLOBALS['NTS_APPPATH'] . '/../theme/footer.php';
+if( ! file_exists($force_footer) )
+	$force_footer = '';
+?>
+<?php
+if( ! $ri )
+{
+	require( dirname(__FILE__) . '/head.php' );
+}
+if( $force_header )
+{
+	require( $force_header );
+}
+?>
 <div id="nts">
 <?php if( $ri ) : ?>
 	<div class="container-fluid">
@@ -28,7 +45,14 @@ $ri = $CI->remote_integration();
 <?php	require( dirname(__FILE__) . '/footer.php' ); ?>
 
 </div><!-- /container -->
-</div><!-- /hc -->
+</div><!-- /nts -->
+
+<?php
+if( $force_footer )
+{
+	require( $force_footer );
+}
+?>
 
 <?php if( ! $ri ) : ?>
 </body>

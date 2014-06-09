@@ -13,6 +13,8 @@ $tab_content = array();
 $tabs['edit'] = '<i class="fa fa-edit"></i> ' . lang('common_view');
 
 $this->hc_time->setDateDb( $object->date );
+$date_view = $this->hc_time->formatDateFull();
+
 $time_view = $this->hc_time->formatTimeOfDay($object->start);
 if( $show_end_time_for_staff )
 {
@@ -26,7 +28,7 @@ $tab_content['edit'][] =
 			$object->prop_text('status', TRUE) .
 		'</li>' . 
 		'<li>' . 
-			'<i class="fa-fw fa fa-calendar"></i> ' . $this->hc_time->formatDateFull() . 
+			'<i class="fa-fw fa fa-calendar"></i> ' . $date_view . 
 		'</li>' . 
 		'<li>' . 
 			'<i class="fa-fw fa fa-clock-o"></i> ' . $time_view . 

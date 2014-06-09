@@ -1,15 +1,16 @@
 <?php
 class Hc_html
 {
-	static function dropdown_menu( $menu, $class = 'dropdown-menu' )
+	static function dropdown_menu( $menu, $class = 'dropdown-menu', $more_li_class = '' )
 	{
 		$renderer = new Hc_renderer;
 		$view_file = dirname(__FILE__) . '/view/dropdown_menu.php';
 		return $renderer->render( 
 			$view_file, 
 			array(
-				'menu'	=> $menu,
-				'class'	=> $class,
+				'menu'			=> $menu,
+				'class'			=> $class,
+				'more_li_class'	=> $more_li_class,
 				)
 			);
 	}

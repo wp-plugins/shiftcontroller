@@ -23,7 +23,7 @@ class Hc_Main_Menu
 	}
 
 	public function set_current( $current )
-	{
+	{	
 		$this->current = $current;
 	}
 
@@ -32,6 +32,8 @@ class Hc_Main_Menu
 		$order = 1;
 		$menu_keys = array_keys($this->menu);
 		reset( $menu_keys );
+		$active_k = '';
+ 
 		foreach( $menu_keys as $k )
 		{
 			if( ! is_array($this->menu[$k]) )
@@ -80,10 +82,11 @@ class Hc_Main_Menu
 			}
 
 			/* check if current */
-			if( $this->current )
+			if( $this->current && (! $active_k) )
 			{
 				$slug = isset($this->menu[$k]['slug']) ? $this->menu[$k]['slug'] : '';
 				$current = $this->current;
+
 				if(
 					(
 						($current == $slug)
@@ -95,15 +98,49 @@ class Hc_Main_Menu
 					)
 					)
 				{
+					$active_k = $k;
+				}
+			}
+		}
+
+	/* set current */
+		if( $active_k )
+		{
+			reset( $menu_keys );
+			foreach( $menu_keys as $k )
+			{
+				if( 
+					( $k == $active_k )
+					OR
+					(
+						( substr($active_k, 0, strlen($k)) == $k ) &&
+						( substr($active_k, strlen($k), 1) == '/' )
+					)
+				)
+				{
 					$this->menu[$k]['active'] = TRUE;
 				}
 			}
 		}
+
 		uasort( $this->menu, create_function('$a, $b', 'return ($a["order"] - $b["order"]);' ) );
+	}
+
+	private function _filter_menu( $root )
+	{
+		$menu_keys = array_keys($this->menu);
+		foreach( $menu_keys as $k )
+		{
+			if( substr($k, 0, strlen($root)) != $root )
+			{
+				unset( $this->menu[$k] );
+			}
+		}
 	}
 
 	private function _get_menu( $root )
 	{
+		$this->_filter_menu( $root );
 		$this->_prepare_menu();
 		$return = array();
 

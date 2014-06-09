@@ -18,6 +18,8 @@
 		continue;
 	if( $sh->date > $end_date )
 		continue;
+	if( ($filter == 'location') && ($sh->location_id != $current_location->id) )
+		continue;
 	?>
 	<tr>
 		<td>
