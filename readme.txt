@@ -6,7 +6,7 @@ License: GPLv2 or later
 
 Stable tag: 2.2.5
 Requires at least: 3.3
-Tested up to: 3.7
+Tested up to: 3.8
 
 == Description ==
 
