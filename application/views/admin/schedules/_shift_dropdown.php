@@ -83,7 +83,8 @@ $final_title[] = '<ul class="list-unstyled">';
 
 if( isset($title['location']) && isset($title['staff']) )
 {
-	$final_title[] = '<li>';
+	list( $this_title_title, $this_title_icon ) = Hc_lib::parse_icon( $title['location'] );
+	$final_title[] = '<li class="squeeze-in" title="' . $this_title_title . '">';
 	$final_title[] = $title['location'];
 	$final_title[] = '</li>';
 }

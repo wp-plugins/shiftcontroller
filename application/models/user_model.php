@@ -41,6 +41,10 @@ class User_model extends MY_model
 			'label'	=> 'lang:common_email',
 			'rules' => array('required', 'trim', 'valid_email', 'unique'),
 			),
+		'username'	=> array(
+			'label'	=> 'lang:common_username',
+			'rules' => array('default_username', 'required', 'trim', 'unique'),
+			),
 		'password'	=> array(
 			'label'	=> 'lang:common_password',
 			'rules' => array('required', 'trim', 'hash_password'),
@@ -102,6 +106,12 @@ class User_model extends MY_model
 			'label'		=> 'lang:common_email',
 			),
 		array(
+			'name'		=> 'username',
+			'size'		=> 16,
+			'required'	=> TRUE,
+			'label'		=> 'lang:common_username',
+			),
+		array(
 			'name'		=> 'password',
 			'type'		=> 'password',
 			'label'		=> 'lang:common_password',
@@ -125,6 +135,19 @@ class User_model extends MY_model
 	public function id_label()
 	{
 		return $this->prop_text('active', TRUE);
+	}
+
+/* remove userneme */
+	public function get_form_fields()
+	{
+		$return = parent::get_form_fields();
+
+		$CI =& ci_get_instance();
+		if( $CI->app_conf->get('login_with') != 'username' )
+		{
+			unset( $return['username'] );
+		}
+		return $return;
 	}
 
 	public function count_staff()
@@ -214,7 +237,15 @@ class User_model extends MY_model
 /* check password */
 	function check_password( $pass )
 	{
-		$this->get_by_email( $this->email );
+		if( isset($this->username) && strlen($this->username) )
+		{
+			$this->get_by_username( $this->username );
+		}
+		else
+		{
+			$this->get_by_email( $this->email );
+		}
+
         if ( ! $this->exists() )
         {
 			return FALSE;
@@ -225,6 +256,7 @@ class User_model extends MY_model
 
 		$this->validate();
 		$this->get();
+
         if ( ! $this->exists() )
         {
             return FALSE;
@@ -243,6 +275,14 @@ class User_model extends MY_model
 				$this->salt = substr( md5(uniqid(rand(), true)), 0, $this->salt_length );
 			}
 			$this->{$field} =  $this->salt . substr( sha1($this->salt . $this->{$field}), 0, -$this->salt_length );
+		}
+	}
+
+	function _default_username( $field )
+	{
+		if( empty($this->{$field}) )
+		{
+			$this->{$field} = $this->email;
 		}
 	}
 }

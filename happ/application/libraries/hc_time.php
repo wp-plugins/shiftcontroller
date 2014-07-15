@@ -790,14 +790,14 @@ class Hc_time extends DateTime {
 		$this->setDateDb( $startDate );
 		$this->setStartWeek();
 		$rexDate = $this->formatDate_Db();
-		
 
 		while( $rexDate <= $endDate )
 		{
 			$week = array();
 			for( $weekDay = 0; $weekDay <= 6; $weekDay++ )
 			{
-				$week[] = $rexDate;
+				$thisWeekday = $this->getWeekday();
+				$week[ $thisWeekday ] = $rexDate;
 				$this->modify('+1 day');
 				$rexDate = $this->formatDate_Db();
 			}

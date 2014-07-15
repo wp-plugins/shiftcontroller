@@ -41,8 +41,8 @@ if( ! $menu )
 
 				<?php if( isset($m['external']) && $m['external'] ) : ?>
 					<a target="_blank" href="<?php echo $m['link']; ?>" title="<?php echo $link_title; ?>">
-						<span class="alert alert-success">
-							<?php echo $link_title; ?> <i class="fa fa-external-link"></i>
+						<span class="alert alert-success-o">
+							<?php echo $link_title; ?>
 						</span>
 					</a>
 				<?php else : ?>

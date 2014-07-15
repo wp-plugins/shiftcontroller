@@ -72,13 +72,27 @@ class Hc_Main_Menu
 				}
 			}
 
-			if( $this->disabled )
+			if( $this->disabled && ( ! ( isset($this->menu[$k]['external']) && $this->menu[$k]['external'] ) ) )
 			{
-				if( in_array($this->menu[$k]['slug'], $this->disabled) )
+				$this_slug = $this->menu[$k]['slug'];
+				if( in_array($this_slug, $this->disabled) )
 				{
 //					echo "DISABLE " . $this->menu[$k]['slug'] . '<br>';
 					unset( $this->menu[$k] );
 				}
+				else
+				{
+					/* also check if a parent is disabled */
+					foreach( $this->disabled as $ds )
+					{
+						if( substr($this_slug, 0, strlen($ds)) == $ds )
+						{
+							unset( $this->menu[$k] );
+							break;
+						}
+					}
+				}
+				
 			}
 
 			/* check if current */

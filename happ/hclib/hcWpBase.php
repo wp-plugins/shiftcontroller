@@ -138,6 +138,8 @@ class hcWpBase2
 	{
 		if( $this->is_me_admin() )
 		{
+			$GLOBALS['NTS_APP'] = $this->app;
+
 			$current_user = wp_get_current_user();
 			$GLOBALS['NTS_CONFIG'][$this->app]['FORCE_LOGIN_ID'] = $current_user->ID;
 			$GLOBALS['NTS_CONFIG'][$this->app]['FORCE_LOGIN_NAME'] = $current_user->user_email;
@@ -155,6 +157,8 @@ class hcWpBase2
 
 		if( $this->is_me_front() )
 		{
+			$GLOBALS['NTS_APP'] = $this->app;
+
 			add_action( 'wp_enqueue_scripts',	array($this, 'admin_scripts') );
 			add_action( 'wp_head', 				array($this, 'admin_head') );
 

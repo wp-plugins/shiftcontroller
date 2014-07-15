@@ -13,7 +13,13 @@ class Loginlog_model extends MY_model
 
 	public function log( $user )
 	{
-		$this->user_id = $user->id;
+		$user_id = 0;
+		if( isset($user->id) && $user->id )
+		{
+			$user_id = $user->id;
+		}
+
+		$this->user_id = $user_id;
 		$this->action_time = time();
 		$this->remote_ip = isset($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : '';
 		return $this->save();

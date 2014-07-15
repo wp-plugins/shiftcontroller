@@ -39,6 +39,12 @@ class Conf_admin_controller extends Backend_controller
 		$this->form_validation->set_rules( 'submit', 'submit', 'required' );
 		$fields = $this->config->items('settings');
 
+		$ri = $this->remote_integration();
+		if( $ri )
+		{
+			unset( $fields['login_with'] );
+		}
+
 		reset( $fields );
 		foreach( $fields as $fn => $f )
 		{
@@ -47,6 +53,7 @@ class Conf_admin_controller extends Backend_controller
 				$this->form_validation->set_rules( $fn, $f['label'], $f['rules'] );
 			}
 		}
+		$this->data['fields'] = $fields;
 
 		if( $this->form_validation->run() == false )
 		{

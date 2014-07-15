@@ -1,7 +1,3 @@
-<?php
-$fields = $this->config->items('settings');
-reset( $fields );
-?>
 <div class="page-header">
 <h2><?php echo lang('menu_conf_settings'); ?></h2>
 </div>

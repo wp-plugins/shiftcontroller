@@ -2,14 +2,14 @@
 /**
  * @package ShiftController
  * @author ShiftController
- * @version 2.2.5
+ * @version 2.2.6
  */
 /*
 Plugin Name: ShiftController
 Plugin URI: http://www.shiftcontroller.com/
 Description: Staff scheduling plugin.
 Author: ShiftController
-Version: 2.2.5
+Version: 2.2.6
 Author URI: http://www.shiftcontroller.com/
 */
 error_reporting( E_ERROR & ~E_NOTICE );

@@ -645,6 +645,7 @@ class Schedules_controller extends Backend_controller
 						$view = 'index';
 						break;
 				}
+				$view = 'index_calendar';
 				break;
 
 			case 'browse':
@@ -731,7 +732,7 @@ class Schedules_controller extends Backend_controller
 				break;
 
 			default:
-				$view = 'index';
+				$view = 'index_calendar';
 				break;
 		}
 

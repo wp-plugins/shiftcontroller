@@ -11,6 +11,12 @@ class Users_controller extends Backend_controller_crud
 			'export'	=> 'users',
 			);
 		parent::__construct( User_model::LEVEL_ADMIN );
+
+		$CI =& ci_get_instance();
+		if( $CI->app_conf->get('login_with') != 'username' )
+		{
+			unset( $this->{$this->model}->validation['username'] );
+		}
 	}
 
 	function index( $status = 1 )

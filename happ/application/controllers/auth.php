@@ -50,7 +50,7 @@ class Auth_controller extends Front_Controller {
 		$this->data['title'] = "Login";
 
 	//validate form input
-		$this->form_validation->set_rules('identity', 'lang:common_email', 'required');
+		$this->form_validation->set_rules('identity', 'identity', 'required');
 		$this->form_validation->set_rules('password', 'lang:common_password', 'required');
 
 		if ($this->form_validation->run() == true)
@@ -195,6 +195,7 @@ class Auth_controller extends Front_Controller {
 	function profile()
 	{
 		$email = $this->auth->user()->email;
+		$username = $this->auth->user()->username;
 		$this->form_validation->set_rules('email', lang('common_email'), 'required|valid_email');
 
 		if ( ! $this->auth->check())
@@ -212,7 +213,9 @@ class Auth_controller extends Front_Controller {
 				'name' => 'email',
 				'id'   => 'email',
 				'type' => 'text',
-			);
+				);
+
+			$this->data['username'] = $username;
 
 			//render
 			$this->data['include'] = 'auth/profile';

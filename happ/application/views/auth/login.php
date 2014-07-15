@@ -3,7 +3,16 @@
 </div>
 
 <?php
-$identity['placeholder'] = lang('common_email');
+if( $this->app_conf->get('login_with') == 'username' )
+{
+	$identity_label = lang('common_username');
+}
+else
+{
+	$identity_label = lang('common_email');
+}
+
+$identity['placeholder'] = $identity_label;
 $password['placeholder'] = lang('common_password');
 ?>
 
@@ -11,7 +20,7 @@ $password['placeholder'] = lang('common_password');
 
 <?php
 echo Hc_html::wrap_input(
-	lang('common_email'),
+	$identity_label,
 	$this->hc_form->build_input($identity)
 	);
 ?>

@@ -5,11 +5,17 @@ $this_method = $this->router->fetch_method();
 <?php if ( $this->auth && ($this->auth->check()) ) : ?>
 	<?php
 	$user = $this->auth->user();
+	$login_with = $this->app_conf->get('login_with');
 	?>
 	<ul class="nav nav-pills">
 		<li>
 			<a href="<?php echo ci_site_url('auth/profile'); ?>">
-				<i class="fa fa-user"></i> <?php echo $user->email; ?>
+				<i class="fa fa-user"></i> 
+				<?php if( $login_with == 'username' ) : ?>
+					<?php echo $user->username; ?>
+				<?php else : ?>
+					<?php echo $user->email; ?>
+				<?php endif; ?>
 			</a>
 		</li>
 		<li class="divider">&nbsp;</li>

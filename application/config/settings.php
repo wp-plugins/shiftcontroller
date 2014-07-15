@@ -99,3 +99,13 @@ $config['show_end_time_for_staff'] = array(
 	'label'		=> lang('show_end_time_for_staff'),
 	'type'		=> 'checkbox',
 	);
+
+$config['login_with'] = array(
+	'default' 	=> 'email',
+	'label'		=> lang('conf_login_with'),
+	'type'		=> 'dropdown',
+	'options'	=> array(
+		'email'		=> lang('common_email'),
+		'username'	=> lang('common_username'),
+		),
+	);

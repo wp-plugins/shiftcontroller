@@ -76,13 +76,24 @@ class Hc_auth
 		}
 	}
 
-	public function attempt( $email, $password, $remember = FALSE )
+	public function attempt( $identity, $password, $remember = FALSE )
 	{
-		$this->auth_model->from_array(
-			array(
-				'email'		=> $email,
-				)
+		$CI =& ci_get_instance();
+		$login_with = $CI->app_conf->get('login_with');
+
+		if( $login_with != 'username' )
+		{
+			$identity_name = 'email';
+		}
+		else
+		{
+			$identity_name = 'username';
+		}
+		$where = array(
+			$identity_name	=> $identity,
 			);
+
+		$this->auth_model->from_array( $where );
 		if( $this->auth_model->check_password($password) )
 		{
 			$this->login( $this->auth_model->id );

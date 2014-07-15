@@ -1,4 +1,6 @@
 <?php
+$login_with = $this->app_conf->get('login_with');
+
 $status_classes = array(
 	USER_MODEL::STATUS_ACTIVE	=> 'success',
 	USER_MODEL::STATUS_ARCHIVE	=> 'archive',
@@ -7,10 +9,15 @@ $status_classes = array(
 $fields = $this->fields;
 $heading = array(
 	lang('user_full_name'),
-	lang('common_email'),
-	lang('user_level'),
-	''
 	);
+
+if( $login_with == 'username' )
+	$heading[] = lang('common_username');
+else
+	$heading[] = lang('common_email');
+
+$heading[] = lang('user_level');
+$heading[] = '';
 $this->table->set_heading( $heading );
 
 reset( $entries );
@@ -21,7 +28,10 @@ foreach( $entries as $e ){
 	$row[] = ci_anchor( array($this->conf['path'], 'edit', $e->id), $e->full_name(), 'title="' . lang('common_edit') . '"' );
 
 // email
-	$row[] = ci_anchor( array($this->conf['path'], 'edit', $e->id), $e->email, 'title="' . lang('common_edit') . '"' );
+	if( $login_with == 'username' )
+		$row[] = ci_anchor( array($this->conf['path'], 'edit', $e->id), $e->username, 'title="' . lang('common_edit') . '"' );
+	else
+		$row[] = ci_anchor( array($this->conf['path'], 'edit', $e->id), $e->email, 'title="' . lang('common_edit') . '"' );
 
 // level
 	$row[] = $e->prop_text('level');

@@ -70,6 +70,7 @@ $lang['common_not_allowed'] = 'You are not allowed to access this page';
 $lang['common_history'] = 'History';
 $lang['common_changed_attribute'] = 'Changed Attribute';
 $lang['common_na'] = 'N/A';
+$lang['common_username'] = 'Username';
 
 $lang['profile_updated'] = 'Profile Updated';
 
@@ -125,6 +126,7 @@ $lang['conf_import_help'] = 'We can recognize the following columns in your CSV 
 $lang['conf_import_error_fields_missing'] = 'Mandatory fields missing in uploaded file';
 $lang['conf_import_message_fields_not_recognized'] = 'Some fields in your file are not recognized';
 $lang['conf_import_ok'] = '%s records imported';
+$lang['conf_login_with'] = 'Users log in with';
 
 /* AUTH */
 $lang['auth_profile'] = 'Profile';

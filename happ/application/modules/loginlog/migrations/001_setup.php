@@ -16,10 +16,12 @@ $this->dbforge->add_field(
 		'user_id' => array(
 			'type' => 'INT',
 			'null' => FALSE,
+			'default' => 0,
 			),
 		'action_time' => array(
 			'type' => 'INT',
 			'null' => FALSE,
+			'default' => 0,
 			),
 		'remote_ip' => array(
 			'type' => 'VARCHAR(32)',

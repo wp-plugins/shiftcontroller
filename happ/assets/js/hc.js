@@ -447,3 +447,9 @@ jQuery(document).on('click', '.dropdown-menu select', function()
 {
 	return false;
 });
+
+jQuery(document).on( 'click', 'a.hc-toggler', function(event)
+{
+	jQuery('.hc-toggled').toggle();
+	return false;
+});
