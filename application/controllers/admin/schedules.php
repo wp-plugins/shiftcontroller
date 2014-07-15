@@ -679,6 +679,11 @@ class Schedules_controller extends Backend_controller
 					if( ! $sh->user_id )
 						continue;
 
+					if( $sh->date < $this->data['start_date'] )
+						continue;
+					if( $sh->date > $this->data['end_date'] )
+						continue;
+
 					if( $filter == 'location' )
 					{
 						if( $sh->location_id != $this->data['current_location']->id )
