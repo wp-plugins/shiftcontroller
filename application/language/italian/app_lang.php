@@ -231,7 +231,7 @@ $lang['shift_delete'] = 'Cancella turno';
 $lang['shift_repeat_options'] = 'Ripeti Opzione';
 $lang['shift_repeat_no'] = 'Non ripetere';
 $lang['shift_status'] = 'Stato';
-$lang['shift_change_staff'] = 'scambia volontario';
+$lang['shift_change_staff'] = 'Scambia volontario';
 
 $lang['shift_status_active'] = 'Attivi';
 $lang['shift_status_active_help'] = 'Pubblicati, Volontari assegnati';

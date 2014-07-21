@@ -11,7 +11,16 @@ class Wall_wall_controller extends Front_controller
 		$this->load->library( 'hc_time' );
 
 	/* check user level */
-		$user_level = $this->app_conf->get('wall_schedule_display');
+		$remote_integration = $this->remote_integration();
+		if( $remote_integration )
+		{
+			$user_level = 0;
+		}
+		else
+		{
+			$user_level = $this->app_conf->get('wall_schedule_display');
+		}
+
 		if( $user_level )
 		{
 			$this->check_level( $user_level );

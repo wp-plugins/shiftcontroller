@@ -4,7 +4,7 @@ Contributors: HitCode
 Tags: staff scheduling, shift scheduling, employee scheduling, rota shift scheduling
 License: GPLv2 or later
 
-Stable tag: 2.2.6
+Stable tag: trunk
 Requires at least: 3.3
 Tested up to: 3.9
 
@@ -40,6 +40,10 @@ Author URI: http://www.shiftcontroller.com
 The upgrade is simply - upload everything up again to your `/wp-content/plugins/` directory, then go to the ShiftController menu item in the admin panel. It will automatically start the upgrade process if any needed.
 
 == Changelog ==
+
+= 2.2.7 =
+* Added an option to supply parameters to the shortcode to define the range (week or month) and the starting date
+* Minor fixes and code updates
 
 = 2.2.6 =
 * Minor fixes and code updates

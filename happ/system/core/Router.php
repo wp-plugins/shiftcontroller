@@ -101,7 +101,7 @@ class CI_Router {
 	 * @access	private
 	 * @return	void
 	 */
-	function _set_routing()
+	function _set_routing( $default_url_params = array() )
 	{
 		// Are query strings enabled in the config file?  Normally CI doesn't utilize query strings
 		// since URI segments are more search-engine friendly, but they can optionally be used.
@@ -181,7 +181,7 @@ class CI_Router {
 		$this->_parse_routes();
 
 		// Re-index the segment array so that it starts with 1 rather than 0
-		$this->uri->_reindex_segments();
+		$this->uri->_reindex_segments( $default_url_params );
 	}
 
 	// --------------------------------------------------------------------

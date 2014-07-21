@@ -2,14 +2,13 @@
 /**
  * @package ShiftController
  * @author ShiftController
- * @version 2.2.6
  */
 /*
 Plugin Name: ShiftController
 Plugin URI: http://www.shiftcontroller.com/
 Description: Staff scheduling plugin.
 Author: ShiftController
-Version: 2.2.6
+Version: 2.2.7
 Author URI: http://www.shiftcontroller.com/
 */
 error_reporting( E_ERROR & ~E_NOTICE );
@@ -116,6 +115,16 @@ class ShiftController extends hcWpBase2
 			{
 				$GLOBALS['NTS_CONFIG'][$this->app]['FORCE_USER_LEVEL'] = 0;
 			// action
+
+				global $post;
+				// might be shortcode with params
+				$pattern = '\[' . $this->slug . '\s*(.+)\]';
+				if(
+					preg_match('/'. $pattern .'/s', $post->post_content, $matches)
+					)
+				{
+					$nts_default_url_params = shortcode_parse_atts( $matches[1] );
+				}
 				require( $this->happ_path . '/application/index_action.php' );
 				$GLOBALS['NTS_CONFIG'][$this->app]['ACTION_STARTED'] = 1;
 			}

@@ -186,8 +186,12 @@
  * ------------------------------------------------------
  */
 
+	if( ! isset($nts_default_url_params) )
+	{
+		$nts_default_url_params = array();
+	}
 	$RTR =& load_class('Router', 'core');
-	$RTR->_set_routing();
+	$RTR->_set_routing( $nts_default_url_params );
 
 	// Set any routing overrides that may exist in the main index file
 	if (isset($routing))
@@ -213,6 +217,7 @@
 		if ($OUT->_display_cache($CFG, $URI) == TRUE)
 		{
 			exit;
+			
 		}
 	}
 

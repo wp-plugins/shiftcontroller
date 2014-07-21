@@ -81,7 +81,7 @@ require_once NTS_SYSTEM_APPPATH.'third_party/datamapper/bootstrap.php';
  * And away we go...
  *
  */
- 
+
 require_once BASEPATH.'core/CodeIgniter_.php';
 
 /* if ajax display it and exit */

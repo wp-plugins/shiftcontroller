@@ -47,7 +47,16 @@ class Dispatcher_controller extends Front_controller
 			$user_level = $GLOBALS['NTS_CONFIG'][$app]['FORCE_USER_LEVEL'];
 		}
 
-		$wall_schedule_display = $this->app_conf->get('wall_schedule_display');
+		$remote_integration = $this->remote_integration();
+		if( $remote_integration )
+		{
+			$wall_schedule_display = 0;
+		}
+		else
+		{
+			$wall_schedule_display = $this->app_conf->get('wall_schedule_display');
+		}
+
 		$allowed = FALSE;
 		switch( $user_level )
 		{
