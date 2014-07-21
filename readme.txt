@@ -42,7 +42,7 @@ The upgrade is simply - upload everything up again to your `/wp-content/plugins/
 == Changelog ==
 
 = 2.2.7 =
-* Added an option to supply parameters to the shortcode to define the range (week or month) and the starting date
+* Added an option to supply parameters to the shortcode to define the range (week or month) and the starting date, please check out the Configuration > Shortcode page
 * Minor fixes and code updates
 
 = 2.2.6 =
