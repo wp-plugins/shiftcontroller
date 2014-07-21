@@ -12,42 +12,44 @@ class MY_URI extends CI_URI {
 	function _reindex_segments( $default_url_params = array() )
 	{
 		parent::_reindex_segments();
-
-		$supplied_segments = array_slice($this->segments, 2);
-
-		$supplied_params = array();
-		for( $ii = 0; $ii < count($supplied_segments); $ii = $ii + 2 )
+		if( $default_url_params )
 		{
-			if( isset($supplied_segments[$ii + 1]) )
+			$supplied_segments = array_slice($this->segments, 2);
+
+			$supplied_params = array();
+			for( $ii = 0; $ii < count($supplied_segments); $ii = $ii + 2 )
 			{
-				$k = $supplied_segments[$ii];
-				$v = $supplied_segments[$ii + 1];
-				$supplied_params[ $k ] = $v;
+				if( isset($supplied_segments[$ii + 1]) )
+				{
+					$k = $supplied_segments[$ii];
+					$v = $supplied_segments[$ii + 1];
+					$supplied_params[ $k ] = $v;
+				}
 			}
-		}
 
-		foreach( $default_url_params as $k => $v )
-		{
-			if( ! array_key_exists($k, $supplied_params) )
+			foreach( $default_url_params as $k => $v )
 			{
-				$supplied_params[ $k ] = $v;
+				if( ! array_key_exists($k, $supplied_params) )
+				{
+					$supplied_params[ $k ] = $v;
+				}
 			}
-		}
 
-		if( ! isset($this->segments[2]) )
-		{
-			$this->segments[2] = 'index';
-		}
+			if( ! isset($this->segments[2]) )
+			{
+				$this->segments[2] = 'index';
+			}
 
-		$ii = 3;
-		foreach( $supplied_params as $k => $v )
-		{
-			$this->segments[$ii] = $k;
-			$this->rsegments[$ii] = $k;
-			$ii++;
-			$this->segments[$ii] = $v;
-			$this->rsegments[$ii] = $v;
-			$ii++;
+			$ii = 3;
+			foreach( $supplied_params as $k => $v )
+			{
+				$this->segments[$ii] = $k;
+				$this->rsegments[$ii] = $k;
+				$ii++;
+				$this->segments[$ii] = $v;
+				$this->rsegments[$ii] = $v;
+				$ii++;
+			}
 		}
 	}
 
