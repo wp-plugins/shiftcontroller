@@ -19,8 +19,6 @@ It helps overcome schedule conflicts as you can see and correct any conflicts du
 
 The monthly shifts are listed by position (location) or by staff member, the plugin automatically calculates the working time and the number of shifts. The plugin automatically emails the schedule to every staff member and lets them know when they work.
 
-ShiftController users database is automatically synchronized with WordPress - you can define which WordPress user roles will be administrators and staff members in ShiftController. 
-
 ###Pro Version Features###
 
 * __Recurring Shifts__ to quickly schedule shifts weeks ahead
@@ -28,6 +26,8 @@ ShiftController users database is automatically synchronized with WordPress - yo
 * __Notes for shifts and timeoffs__ to keep track of what is going on
 
 Please visit [our website](http://www.shiftcontroller.com "WordPress Employee Scheduling") for more info and [get the Premium version now!](http://www.shiftcontroller.com/order/).
+
+ShiftController users database is automatically synchronized with WordPress - you can define which WordPress user roles will be administrators and staff members in ShiftController. 
 
 == Support ==
 Please contact us at http://www.shiftcontroller.com/contact/
