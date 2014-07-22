@@ -1,4 +1,4 @@
-=== ShiftController Staff Scheduler - Employee Shift Scheduling ===
+=== ShiftController - Employee Shift Scheduling ===
 
 Contributors: HitCode
 Tags: staff scheduling, shift scheduling, employee scheduling, rota shift scheduling
