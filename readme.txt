@@ -8,16 +8,26 @@ Stable tag: trunk
 Requires at least: 3.3
 Tested up to: 3.9
 
+Schedule staff and shifts anywhere at anytime online from your WordPress powered website.
+
 == Description ==
 
 ShiftController is a staff scheduling plugin for any business that needs to manage and schedule staff. 
 It provides the ability for the administrators to assign staff members to the shifts.
 ShiftController allows to manage timeoffs and holidays so you can assign only those people who are available for work. 
 It helps overcome schedule conflicts as you can see and correct any conflicts due to overlapping shifts or timeoffs. 
-The monthly shifts are listed by position (location) or by staff member, the plugin automatically calculates the working time and the number of shifts.
-The plugin automatically emails the schedule to every staff member and lets them know when they work.
+
+The monthly shifts are listed by position (location) or by staff member, the plugin automatically calculates the working time and the number of shifts. The plugin automatically emails the schedule to every staff member and lets them know when they work.
+
 ShiftController users database is automatically synchronized with WordPress - you can define which WordPress user roles will be administrators and staff members in ShiftController. 
-Please visit [our website](http://www.shiftcontroller.com "WordPress Employee Scheduling") for more info, or try our online staff scheduling [demo](http://www.shiftcontroller.com/demo/ "ShiftController Premium Demo") with all features.
+
+###Pro Version Features###
+
+* __Recurring Shifts__ to quickly schedule shifts weeks ahead
+* __Shift Trade__ to let your staff exchange their shifts
+* __Notes for shifts and timeoffs__ to keep track of what is going on
+
+Please visit [our website](http://www.shiftcontroller.com "WordPress Employee Scheduling") for more info and [get the Premium version now!](http://www.shiftcontroller.com/order/).
 
 == Support ==
 Please contact us at http://www.shiftcontroller.com/contact/
