@@ -18,6 +18,12 @@ class Shifts_controller extends Backend_controller_crud
 		$this->data['location_count'] = $location_count;
 	}
 
+	function after_delete()
+	{
+		$redirect_to = array('admin/schedules');
+		return $redirect_to;
+	}
+
 	function publish( $id )
 	{
 		if( $this->{$this->model}->id != $id )

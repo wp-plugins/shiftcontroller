@@ -217,7 +217,6 @@
 		if ($OUT->_display_cache($CFG, $URI) == TRUE)
 		{
 			exit;
-			
 		}
 	}
 

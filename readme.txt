@@ -51,6 +51,10 @@ The upgrade is simply - upload everything up again to your `/wp-content/plugins/
 
 == Changelog ==
 
+= 2.2.8 =
+* If there are open shifts in more than one location, an employee is asked to choose a location first, then the available shifts in this location ara displayed.
+* Minor fixes and code updates
+
 = 2.2.7 =
 * Added an option to supply parameters to the shortcode to define the range (week or month) and the starting date, please check out the Configuration > Shortcode page
 * Minor fixes and code updates

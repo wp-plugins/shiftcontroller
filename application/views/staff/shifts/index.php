@@ -5,10 +5,44 @@
 	<?php echo lang('common_none'); ?>
 <?php endif; ?>
 
+<?php if( $display == 'pickup' ) : ?>
+	<?php
+	$temp_count_by_location = array();
+	foreach( $shifts as $sh )
+	{
+		if( ! isset($temp_count_by_location[$sh->location_id]) )
+		{
+			$temp_count_by_location[$sh->location_id] = 0;
+		}
+		$temp_count_by_location[ $sh->location_id ]++;
+	}
+
+	$count_by_location = array();
+	foreach( $locations as $lid => $loc )
+	{
+		if( isset($temp_count_by_location[$lid]) )
+			$count_by_location[ $lid ] = $temp_count_by_location[ $lid ];
+	}
+	?>
+	<?php if( count($count_by_location) > 1 ) : ?>
+		<ul class="list-inline list-separated">
+		<?php foreach( $count_by_location as $lid => $count ) : ?>
+			<li>
+				<a href="<?php echo ci_site_url( array($this->conf['path'], 'index', 'display', 'pickup', 'location', $lid) ); ?>" class="btn btn-default">
+					<i class="fa fa-home"></i> <?php echo $locations[$lid]->name; ?> [<?php echo $count; ?>]
+				</a>
+			</li>
+		<?php endforeach; ?>
+		</ul>
+		<?php return; ?>
+	<?php endif; ?>
+<?php endif; ?>
+
 <?php
 $per_row = 4;
 $row_open = FALSE;
 $ii = 0;
+reset( $shifts );
 ?>
 
 <?php foreach( $shifts as $sh ) : ?>

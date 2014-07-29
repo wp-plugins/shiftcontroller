@@ -1,8 +1,11 @@
 <?php
 // set timezone
-$tz = get_option('timezone_string');
-if( strlen($tz) )
+if( function_exists('get_option') )
 {
-	date_default_timezone_set( $tz );
+	$tz = get_option('timezone_string');
+	if( strlen($tz) )
+	{
+		date_default_timezone_set( $tz );
+	}
 }
 ?>

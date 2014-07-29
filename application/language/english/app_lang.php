@@ -219,6 +219,7 @@ $lang['shift_edit'] = 'Edit Shift';
 $lang['shift_start'] = 'Start Time';
 $lang['shift_end'] = 'End Time';
 $lang['shift_next'] = 'My Next Shifts';
+$lang['shift_old'] = 'My Old Shifts';
 $lang['shift_staff_count'] = 'Staff Count';
 $lang['shift_error_end_start'] = 'The shift end time should differ from the start time';
 $lang['shift_error_staff_required'] = 'Staff required';
