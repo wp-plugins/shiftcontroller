@@ -19,7 +19,7 @@ class Location_model extends MY_model
 		'name'	=> array(
 			'label'	=> 'lang:location_name',
 			'rules'	=> array('required', 'trim', 'max_length' => 50, 'unique')
-			)
+			),
 		);
 
 	var $my_fields = array(
@@ -28,6 +28,11 @@ class Location_model extends MY_model
 			'label'		=> 'lang:location_name',
 			'size'		=> 24,
 			'required'	=> TRUE,
+			),
+		array(
+			'name'		=> 'description',
+			'type'		=> 'textarea',
+			'label'		=> 'lang:common_description',
 			),
 		);
 

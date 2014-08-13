@@ -6,10 +6,13 @@
 $brand_title = $this->config->item('nts_app_title');
 ?>
 <p>
-Thank you for trying <strong><?php echo $brand_title; ?></strong>! Please now proceed to the <a href="<?php echo ci_site_url(); ?>">start page</a>.
+Thank you for installing <strong><?php echo $brand_title; ?></strong>! Please now proceed to the <a href="<?php echo ci_site_url(); ?>">start page</a>.
+</p>
 
-<?php if( $this->input->server('SERVER_NAME') != 'localhost') : ?>
+<META http-equiv="refresh" content="5;URL=<?php echo ci_site_url(); ?>">
+
 <?php
+$localhost = ($this->input->server('SERVER_NAME') != 'localhost') ? FALSE : TRUE;
 $track_setup = $this->config->item('nts_track_setup');
 if( $track_setup )
 {
@@ -17,9 +20,11 @@ if( $track_setup )
 }
 ?>
 <?php if( $track_setup ) : ?>
+<?php if( $localhost ) : ?>
+	<?php // echo 'TRACKING ' . $track_site_id . ':' . $track_goal_id; ?>
+<?php else : ?>
 <br><br><br><br>
 
-<p>
 <script type="text/javascript">
   var _paq = _paq || [];
   _paq.push(["trackPageView"]);

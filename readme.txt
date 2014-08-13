@@ -51,6 +51,11 @@ The upgrade is simply - upload everything up again to your `/wp-content/plugins/
 
 == Changelog ==
 
+= 2.2.9 =
+* If more than one locations are available in the "Everyone Schedule" then it first asks to choose a location first.
+* Added the description field for locations. If specified, it will be given in the "Everyone Schedule" and "Shift Pick Up" parts if more than one location available.
+* Redesigned the "Everyone Schedule" (wall) page view so that lists all upcoming shifts in a simple list. It is supposed to eleminate all the compatibility issues for the shortcode page display as the calendar output would look cumbersome under certain themes.
+
 = 2.2.8 =
 * If there are open shifts in more than one location, an employee is asked to choose a location first, then the available shifts in this location ara displayed.
 * Minor fixes and code updates

@@ -32,7 +32,7 @@ class Wall_wall_controller extends Front_controller
 		$this->data['location_count'] = $location_count;
 	}
 
-	private function _load_shifts( $date = 0, $staff_id = 0 )
+	private function _load_shifts( $dates = array(), $staff_id = 0, $location_id = 0 )
 	{
 		if( $staff_id )
 		{
@@ -47,32 +47,9 @@ class Wall_wall_controller extends Front_controller
 			$timeoff_model = new Timeoff_Model;
 		}
 
-		if( $date )
+		if( $dates )
 		{
-			if( is_array($date) ) // to-from
-			{
-				$this->hc_time->setDateDb( $date[1] );
-				$this->hc_time->modify( '+1 day' );
-				$tomorrow = $this->hc_time->formatDate_Db();
-				$this->hc_time->setDateDb( $date[0] );
-				$this->hc_time->modify( '-1 day' );
-				$yesterday = $this->hc_time->formatDate_Db();
-			}
-			else
-			{
-				$this->hc_time->setDateDb( $date );
-				$this->hc_time->modify( '+1 day' );
-				$tomorrow = $this->hc_time->formatDate_Db();
-				$this->hc_time->setDateDb( $date );
-				$this->hc_time->modify( '-1 day' );
-				$yesterday = $this->hc_time->formatDate_Db();
-			}
-
-			$shift_model->where('date <=', $tomorrow);
-			$shift_model->where('date >=', $yesterday);
-
-			$timeoff_model->where('date <', $tomorrow);
-			$timeoff_model->where('date_end >', $yesterday);
+			$shift_model->where_in('date', $dates);
 		}
 
 		$shift_model
@@ -83,6 +60,11 @@ class Wall_wall_controller extends Front_controller
 			->order_by( 'date', 'ASC' )
 			->order_by( 'start', 'ASC' )
 			->order_by( 'location_show_order', 'ASC' );
+
+		if( $location_id )
+		{
+			$shift_model->where_related( 'location', 'id', $location_id );
+		}
 
 		$shift_model->group_start();
 			$shift_model->where('status', SHIFT_MODEL::STATUS_ACTIVE);
@@ -130,7 +112,7 @@ class Wall_wall_controller extends Front_controller
 		}
 	}
 
-	function day( $date )
+	function day( $date, $location_id = 0 )
 	{
 		$args = $this->parse_args( func_get_args() );
 		$range = isset($args['range']) ? $args['range'] : 'week'; // or month
@@ -143,7 +125,7 @@ class Wall_wall_controller extends Front_controller
 	/* load shifts if needed */
 		if( ! isset($this->data['shifts']) )
 		{
-			$this->_load_shifts( $date );
+			$this->_load_shifts( $date, 0, $location_id );
 		}
 
 	/* filter all shifts */
@@ -186,49 +168,59 @@ class Wall_wall_controller extends Front_controller
 
 		$display = 'all';
 		$range = isset($args['range']) ? $args['range'] : 'week'; // or month
-		$date = isset($args['start']) ? $args['start'] : '';
-		$end_date = '';
-
-	/* check if schedule for this date exists */
-		if( $end_date )
+		$location_id = isset($args['location']) ? $args['location'] : 0;
+		if( isset($args['start']) )
 		{
-			$start_date = $date;
-			if( $end_date < $start_date )
-				$end_date = $start_date;
+			$start_date = $args['start'];
 		}
 		else
 		{
-			if( $date )
+			$start_date = $this->hc_time->setNow()->formatDate_Db();
+		}
+
+		$end_date = '';
+
+	/* find dates that we have shifts */
+		$shift_model = new Shift_Model;
+		$shift_model->select( 'date' );
+
+		$shift_model->where('date >=', $start_date);
+
+		$shift_model->group_start();
+			$shift_model->where('status', SHIFT_MODEL::STATUS_ACTIVE);
+			if( 
+				$this->auth->check() && 
+				$this->app_conf->get('staff_pick_shifts')
+				)
 			{
-				$this->hc_time->setDateDb( $date );
+				$shift_model->or_where('user_id IS ', 'NULL', FALSE);
 			}
 			else
 			{
-				$this->hc_time->setNow();
+				$shift_model->where('user_id IS NOT ', 'NULL', FALSE);
 			}
+		$shift_model->group_end();
 
-			switch( $range )
-			{
-				case 'week':
-					$this->hc_time->setStartWeek();
-					$start_date = $this->hc_time->formatDate_Db();
-					$this->hc_time->setEndWeek();
-					$end_date = $this->hc_time->formatDate_Db();
-					break;
-
-				case 'month':
-					$this->hc_time->setStartMonth();
-					$start_date = $this->hc_time->formatDate_Db();
-					$this->hc_time->setEndMonth();
-					$end_date = $this->hc_time->formatDate_Db();
-					break;
-			}
+		if( $location_id )
+		{
+			$shift_model->where_related( 'location', 'id', $location_id );
 		}
 
-		$this->data['start_date'] = $start_date;
-		$this->data['end_date'] = $end_date;
-		$this->data['range'] = $range;
+		$shift_model->distinct();
+//		$shift_model->limit( 3 );
 
+		$shift_model->order_by( 'date', 'ASC' );
+
+		$shift_model->get();
+
+		$dates = array();
+		foreach( $shift_model as $s )
+		{
+			$dates[] = $s->date;
+		}
+		$this->data['dates'] = $dates;
+
+	/* preload staff information */
 		$um = new User_Model;
 		$staffs = $um->get_staff();
 		$this->data['staffs'] = array();
@@ -237,30 +229,23 @@ class Wall_wall_controller extends Front_controller
 			$this->data['staffs'][ $sta->id ] = $sta;
 		}
 
-	/* decide which view */
-		switch( $display )
+	/* preload location information */
+		$lm = new Location_Model;
+		$locations = $lm
+			->get()->all;
+		$this->data['locations'] = array();
+		foreach( $locations as $loc )
 		{
-			case 'all':
-				$view = 'index';
-				break;
-
-			case 'staff':
-				$view = 'index_staff';
-				break;
-
-			case 'browse':
-				$view = 'index_browse';
-				break;
-
-			default:
-				$view = 'index';
-				break;
+			$this->data['locations'][ $loc->id ] = $loc;
 		}
 
+		$this->data['location_id'] = $location_id;
 		$this->data['display'] = $display;
 
 	/* load shifts so that they can be reused in module displays to save queries */
-		$this->_load_shifts( array($start_date, $end_date) );
+		$this->_load_shifts( $dates, 0, $location_id );
+
+		$view = 'index';
 
 		$this->set_include( $view );
 		$this->load->view( $this->template, $this->data);

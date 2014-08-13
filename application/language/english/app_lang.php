@@ -1,5 +1,6 @@
 <?php
 /* COMMON */
+$lang['common_description'] = 'Description';
 $lang['common_overall'] = 'Overall';
 $lang['common_home'] = 'Home';
 $lang['common_email'] = 'Email';
@@ -282,6 +283,7 @@ $lang['schedule'] = 'Schedule';
 $lang['my_schedule'] = 'My Schedule';
 $lang['everyone_schedule'] = 'Everyone Schedule';
 $lang['everyone_schedule_display'] = "Who can view everyone's schedule";
+$lang['everyone_schedule_display_staff'] = "Staff Can See Others Schedule";
 $lang['schedules'] = 'Schedules';
 $lang['schedule_add'] = 'New Schedule';
 $lang['schedule_start'] = 'Start Date';

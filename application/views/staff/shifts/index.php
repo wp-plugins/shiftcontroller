@@ -30,6 +30,10 @@
 			<li>
 				<a href="<?php echo ci_site_url( array($this->conf['path'], 'index', 'display', 'pickup', 'location', $lid) ); ?>" class="btn btn-default">
 					<i class="fa fa-home"></i> <?php echo $locations[$lid]->name; ?> [<?php echo $count; ?>]
+					<?php if( $locations[$lid]->description ) : ?>
+						<br>
+						<span class="text-muted"><?php echo $locations[$lid]->description; ?></span>
+					<?php endif; ?>
 				</a>
 			</li>
 		<?php endforeach; ?>

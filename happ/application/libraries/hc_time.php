@@ -285,6 +285,7 @@ class Hc_time extends DateTime {
 
 	function setNow(){
 		$this->setTimestamp( time() );
+		return $this;
 		}
 
 	function differ( $other )
@@ -533,11 +534,13 @@ class Hc_time extends DateTime {
 	function setDateTime( $year, $month, $day, $hour, $minute, $second ){
 		$this->setDate( $year, $month, $day );
 		$this->setTime( $hour, $minute, $second );
+		return $this;
 		}
 
 	function setDateDb( $date ){
 		list( $year, $month, $day ) = Hc_time::splitDate( $date );
 		$this->setDateTime( $year, $month, $day, 0, 0, 0 );
+		return $this;
 		}
 
 	function formatPeriodOfDay( $start, $end )
