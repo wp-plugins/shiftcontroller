@@ -12,7 +12,7 @@ class Migration_location_description extends CI_Migration {
 					'description' => array(
 						'type'		=> 'TEXT',
 						'null'		=> TRUE,
-						'default'	=> '',
+//						'default'	=> '',
 						),
 					)
 				);
