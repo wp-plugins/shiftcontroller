@@ -1,6 +1,5 @@
 <?php
-if( $range == 'week' )
-	$wide_view = TRUE;
+$wide_view = TRUE;
 
 $this->hc_time->setDateDb( $date );
 $this_weekday = $this->hc_time->getWeekday();

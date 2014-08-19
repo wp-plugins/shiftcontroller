@@ -136,6 +136,30 @@ else
 }
 $final_title[] = '</ul>';
 
+
+if( $this->hc_modules->exists('notes') )
+{
+	$notes = $sh->note->get()->all;
+	if( count($notes) > 0 )
+	{
+		$notes_text = array();
+		reset( $notes );
+		foreach( $notes as $n )
+		{
+			$notes_text[] = $n->content;
+		}
+		$notes_text = join( "\n", $notes_text );
+
+		$notes_view = '';
+		$notes_view .= '<span class="hc-tooltip" style="float: right;" title="' . $notes_text . '">';
+		$notes_view .= '<i class="fa fa-comment-o"></i> ' . count($notes);
+		$notes_view .= '</span>';
+
+		array_unshift( $final_title, $notes_view );
+	}
+}
+
+
 $title = join( '', $final_title );
 ?>
 

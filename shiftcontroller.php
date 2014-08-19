@@ -144,8 +144,17 @@ class ShiftController extends hcWpBase2
 			$GLOBALS['NTS_CONFIG'][$this->app]['ACTION_STARTED']
 			)
 		{
+/*
+			$ci =& ci_get_instance();
+			$output = $ci->output->get_output();
+			return $output;
+*/
 			$file = $this->happ_path . '/application/index_view.php';
+			ob_start();
 			require( $file );
+			$return = ob_get_contents();
+			ob_end_clean();
+			return $return;
 		}
 	}
 }

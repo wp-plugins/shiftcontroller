@@ -9,19 +9,27 @@ $class = 'alert alert-success';
 	</a>
 <?php endif; ?>
 
-<a href="<?php echo ci_site_url( array($this->conf['path'], 'edit', $e->id) ); ?>" title="<?php echo lang('common_edit'); ?>">
-	<?php echo $e->name; ?>
-</a>
+<ul class="list-unstyled">
+	<li>
+		<a href="<?php echo ci_site_url( array($this->conf['path'], 'edit', $e->id) ); ?>" title="<?php echo lang('common_edit'); ?>">
+			<?php echo $e->name; ?>
+		</a>
+	</li>
 
-<br>
-<div class="pull-left">
-	<?php echo ci_anchor( array($this->conf['path'], 'up', $e->id), '<i class="fa fa-arrow-left"> </i>', 'title="' . lang('common_move_up') . '"' ); ?>
-</div>
+	<li class="text-muted">
+		id: <?php echo $e->id; ?>
+	</li>
 
-<div class="pull-right">
-	<?php echo ci_anchor( array($this->conf['path'], 'down', $e->id), '<i class="fa fa-arrow-right"></i>', 'title="' . lang('common_move_down') . '"' ); ?>
-</div>
+	<li>
+		<div class="pull-left">
+			<?php echo ci_anchor( array($this->conf['path'], 'up', $e->id), '<i class="fa fa-arrow-left"> </i>', 'title="' . lang('common_move_up') . '"' ); ?>
+		</div>
 
-<div class="clearfix"></div>
+		<div class="pull-right">
+			<?php echo ci_anchor( array($this->conf['path'], 'down', $e->id), '<i class="fa fa-arrow-right"></i>', 'title="' . lang('common_move_down') . '"' ); ?>
+		</div>
 
+		<div class="clearfix"></div>
+	</li>
+</ul>
 </div>

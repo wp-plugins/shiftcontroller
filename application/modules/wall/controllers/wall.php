@@ -115,9 +115,6 @@ class Wall_wall_controller extends Front_controller
 	function day( $date, $location_id = 0 )
 	{
 		$args = $this->parse_args( func_get_args() );
-		$range = isset($args['range']) ? $args['range'] : 'week'; // or month
-
-		$this->data['range'] = $range;
 
 		$this->data['display'] = 'all';
 		$sm = new Shift_Model;
@@ -167,8 +164,8 @@ class Wall_wall_controller extends Front_controller
 		$args = $this->parse_args( func_get_args() );
 
 		$display = 'all';
-		$range = isset($args['range']) ? $args['range'] : 'week'; // or month
 		$location_id = isset($args['location']) ? $args['location'] : 0;
+
 		if( isset($args['start']) )
 		{
 			$start_date = $args['start'];
@@ -178,13 +175,24 @@ class Wall_wall_controller extends Front_controller
 			$start_date = $this->hc_time->setNow()->formatDate_Db();
 		}
 
-		$end_date = '';
+		if( isset($args['end']) )
+		{
+			$end_date = $args['end'];
+		}
+		else
+		{
+			$end_date = '';
+		}
 
 	/* find dates that we have shifts */
 		$shift_model = new Shift_Model;
 		$shift_model->select( 'date' );
 
 		$shift_model->where('date >=', $start_date);
+		if( $end_date )
+		{
+			$shift_model->where('date <=', $end_date);
+		}
 
 		$shift_model->group_start();
 			$shift_model->where('status', SHIFT_MODEL::STATUS_ACTIVE);

@@ -148,15 +148,15 @@ class Migration_setup extends CI_Migration {
 					),
 				'first_name' => array(
 					'type' => 'VARCHAR(100)',
-					'null' => FALSE,
+					'null' => TRUE,
 					),
 				'last_name' => array(
 					'type' => 'VARCHAR(100)',
-					'null' => FALSE,
+					'null' => TRUE,
 					),
 				'email' => array(
 					'type' => 'VARCHAR(255)',
-					'null' => FALSE,
+					'null' => TRUE,
 					),
 				'password' => array(
 					'type' => 'VARCHAR(80)',
