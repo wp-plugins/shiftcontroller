@@ -104,7 +104,6 @@ class Wordpress_setup_controller extends Setup_controller
 				$user->password = hc_random();
 				$user->level = USER_MODEL::LEVEL_ADMIN;
 
-				
 				if( $user->save_as_new() )
 				{
 					$count_users++;

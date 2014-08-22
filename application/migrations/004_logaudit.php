@@ -1,19 +1,17 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Migration_logaudit extends CI_Migration {
-	public function up()
+if( ! class_exists('Migration_logaudit') )
+{
+	class Migration_logaudit extends CI_Migration
 	{
-		$CI =& ci_get_instance();
-		if( $CI->hc_modules->exists('logaudit') )
+		public function up()
 		{
-			$module_dir = $CI->hc_modules->module_dir('logaudit');
-			$migration_file = $module_dir . '/migrations/001_setup.php';
-			require( $migration_file );
+			/* nothing here as it is now handled by modules migrations */
 		}
-	}
 
-	public function down()
-	{
+		public function down()
+		{
+		}
 	}
 }

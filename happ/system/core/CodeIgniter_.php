@@ -256,10 +256,28 @@
 		return CI_Controller::ci_get_instance();
 	}
 
-	if (file_exists(NTS_SYSTEM_APPPATH.'core/'.$CFG->config['subclass_prefix'].'Controller.php'))
+	$happ_core_dir = NTS_SYSTEM_APPPATH . 'core/';
+
+	$base_controller_file = $happ_core_dir . $CFG->config['subclass_prefix'] . 'BaseController.php';
+	$my_happ_controller_file = $happ_core_dir . $CFG->config['subclass_prefix'] . 'Controller.php';
+	$my_controller_file = APPPATH.'core/'.$CFG->config['subclass_prefix'].'Controller.php';
+
+	if( file_exists($base_controller_file) )
 	{
-		require NTS_SYSTEM_APPPATH.'core/'.$CFG->config['subclass_prefix'].'Controller.php';
+		require( $base_controller_file );
 	}
+	if( file_exists($my_controller_file) )
+	{
+		require( $my_controller_file );
+	}
+	else
+	{
+		require( $my_happ_controller_file );
+	}
+
+	include_once( $happ_core_dir . 'Front_controller.php' );
+	include_once( $happ_core_dir . 'Backend_controller.php' );
+	include_once( $happ_core_dir . 'Backend_controller_crud.php' );
 
 	// Load the local application controller
 	// Note: The Router class automatically validates the controller path using the router->_validate_request().

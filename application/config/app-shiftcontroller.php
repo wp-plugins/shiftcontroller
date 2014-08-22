@@ -12,7 +12,12 @@ $config['modules'] = array(
 	'conf',
 	'wordpress',
 	'wall',
-//	'notes',
+//	'notes'	=> array(
+//		'relations'	=> array(
+//			'timeoff_id',
+//			'shift_id'
+//			)
+//		),
 //	'shift_groups',
 //	'shift_trades',
 	'loginlog',

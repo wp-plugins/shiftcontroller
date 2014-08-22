@@ -1,5 +1,6 @@
 <?php
 /* COMMON */
+$lang['common_who_can_see'] = 'Who Can See';
 $lang['common_description'] = 'Description';
 $lang['common_overall'] = 'Overall';
 $lang['common_home'] = 'Home';
@@ -107,6 +108,7 @@ $lang['users_active'] = 'Active Users';
 $lang['user_restore'] = 'Restore';
 $lang['user_level'] = 'User Level';
 $lang['user_level_staff'] = 'Staff';
+$lang['user_level_staff_all'] = 'All Staff';
 $lang['user_level_manager'] = 'Manager';
 $lang['user_level_admin'] = 'Admin';
 $lang['user_status'] = 'Status';
@@ -225,6 +227,7 @@ $lang['shift_staff_count'] = 'Staff Count';
 $lang['shift_error_end_start'] = 'The shift end time should differ from the start time';
 $lang['shift_error_staff_required'] = 'Staff required';
 $lang['shift_add_staff'] = 'Add Staff';
+$lang['shift_staff'] = 'Shift Staff';
 $lang['shift_assign_staff'] = 'Assign';
 $lang['shift_change_staff'] = 'Change Staff';
 $lang['shift_no_staff'] = 'No Staff Available';

@@ -32,7 +32,11 @@ class Wall_wall_controller extends Front_controller
 		$this->data['location_count'] = $location_count;
 	}
 
-	private function _load_shifts( $dates = array(), $staff_id = 0, $location_id = 0 )
+	private function _load_shifts( 
+		$dates = array(),
+		$staff_id = 0,
+		$location_id = 0
+		)
 	{
 		if( $staff_id )
 		{
@@ -165,23 +169,44 @@ class Wall_wall_controller extends Front_controller
 
 		$display = 'all';
 		$location_id = isset($args['location']) ? $args['location'] : 0;
+		$staff_id = isset($args['staff']) ? $args['staff'] : 0;
 
 		if( isset($args['start']) )
-		{
 			$start_date = $args['start'];
-		}
 		else
-		{
 			$start_date = $this->hc_time->setNow()->formatDate_Db();
-		}
 
 		if( isset($args['end']) )
-		{
 			$end_date = $args['end'];
-		}
 		else
-		{
 			$end_date = '';
+
+		$this->hc_time->setDateDb( $start_date );
+		$range = isset($args['range']) ? $args['range'] : '';
+		if( $range )
+		{
+			switch( $range )
+			{
+				case 'week':
+					$this->hc_time->setStartWeek();
+					$start_date = $this->hc_time->formatDate_Db();
+					$this->hc_time->setEndWeek();
+					$end_date = $this->hc_time->formatDate_Db();
+					break;
+
+				case 'month':
+					$this->hc_time->setStartMonth();
+					$start_date = $this->hc_time->formatDate_Db();
+					$this->hc_time->setEndMonth();
+					$end_date = $this->hc_time->formatDate_Db();
+					break;
+
+				default:
+					$this->hc_time->modify('+' . $range);
+					$this->hc_time->modify('-1 day');
+					$end_date = $this->hc_time->formatDate_Db();
+					break;
+			}
 		}
 
 	/* find dates that we have shifts */
@@ -212,6 +237,10 @@ class Wall_wall_controller extends Front_controller
 		if( $location_id )
 		{
 			$shift_model->where_related( 'location', 'id', $location_id );
+		}
+		if( $staff_id )
+		{
+			$shift_model->where_related( 'user', 'id', $staff_id );
 		}
 
 		$shift_model->distinct();
@@ -251,7 +280,11 @@ class Wall_wall_controller extends Front_controller
 		$this->data['display'] = $display;
 
 	/* load shifts so that they can be reused in module displays to save queries */
-		$this->_load_shifts( $dates, 0, $location_id );
+		$this->_load_shifts(
+			$dates,
+			$staff_id,
+			$location_id
+			);
 
 		$view = 'index';
 

@@ -255,32 +255,6 @@ class CI_Migration {
 		return $this->_error_string;
 	}
 
-	// --------------------------------------------------------------------
-
-	/**
-	 * Set's the schema to the latest migration
-	 *
-	 * @return	mixed	true if already latest, false if failed, int if upgraded
-	 */
-	protected function find_migrations()
-	{
-		// Load all *_*.php files in the migrations path
-		$files = glob($this->_migration_path . '*_*.php');
-		$file_count = count($files);
-
-		for ($i = 0; $i < $file_count; $i++)
-		{
-			// Mark wrongly formatted files as false for later filtering
-			$name = basename($files[$i], '.php');
-			if ( ! preg_match('/^\d{3}_(\w+)$/', $name))
-			{
-				$files[$i] = FALSE;
-			}
-		}
-
-		sort($files);
-		return $files;
-	}
 
 	// --------------------------------------------------------------------
 

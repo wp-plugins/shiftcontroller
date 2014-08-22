@@ -7,9 +7,10 @@ $status_classes = array(
 	);
 
 $fields = $this->fields;
-$heading = array(
-	lang('user_full_name'),
-	);
+$heading = array();
+
+$heading[] = 'id';
+$heading[] = lang('user_full_name');
 
 if( $login_with == 'username' )
 	$heading[] = lang('common_username');
@@ -24,8 +25,14 @@ reset( $entries );
 foreach( $entries as $e ){
 	$row = array();
 
+	$row[] = $e->id;
+
 // full name
-	$row[] = ci_anchor( array($this->conf['path'], 'edit', $e->id), $e->full_name(), 'title="' . lang('common_edit') . '"' );
+	$row[] = ci_anchor(
+		array($this->conf['path'], 'edit', $e->id),
+		$e->full_name(),
+		'title="' . lang('common_edit') . '"'
+		);
 
 // email
 	if( $login_with == 'username' )

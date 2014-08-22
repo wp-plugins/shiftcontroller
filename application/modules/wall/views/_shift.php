@@ -4,6 +4,12 @@ if( ! isset($wide_view) )
 	$wide_view = FALSE;
 }
 
+$notes = array();
+if( $this->hc_modules->exists('notes') )
+{
+	$notes = $this->access_manager->filter_see( $sh->note->get()->all );
+}
+
 $this->hc_time->setNow();
 $today = $this->hc_time->formatDate_Db();
 
@@ -128,6 +134,19 @@ else
 		$final_title[] = '</li>';
 	}
 }
+
+
+if( count($notes) > 0 )
+{
+	foreach( $notes as $n )
+	{
+		$final_title[] = '<li style="font-style: italic;">';
+		$final_title[] = '<i class="fa-fw fa fa-comment-o"></i>';
+		$final_title[] = $n->content;
+		$final_title[] = '</li>';
+	}
+}
+
 $final_title[] = '</ul>';
 
 $title = join( '', $final_title );
@@ -159,6 +178,5 @@ $title = join( '', $final_title );
 				<i class="fa fa-check text-success"></i> <?php echo lang('shift_pick_up'); ?>
 			</a>
 		<?php endif; ?>
-
 	<?php endif; ?>
 </div>

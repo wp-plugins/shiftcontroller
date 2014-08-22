@@ -5,17 +5,7 @@ $is_my = ( $my_user_id == $sh->user_id ) ? TRUE : FALSE;
 $notes = array();
 if( $this->hc_modules->exists('notes') )
 {
-	$notes = $sh->note->get()->all;
-	if( count($notes) > 0 )
-	{
-		$notes_text = array();
-		reset( $notes );
-		foreach( $notes as $n )
-		{
-			$notes_text[] = $n->content;
-		}
-		$notes_text = join( "\n", $notes_text );
-	}
+	$notes = $this->access_manager->filter_see( $sh->note->get()->all );
 }
 $this->hc_time->setDateDb( $sh->date );
 
@@ -68,6 +58,15 @@ $container_class = $conflicts ? 'alert-danger' : 'alert-none';
 			</li>
 		<?php endif; ?>
 
+		<?php if( count($notes) > 0 ) : ?>
+			<?php foreach( $notes as $n ) : ?>
+				<li style="font-style: italic;">
+					<i class="fa-fw fa fa-comment-o"></i> 
+					<?php echo $n->content; ?>
+				</li>
+			<?php endforeach; ?>
+		<?php endif; ?>
+
 		<?php if( ! $is_my ) : ?>
 
 			<?php 
@@ -94,13 +93,6 @@ $container_class = $conflicts ? 'alert-danger' : 'alert-none';
 				<?php endif; ?>
 			<?php endif; ?>
 
-		<?php endif; ?>
-
-		<?php if( count($notes) > 0 ) : ?>
-			<li style="font-style: italic;">
-				<i class="fa-fw fa fa-comment-o"></i> 
-				<?php echo $notes_text; ?>
-			</li>
 		<?php endif; ?>
 	</ul>
 </div>

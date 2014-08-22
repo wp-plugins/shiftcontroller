@@ -6,10 +6,11 @@ class Backend_controller extends MY_Controller
 		parent::__construct();
 
 		$this->load->library('migration');
-		if ( ! $this->migration->current()){
+		if ( ! $this->migration->current())
+		{
 //			show_error($this->migration->error_string());
 			return false;
-			}
+		}
 		$this->load->library( 'conf/app_conf' );
 		$this->load->library( 'hc_time' );
 		$this->load->library( 'hc_form' );

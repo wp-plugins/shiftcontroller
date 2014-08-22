@@ -51,6 +51,10 @@ The upgrade is simply - upload everything up again to your `/wp-content/plugins/
 
 == Changelog ==
 
+= 2.3.0 =
+* Added more options for shortcode to filter by location or by staff, as well as specify the start and end date and how many days to show.
+* Extended options for the shift notes premium module, now one can define who can see the shift note - everyone, staff members, this shift staff or admin only.
+
 = 2.2.9 =
 * If more than one locations are available in the "Everyone Schedule" then it first asks to choose a location first.
 * Added the description field for locations. If specified, it will be given in the "Everyone Schedule" and "Shift Pick Up" parts if more than one location available.

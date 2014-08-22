@@ -37,7 +37,7 @@ class Setup_controller extends MX_Controller
 		$this->data['page_title'] = $this->config->item('nts_app_title') . ' :: ' . 'Installation';
 
 	/* add module models paths for autoloading */
-		$modules = $this->config->item('modules');
+		$modules = $this->config->get_modules();
 		if( is_array($modules) )
 		{
 			reset($modules);

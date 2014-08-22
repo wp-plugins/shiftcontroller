@@ -134,7 +134,6 @@ else
 		$final_title[] = '</li>';
 	}
 }
-$final_title[] = '</ul>';
 
 
 if( $this->hc_modules->exists('notes') )
@@ -142,6 +141,7 @@ if( $this->hc_modules->exists('notes') )
 	$notes = $sh->note->get()->all;
 	if( count($notes) > 0 )
 	{
+/*
 		$notes_text = array();
 		reset( $notes );
 		foreach( $notes as $n )
@@ -151,14 +151,26 @@ if( $this->hc_modules->exists('notes') )
 		$notes_text = join( "\n", $notes_text );
 
 		$notes_view = '';
-		$notes_view .= '<span class="hc-tooltip" style="float: right;" title="' . $notes_text . '">';
+		$notes_view .= '<span class="hc-tooltip" style="position: absolute; top: 0; right: 0; float: right;" title="' . $notes_text . '">';
 		$notes_view .= '<i class="fa fa-comment-o"></i> ' . count($notes);
 		$notes_view .= '</span>';
 
 		array_unshift( $final_title, $notes_view );
+*/
+		$final_title[] = '<li class="divider"></li>';
+		reset( $notes );
+		foreach( $notes as $n )
+		{
+			$final_title[] = '<li class="squeeze-in" title="' . quotes_to_entities($n->content). '">';
+			$final_title[] = '<i class="fa fa-comment-o fa-fw"></i> ' . $n->content;
+			$final_title[] = '</li>';
+		}
+
+
 	}
 }
 
+$final_title[] = '</ul>';
 
 $title = join( '', $final_title );
 ?>

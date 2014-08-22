@@ -4,7 +4,10 @@ $show_end_time_for_staff = $this->app_conf->get( 'show_end_time_for_staff' );
 $conflicts = $object->conflicts();
 $notes_count = 0;
 if( $this->hc_modules->exists('notes') )
-	$notes_count = $object->note->count();
+{
+	$notes = $this->access_manager->filter_see( $object->note->get()->all );
+	$notes_count = count($notes);
+}
 
 $tabs = array();
 $tab_content = array();

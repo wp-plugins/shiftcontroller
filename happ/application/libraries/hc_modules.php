@@ -5,8 +5,8 @@ class Hc_modules
 
 	function __construct()
 	{
-		$CI =& ci_get_instance(); 
-		$this->modules = $CI->config->item('modules');
+		$CI =& ci_get_instance();
+		$this->modules = $CI->config->get_modules();
 	}
 
 	function exists( $path )

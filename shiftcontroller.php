@@ -8,7 +8,7 @@ Plugin Name: ShiftController
 Plugin URI: http://www.shiftcontroller.com/
 Description: Staff scheduling plugin.
 Author: ShiftController
-Version: 2.2.9
+Version: 2.3.0
 Author URI: http://www.shiftcontroller.com/
 */
 error_reporting( E_ERROR & ~E_NOTICE );
