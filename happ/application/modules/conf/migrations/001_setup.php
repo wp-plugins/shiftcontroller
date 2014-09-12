@@ -16,7 +16,7 @@ class Migration_conf_setup extends MY_Migration {
 						'auto_increment' => TRUE
 						),
 					'name' => array(
-						'type' => 'VARCHAR(32)',
+						'type' => 'VARCHAR(255)',
 						'null' => FALSE,
 						),
 					'value' => array(
