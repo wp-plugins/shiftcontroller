@@ -91,17 +91,19 @@ class MY_Session extends CI_Session {
 				if( ! in_array($key, $this->builtin_props) )
 				{
 					$my_key = $this->my_prefix . $key;
-					if( ! isset($_SESSION[$my_key]) )
-						$_SESSION[$my_key] = array();
-
 					if( is_array($val) )
 					{
+						if( ! isset($_SESSION[$my_key]) )
+							$_SESSION[$my_key] = array();
+						if( ! is_array($_SESSION[$my_key]) )
+							$_SESSION[$my_key] = array( $_SESSION[$my_key] );
 						$_SESSION[$my_key] = array_merge( $_SESSION[$my_key], $val );
 					}
 					else
 					{
-						$_SESSION[$my_key][] = $val;
+						$_SESSION[$my_key] = $val;
 					}
+//					$_SESSION[$my_key] = $val;
 				}
 				else
 				{

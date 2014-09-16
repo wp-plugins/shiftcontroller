@@ -112,7 +112,7 @@ function hc_submit_ajax( method, targetUrl, resultDiv, thisFormData )
 		data: thisFormData,
 		success: function(data, textStatus){
 			resultDiv.removeClass( 'hc-loading' );
-			if( data.redirect )
+			if( data && data.redirect )
 			{
 				var returnDiv = resultDiv.data('return-target');
 				if( returnDiv )
@@ -155,7 +155,7 @@ function hc_submit_ajax( method, targetUrl, resultDiv, thisFormData )
 //						resultDiv.hide();
 				}
 			}
-			else if( data.html )
+			else if( data && data.html )
 			{
 				resultDiv.html( data.html );
 			}

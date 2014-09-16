@@ -19,6 +19,10 @@ class Hc_auth
 	public function check()
 	{
 		$user_id = $this->session->userdata('user_id');
+		if( is_array($user_id) )
+		{
+			$user_id = array_shift( $user_id );
+		}
 		return $user_id;
 	}
 

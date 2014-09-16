@@ -51,6 +51,9 @@ The upgrade is simply - upload everything up again to your `/wp-content/plugins/
 
 == Changelog ==
 
+= 2.3.2 =
+* A fix in session handling function that lead to an error on first user access of the system.
+
 = 2.3.1 =
 * Archived staff members are now not showing in the stats display if they have no shifts during the requested period.
 * In the shortcode if you need to filter more than one location or employee, now you can supply a comma separated list of ids, for example [shiftcontroller staff="1,8"].
