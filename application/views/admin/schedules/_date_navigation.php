@@ -38,6 +38,7 @@ switch( $range )
 {
 	case 'week':
 		$nav_title = $start_view . ' - ' . $end_view;
+		$nav_title = $this->hc_time->formatDateRange( $start_date, $end_date );
 		break;
 	case 'month':
 		$nav_title = $month_view;

@@ -137,7 +137,7 @@ class MY_URI extends CI_URI {
 
 		$uri = $_SERVER['REQUEST_URI'];
 		$base_url = $this->config->item('base_url');
-		
+
 		if (strpos($uri, $base_url) === 0)
 		{
 			$uri = substr($uri, strlen($base_url));

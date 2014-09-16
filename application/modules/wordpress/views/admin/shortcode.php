@@ -34,10 +34,15 @@ If need to, you can adjust it by supplying additional parameters to control the 
 		Please note that if <strong>range</strong> is given, it will overwrite the <strong>end</strong> setting.
 	</li>
 	<li>
-		<strong>location</strong>: <em>location id</em>, for example <em>2</em>. You can find out the id of a location in <a href="<?php echo ci_site_url('admin/locations'); ?>">Configuration &gt; Locations</a>. If not supplied, it will display shifts of all locations.
+		<p>
+		<strong>location</strong>: <em>location id</em>, for example <em>2</em>. You can find out the id of a location in <a href="<?php echo ci_site_url('admin/locations'); ?>">Configuration &gt; Locations</a>. If not supplied, it will display shifts of all locations. You can also supply several ids separated by comma.
+		</p>
+		<p>
+		Also if you have more than one location, and the location parameter is not supplied, it will show first a list of locations to choose from. If you explicitly set the location parameter to "0", it will show the shifts of all locations right away.
+		</p>
 	</li>
 	<li>
-		<strong>staff</strong>: <em>staff id</em>, for example <em>3</em>. You can find out the id of an employee in <a href="<?php echo ci_site_url('admin/users'); ?>">Users</a>. If not supplied, it will display shifts of all employees.
+		<strong>staff</strong>: <em>staff id</em>, for example <em>3</em>. You can find out the id of an employee in <a href="<?php echo ci_site_url('admin/users'); ?>">Users</a>. If not supplied, it will display shifts of all employees. You can also supply several ids separated by comma.
 	</li>
 </ul>
 
@@ -67,4 +72,12 @@ Next three days:
 
 <p>
 <code>[<?php echo $shortcode; ?> range="3 days"]</code>
+</p>
+
+<p>
+All locations shifts on one page (if you have several locations):
+</p>
+
+<p>
+<code>[<?php echo $shortcode; ?> location="0"]</code>
 </p>

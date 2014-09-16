@@ -22,7 +22,7 @@ echo form_open(
 	<table class="table table-striped table-condensed">
 		<tr>
 			<th>
-				
+				WordPress
 			</th>
 			<th>
 				<?php echo $app_title; ?>

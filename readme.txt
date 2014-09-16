@@ -6,7 +6,7 @@ License: GPLv2 or later
 
 Stable tag: trunk
 Requires at least: 3.3
-Tested up to: 3.9
+Tested up to: 4.0
 
 Schedule staff and shifts anywhere at anytime online from your WordPress powered website.
 
@@ -50,6 +50,11 @@ Author URI: http://www.shiftcontroller.com
 The upgrade is simply - upload everything up again to your `/wp-content/plugins/` directory, then go to the ShiftController menu item in the admin panel. It will automatically start the upgrade process if any needed.
 
 == Changelog ==
+
+= 2.3.1 =
+* Archived staff members are now not showing in the stats display if they have no shifts during the requested period.
+* In the shortcode if you need to filter more than one location or employee, now you can supply a comma separated list of ids, for example [shiftcontroller staff="1,8"].
+* Also if you do not want to show the list of locations in the shortcode page, you can supply the location parameter as 0 so it will list shifts for all locations [shiftcontroller location="0"]
 
 = 2.3.0 =
 * Added more options for shortcode to filter by location or by staff, as well as specify the start and end date and how many days to show.

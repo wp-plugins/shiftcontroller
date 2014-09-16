@@ -2,12 +2,14 @@
 $brand_title = $this->config->item('nts_app_title');
 $brand_url = $this->config->item('nts_app_url');
 ?>
-<?php if( strlen($brand_title) ) : ?>
+<?php if( (! $ri) && strlen($brand_title) ) : ?>
 	<p>
 	<a href="<?php echo $brand_url; ?>">
 		<?php echo $brand_title; ?> <small><?php echo HC_APP_VERSION; ?></small>
 	</a>
 	</p>
+<?php elseif( $ri ) : ?>
+	<p>&nbsp;</p>
 <?php endif; ?>
 
 <?php if( ! $ri ) : ?>

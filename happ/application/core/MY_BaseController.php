@@ -110,6 +110,7 @@ class MY_BaseController extends MX_Controller
 		$this->data['page_title'] = $this->config->item('nts_app_title');
 
 		$this->data['message'] = $this->session->flashdata('message');
+		$this->data['debug_message'] = $this->session->flashdata('debug_message');
 		$this->data['error'] = $this->session->flashdata('error');
 
 	/* menu */
@@ -251,6 +252,15 @@ class MY_BaseController extends MX_Controller
 		$this->data['include_tabs'] = $include_tabs;
 		$this->data['include_header'] = $include_header;
 		$this->data['current_view'] = $current_view;
+	}
+
+	function get_current_slug()
+	{
+		$parts = array();
+		$parts[] = $this->uri->segment(1);
+		$parts[] = $this->uri->segment(2);
+		$return = join( '/', $parts );
+		return $return;
 	}
 
 	function get_view( $view, $path = '' )

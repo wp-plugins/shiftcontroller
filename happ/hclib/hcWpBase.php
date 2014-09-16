@@ -1,4 +1,10 @@
 <?php
+global $wp_version;
+if (version_compare($wp_version, "3.3", "<"))
+{
+	exit('This plugin requires WordPress 3.3 or newer, yours is ' . $wp_version);
+}
+
 if( ! function_exists('_print_r') )
 {
 	function _print_r($thing)
@@ -22,9 +28,9 @@ class hcWpPost {
 	}
 }
 
-if( ! class_exists('hcWpBase2') )
+if( ! class_exists('hcWpBase3') )
 {
-class hcWpBase2
+class hcWpBase3
 {
 	var $app = '';
 	var $slug = '';
@@ -35,31 +41,67 @@ class hcWpBase2
 	var $_admin_scripts = array();
 	var $pages = array();
 	var $page_param = '';
-	var $own_db = FALSE;
+
 	var $require_shortcode = FALSE;
 //	var $query_prefix = '?/'; // for CI based apps
 	var $query_prefix = ''; // for NTS based apps
 
+	var $hc_product = '';
+	var $full_path = '';
+	var $system_type = '';
+
+	var $happ_path = '';
+	var $happ_web_dir = '';
+	var $deactivate_other = array();
+
 	public function __construct( 
-		$app, 
-		$dir, 
+		$app,
+		$full_path,
+		$hc_product = '',
+		$system_type = 'nts', // ci or nts
 		$types = array(),
-		$own_db = FALSE,
 		$slug = '',
 		$db_prefix = ''
 		)
 	{
+		$this->system_type = $system_type;
+
+		$GLOBALS['NTS_APPPATH'] = dirname($full_path) . '/application';
+		if( defined('NTS_DEVELOPMENT') )
+		{
+			$this->happ_path = NTS_DEVELOPMENT;
+			$this->happ_web_dir = 'http://localhost';
+		}
+		else
+		{
+			switch( $this->system_type )
+			{
+				case 'nts':
+					$this->happ_path = dirname($full_path) . '/core6/happ';
+					$this->happ_web_dir = plugins_url('core6', $full_path);
+					break;
+				case 'ci':
+					$this->happ_path = dirname($full_path) . '/happ';
+					$this->happ_web_dir = plugins_url('', $full_path);
+					break;
+			}
+		}
+
 		$GLOBALS['NTS_IS_PLUGIN'] = 'wordpress';
+		$dir = dirname( $full_path );
+
+		$this->hc_product = $hc_product;
+		$this->full_path = $full_path;
 
 		$this->app = $app;
 		$GLOBALS['NTS_APP'] = $app;
 
 		$this->slug = $slug ? $slug : $this->app;
+
 		$this->db_prefix = $db_prefix ? $db_prefix : $this->slug;
 		$this->dir = $dir;
 		$this->types = array();
 		$this->page_param = 'page_id';
-		$this->own_db = $own_db;
 
 		reset( $types );
 		foreach( $types as $t )
@@ -70,6 +112,69 @@ class hcWpBase2
 
 		$this->_admin_styles = array();
 		$this->_admin_scripts = array();
+
+		require( $this->happ_path . '/assets/files.php' );
+		reset( $css_files );
+		foreach( $css_files as $f )
+		{
+			if( is_array($f) )
+			{
+				$real_f = $f[0];
+			}
+			else
+			{
+				$real_f = $f;
+			}
+
+			$full = FALSE;
+			$prfx = array('http://', 'https://');
+			reset( $prfx );
+			foreach( $prfx as $prf )
+			{
+				if( substr($real_f, 0, strlen($prf)) == $prf )
+				{
+					$full = TRUE;
+					break;
+				}
+			}
+
+			if( ! $full )
+			{
+				$f = $this->happ_web_dir . '/' . $real_f;
+			}
+			$this->register_admin_style($f);
+		}
+
+		reset( $js_files );
+		foreach( $js_files as $f )
+		{
+			if( is_array($f) )
+			{
+				$real_f = $f[0];
+			}
+			else
+			{
+				$real_f = $f;
+			}
+
+			$full = FALSE;
+			$prfx = array('http://', 'https://');
+			reset( $prfx );
+			foreach( $prfx as $prf )
+			{
+				if( substr($real_f, 0, strlen($prf)) == $prf )
+				{
+					$full = TRUE;
+					break;
+				}
+			}
+
+			if( ! $full )
+			{
+				$f = $this->happ_web_dir . '/' . $real_f;
+			}
+			$this->register_admin_script($f);
+		}
 
 		$file = $this->dir . '/' . $app . '.php';
 		if( file_exists($file) )
@@ -92,6 +197,69 @@ class hcWpBase2
 
 		add_action( 'save_post',				array($this, 'save_meta'));
 		add_action( 'wp_logout',				array($this, 'logout'));
+
+		add_action( 'admin_init', array($this, 'admin_init') );
+		add_action( 'wp', array($this, 'front_init') );
+
+		add_shortcode( $this->app, array($this, 'front_view'));
+		add_action( 'admin_menu', array($this, 'admin_menu') );
+		
+		$submenu = is_multisite() ? 'network_admin_menu' : 'admin_menu';
+		add_action( $submenu, array($this, 'admin_submenu') );
+	}
+
+	public function admin_menu()
+	{
+	}
+
+	public function admin_submenu()
+	{
+	}
+
+	public function deactivate_other( $plugins = array() )
+	{
+		$this->deactivate_other = $plugins;
+		add_action( 'admin_init', array($this, 'run_deactivate'), 999 );
+	}
+
+	public function run_deactivate()
+	{
+		if( ! $this->deactivate_other )
+			return;
+
+		/* check if we have other  activated */
+		$deactivate = array();
+		$plugins = get_option('active_plugins');
+		foreach( $plugins as $pl )
+		{
+			reset( $this->deactivate_other );
+			foreach( $this->deactivate_other as $d )
+			{
+				if( strpos($pl, $d) !== FALSE )
+				{
+					$deactivate[] = $pl;
+				}
+			}
+		}
+
+		foreach( $deactivate as $d );
+		{
+			if( is_plugin_active($d) )
+			{
+				deactivate_plugins($d);
+			}
+		}
+	}
+
+	public function admin_view()
+	{
+		switch( $this->system_type )
+		{
+			case 'ci':
+				$file = $this->happ_path . '/application/index_view.php';
+				require( $file );
+				break;
+		}
 	}
 
 	private function _init_db()
@@ -134,8 +302,14 @@ class hcWpBase2
 			$this->_admin_scripts[] = array( $id, $url );
 	}
 
+	public function admin_total_init()
+	{
+	}
+
 	public function admin_init()
 	{
+		$this->admin_total_init();
+
 		if( $this->is_me_admin() )
 		{
 			$GLOBALS['NTS_APP'] = $this->app;
@@ -147,6 +321,13 @@ class hcWpBase2
 			$GLOBALS['NTS_CONFIG'][$this->app]['BASE_URL'] = get_admin_url();
 			$GLOBALS['NTS_CONFIG'][$this->app]['INDEX_PAGE'] = 'admin.php?page=' . $this->slug . '&';
 			$GLOBALS['NTS_CONFIG'][$this->app]['ADMIN_PANEL'] = 1;
+
+			switch( $this->system_type )
+			{
+				case 'ci':
+					require( $this->happ_path . '/application/index_action.php' );
+					break;
+			}
 		}
 	}
 
@@ -155,26 +336,70 @@ class hcWpBase2
 		global $post;
 		$return = FALSE;
 
-		if( $this->is_me_front() )
+		if( ! is_admin() )
 		{
-			$GLOBALS['NTS_APP'] = $this->app;
+			if( $this->is_me_front() )
+			{
+				$GLOBALS['NTS_APP'] = $this->app;
 
-			add_action( 'wp_enqueue_scripts',	array($this, 'admin_scripts') );
-			add_action( 'wp_head', 				array($this, 'admin_head') );
+				add_action( 'wp_enqueue_scripts',	array($this, 'admin_scripts') );
+				add_action( 'wp_head', 				array($this, 'admin_head') );
 
-			$current_user = wp_get_current_user();
-			$GLOBALS['NTS_CONFIG'][$this->app]['FORCE_LOGIN_ID'] = $current_user->ID;
-			$GLOBALS['NTS_CONFIG'][$this->app]['FORCE_LOGIN_NAME'] = $current_user->user_email;
+				$current_user = wp_get_current_user();
+				$GLOBALS['NTS_CONFIG'][$this->app]['FORCE_LOGIN_ID'] = $current_user->ID;
+				$GLOBALS['NTS_CONFIG'][$this->app]['FORCE_LOGIN_NAME'] = $current_user->user_email;
 
-			$url = parse_url( get_permalink($post) );
-			$base_url = $url['path'];
-			$index_page = (isset($url['query']) && $url['query']) ? '?' . $url['query'] . '&' : $this->query_prefix;
+				$url = parse_url( get_permalink($post) );
+				$base_url = $url['path'];
+				$index_page = (isset($url['query']) && $url['query']) ? '?' . $url['query'] . '&' : $this->query_prefix;
 
-			$GLOBALS['NTS_CONFIG'][$this->app]['BASE_URL'] = $base_url;
-			$GLOBALS['NTS_CONFIG'][$this->app]['INDEX_PAGE'] = $index_page;
-			$return = TRUE;
+				$GLOBALS['NTS_CONFIG'][$this->app]['BASE_URL'] = $base_url;
+				$GLOBALS['NTS_CONFIG'][$this->app]['INDEX_PAGE'] = $index_page;
+				$return = TRUE;
+
+				switch( $this->system_type )
+				{
+					case 'ci':
+						$GLOBALS['NTS_CONFIG'][$this->app]['FORCE_USER_LEVEL'] = 0;
+					// action
+
+						global $post;
+						// might be shortcode with params
+						$pattern = '\[' . $this->slug . '\s+(.+)\]';
+						if(
+							preg_match('/'. $pattern .'/s', $post->post_content, $matches)
+							)
+						{
+							$nts_default_url_params = shortcode_parse_atts( $matches[1] );
+						}
+						require( $this->happ_path . '/application/index_action.php' );
+						$GLOBALS['NTS_CONFIG'][$this->app]['ACTION_STARTED'] = 1;
+						break;
+				}
+			}
 		}
 		return $return;
+	}
+
+	public function front_view()
+	{
+		switch( $this->system_type )
+		{
+			case 'ci':
+				if( 
+					isset($GLOBALS['NTS_CONFIG'][$this->app]['ACTION_STARTED']) && 
+					$GLOBALS['NTS_CONFIG'][$this->app]['ACTION_STARTED']
+					)
+				{
+					$file = $this->happ_path . '/application/index_view.php';
+					ob_start();
+					require( $file );
+					$return = ob_get_contents();
+					ob_end_clean();
+					return $return;
+				}
+				break;
+		}
 	}
 
 	public function is_me_front()
@@ -198,7 +423,7 @@ class hcWpBase2
 		else
 		{
 			// might be shortcode with params
-			$pattern = '\[' . $this->slug . '\s*(.+)\]';
+			$pattern = '\[' . $this->slug . '\s+(.+)\]';
 			if(
 				preg_match('/'. $pattern .'/s', $post->post_content, $matches)
 				)
@@ -339,10 +564,7 @@ class hcWpBase2
 	function _install()
 	{
 	// own database
-		if( $this->own_db )
-		{
-			$this->_init_db();
-		}
+		$this->_init_db();
 	}
 
 	function _init()
@@ -355,10 +577,7 @@ class hcWpBase2
 		}
 
 	// own database
-		if( $this->own_db )
-		{
-			$this->_init_db();
-		}
+		$this->_init_db();
 
 	// load shortcode
 		global $wpdb;

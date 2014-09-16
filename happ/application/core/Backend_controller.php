@@ -50,5 +50,29 @@ class Backend_controller extends MY_Controller
 			if( $default_path )
 				$this->conf['path'] = $default_path;
 		}
+
+	/* check license code */
+		if( $this->hc_modules->exists('license') )
+		{
+			$license_model = new Hitcode_license_model;
+			$code = $license_model->get();
+			if( ! $code )
+			{
+				$to = 'license/admin';
+
+				$current_slug = $this->get_current_slug();
+				if( $current_slug != $to )
+				{
+					$this->session->set_flashdata( 
+						'error', 
+						lang('license_code_required')
+						);
+
+					ci_redirect( $to );
+					exit;
+				}
+			}
+		}
+
 	}
 }

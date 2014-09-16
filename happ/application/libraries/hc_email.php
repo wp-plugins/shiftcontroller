@@ -118,7 +118,15 @@ class Hc_email {
 			}
 
 		reset( $toArray );
-		if( $this->debug ){
+
+		if( defined('NTS_DEVELOPMENT') && NTS_DEVELOPMENT )
+		{
+			$msg = 'Email to ' . join( ', ', $toArray ) . ':<br>' . $this->getSubject();
+			$CI =& ci_get_instance();
+			$CI->session->set_flashdata( 'debug_message', $msg );
+		}
+		elseif( $this->debug )
+		{
 			echo '<PRE>';
 			echo "<BR>-------------------------------------------<BR>";
 			foreach( $toArray as $to ){
@@ -141,7 +149,7 @@ class Hc_email {
 				}
 
 			echo '</PRE>';
-			}
+		}
 		else {
 //			$this->mail->WordWrap = 50; // set word wrap to 50 characters
 

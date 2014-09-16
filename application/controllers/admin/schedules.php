@@ -715,6 +715,34 @@ class Schedules_controller extends Backend_controller
 					}
 				}
 
+			/* filter archived staff if they have no shifts */
+				$archived_users = array();
+				$um = new User_Model;
+				$um
+					->select( 'id' )
+					->where( 'active', USER_MODEL::STATUS_ARCHIVE )
+					->get();
+				foreach( $um as $u )
+				{
+					$archived_users[] = $u->id;
+				}
+				if( $archived_users )
+				{
+					$all_users = array_keys( $stats_shifts );
+					foreach( $all_users as $uid )
+					{
+						if( 
+							in_array($uid, $archived_users) &&
+							( $stats_shifts[$uid][0] == 0 ) &&
+							( $stats_drafts[$uid][0] == 0 )
+						)
+						{
+							unset( $stats_shifts[$uid] );
+							unset( $stats_drafts[$uid] );
+						}
+					}
+				}
+
 				$this->data['stats_shifts'] = $stats_shifts;
 				$this->data['stats_drafts'] = $stats_drafts;
 

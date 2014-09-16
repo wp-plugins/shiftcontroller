@@ -6,21 +6,25 @@
 <?php endif; ?>
 
 <?php
-$temp_count_by_location = array();
-foreach( $shifts as $sh )
-{
-	if( ! isset($temp_count_by_location[$sh->location_id]) )
-	{
-		$temp_count_by_location[$sh->location_id] = 0;
-	}
-	$temp_count_by_location[ $sh->location_id ]++;
-}
-
 $count_by_location = array();
-foreach( $locations as $lid => $loc )
+
+if( ! (($location_id === 0) OR ($location_id === '0')) )
 {
-	if( isset($temp_count_by_location[$lid]) )
-		$count_by_location[ $lid ] = $temp_count_by_location[ $lid ];
+	$temp_count_by_location = array();
+	foreach( $shifts as $sh )
+	{
+		if( ! isset($temp_count_by_location[$sh->location_id]) )
+		{
+			$temp_count_by_location[$sh->location_id] = 0;
+		}
+		$temp_count_by_location[ $sh->location_id ]++;
+	}
+
+	foreach( $locations as $lid => $loc )
+	{
+		if( isset($temp_count_by_location[$lid]) )
+			$count_by_location[ $lid ] = $temp_count_by_location[ $lid ];
+	}
 }
 ?>
 
@@ -46,12 +50,12 @@ foreach( $locations as $lid => $loc )
 	$this_day_slot = array(
 		'wall/day',
 		$date,
-		'location',
-		$location_id
+//		'location',
+//		$location_id
 		);
 	?>
 	<div class="thumbnail">
-		<div class="hc-target" data-src="<?php echo ci_site_url($this_day_slot); ?>">
+		<div class="hc-target" data-src="<?php// echo ci_site_url($this_day_slot); ?>">
 			<?php echo call_user_func_array( 'Modules::run', $this_day_slot ); ?>
 		</div>
 	</div>

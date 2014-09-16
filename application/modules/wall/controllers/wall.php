@@ -34,14 +34,14 @@ class Wall_wall_controller extends Front_controller
 
 	private function _load_shifts( 
 		$dates = array(),
-		$staff_id = 0,
-		$location_id = 0
+		$staff_id = array(),
+		$location_id = array()
 		)
 	{
-		if( $staff_id )
+		if( $staff_id && (count($staff_id) == 1) )
 		{
 			$um = new User_Model;
-			$um->get_by_id( $staff_id );
+			$um->get_by_id( $staff_id[0] );
 			$shift_model = $um->shift;
 			$timeoff_model = $um->timeoff;
 		}
@@ -116,7 +116,7 @@ class Wall_wall_controller extends Front_controller
 		}
 	}
 
-	function day( $date, $location_id = 0 )
+	function day( $date, $location_id = array() )
 	{
 		$args = $this->parse_args( func_get_args() );
 
@@ -168,8 +168,44 @@ class Wall_wall_controller extends Front_controller
 		$args = $this->parse_args( func_get_args() );
 
 		$display = 'all';
-		$location_id = isset($args['location']) ? $args['location'] : 0;
-		$staff_id = isset($args['staff']) ? $args['staff'] : 0;
+
+		$location_id = array();
+		$supplied_location_id = isset($args['location']) ? $args['location'] : '';
+		if( strlen($supplied_location_id)  )
+		{
+			if( strpos($supplied_location_id, ',') !== FALSE )
+			{
+				$location_id = explode(',', $supplied_location_id);
+				array_walk( $location_id, 'intval' );
+			}
+			else
+			{
+				if( $location_id )
+					$location_id = array($supplied_location_id);
+				else
+					$location_id = $supplied_location_id; // 0 for all
+			}
+		}
+
+		$staff_id = array();
+		$supplied_staff_id = isset($args['staff']) ? $args['staff'] : '';
+		if( $supplied_staff_id )
+		{
+			if( strpos($supplied_staff_id, ',') !== FALSE )
+			{
+				$staff_id = explode(',', $supplied_staff_id);
+				array_walk( $staff_id, 'intval' );
+			}
+			elseif( $supplied_staff_id == '_current_user_id_' )
+			{
+				if( $this->auth && $this->auth->user() )
+					$staff_id = array( $this->auth->user()->id );
+			}
+			else
+			{
+				$staff_id = array($supplied_staff_id);
+			}
+		}
 
 		if( isset($args['start']) )
 			$start_date = $args['start'];
@@ -247,8 +283,10 @@ class Wall_wall_controller extends Front_controller
 //		$shift_model->limit( 3 );
 
 		$shift_model->order_by( 'date', 'ASC' );
-
 		$shift_model->get();
+
+//		$shift_model->check_last_query();
+//		exit;
 
 		$dates = array();
 		foreach( $shift_model as $s )

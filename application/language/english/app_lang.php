@@ -297,3 +297,6 @@ $lang['schedule_published'] = 'Schedule Posted';
 
 /* STATS */
 $lang['stats'] = 'Stats';
+
+$lang['license_code'] = 'License Code';
+$lang['license_code_required'] = 'Please enter your license code';

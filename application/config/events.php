@@ -9,14 +9,14 @@ $config['shift.after_save'][] = array(
 	'class'		=> 'Shifts_notify',
 	'method'	=> 'save'
 	);
-$config['user.after_login'][] = array(
-	'file'		=> 'loginlog/models/loginlog_model.php',
-	'class'		=> 'Loginlog_model',
-	'method'	=> 'log'
-	);
-$config['shift.after_save'][] = array(
-	'file'		=> 'logaudit/models/logaudit_model.php',
-	'class'		=> 'Logaudit_model',
-	'method'	=> 'log',
-	'attr'		=> array('user_id', 'location_id', 'start', 'end', 'date', 'status', 'id', 'has_trade'),
-	);
+
+$CI =& ci_get_instance();
+if( $CI->hc_modules->exists('logaudit') )
+{
+	$config['shift.after_save'][] = array(
+		'file'		=> 'logaudit/models/logaudit_model.php',
+		'class'		=> 'Logaudit_model',
+		'method'	=> 'log',
+		'attr'		=> array('user_id', 'location_id', 'start', 'end', 'date', 'status', 'id', 'has_trade'),
+		);
+}
