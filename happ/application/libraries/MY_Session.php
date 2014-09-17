@@ -75,7 +75,29 @@ class MY_Session extends CI_Session {
 		}
 	}
 
-	function set_userdata($newdata = array(), $newval = '')
+	function add_flashdata($newdata = array(), $newval = '')
+	{
+		return $this->set_flashdata( $newdata, $newval, TRUE );
+	}
+
+	function set_flashdata($newdata = array(), $newval = '', $append = FALSE)
+	{
+		if (is_string($newdata))
+		{
+			$newdata = array($newdata => $newval);
+		}
+
+		if (count($newdata) > 0)
+		{
+			foreach ($newdata as $key => $val)
+			{
+				$flashdata_key = $this->flashdata_key.':new:'.$key;
+				$this->set_userdata($flashdata_key, $val, $append);
+			}
+		}
+	}
+
+	function set_userdata($newdata = array(), $newval = '', $append = FALSE)
 	{
 		if (is_string($newdata))
 		{
@@ -91,19 +113,18 @@ class MY_Session extends CI_Session {
 				if( ! in_array($key, $this->builtin_props) )
 				{
 					$my_key = $this->my_prefix . $key;
-					if( is_array($val) )
+					if( $append )
 					{
 						if( ! isset($_SESSION[$my_key]) )
 							$_SESSION[$my_key] = array();
 						if( ! is_array($_SESSION[$my_key]) )
 							$_SESSION[$my_key] = array( $_SESSION[$my_key] );
-						$_SESSION[$my_key] = array_merge( $_SESSION[$my_key], $val );
+						$_SESSION[$my_key][] = $val;
 					}
 					else
 					{
 						$_SESSION[$my_key] = $val;
 					}
-//					$_SESSION[$my_key] = $val;
 				}
 				else
 				{

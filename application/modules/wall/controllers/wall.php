@@ -77,7 +77,7 @@ class Wall_wall_controller extends Front_controller
 				$this->app_conf->get('staff_pick_shifts')
 				)
 			{
-				$shift_model->or_where('user_id IS ', 'NULL', FALSE);
+//				$shift_model->or_where('user_id IS ', 'NULL', FALSE);
 			}
 			else
 			{
@@ -87,8 +87,6 @@ class Wall_wall_controller extends Front_controller
 
 		$this->data['shifts'] = $shift_model
 			->get()->all;
-
-//$shift_model->check_last_query();
 
 		$this->data['timeoffs'] = $timeoff_model
 			->where_in('status', array(TIMEOFF_MODEL::STATUS_ACTIVE))
@@ -262,7 +260,7 @@ class Wall_wall_controller extends Front_controller
 				$this->app_conf->get('staff_pick_shifts')
 				)
 			{
-				$shift_model->or_where('user_id IS ', 'NULL', FALSE);
+//				$shift_model->or_where('user_id IS ', 'NULL', FALSE);
 			}
 			else
 			{

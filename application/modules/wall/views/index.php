@@ -55,7 +55,7 @@ if( ! (($location_id === 0) OR ($location_id === '0')) )
 		);
 	?>
 	<div class="thumbnail">
-		<div class="hc-target" data-src="<?php// echo ci_site_url($this_day_slot); ?>">
+		<div class="_hc-target" data-src="<?php echo ci_site_url($this_day_slot); ?>">
 			<?php echo call_user_func_array( 'Modules::run', $this_day_slot ); ?>
 		</div>
 	</div>

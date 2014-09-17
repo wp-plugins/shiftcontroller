@@ -51,6 +51,9 @@ The upgrade is simply - upload everything up again to your `/wp-content/plugins/
 
 == Changelog ==
 
+= 2.3.3 =
+* JavaScript error when staff picking up free shifts from everyone schedule page (shortcode page).
+
 = 2.3.2 =
 * A fix in session handling function that lead to an error on first user access of the system.
 

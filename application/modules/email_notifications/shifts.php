@@ -31,7 +31,7 @@ class Shifts_notify
 			'msg'		=> 'shifts_cancelled',
 			'to'		=> 'current',
 			'change'	=> array('status'),
-			'nochange'	=> array('id'),
+			'nochange'	=> array('id', 'user_id'),
 			'when'		=> array(
 				'status'	=> SHIFT_MODEL::STATUS_DRAFT
 				)

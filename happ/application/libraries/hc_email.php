@@ -123,7 +123,7 @@ class Hc_email {
 		{
 			$msg = 'Email to ' . join( ', ', $toArray ) . ':<br>' . $this->getSubject();
 			$CI =& ci_get_instance();
-			$CI->session->set_flashdata( 'debug_message', $msg );
+			$CI->session->add_flashdata( 'debug_message', $msg );
 		}
 		elseif( $this->debug )
 		{
