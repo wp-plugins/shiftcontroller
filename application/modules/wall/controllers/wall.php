@@ -116,8 +116,6 @@ class Wall_wall_controller extends Front_controller
 
 	function day( $date, $location_id = array() )
 	{
-		$args = $this->parse_args( func_get_args() );
-
 		$this->data['display'] = 'all';
 		$sm = new Shift_Model;
 
@@ -164,6 +162,7 @@ class Wall_wall_controller extends Front_controller
 	function index()
 	{
 		$args = $this->parse_args( func_get_args() );
+		$args = array_merge( $this->default_params, $args );
 
 		$display = 'all';
 

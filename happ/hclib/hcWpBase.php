@@ -370,7 +370,7 @@ class hcWpBase3
 							preg_match('/'. $pattern .'/s', $post->post_content, $matches)
 							)
 						{
-							$nts_default_url_params = shortcode_parse_atts( $matches[1] );
+							$GLOBALS['NTS_CONFIG'][$this->app]['DEFAULT_PARAMS'] = shortcode_parse_atts( $matches[1] );
 						}
 						require( $this->happ_path . '/application/index_action.php' );
 						$GLOBALS['NTS_CONFIG'][$this->app]['ACTION_STARTED'] = 1;

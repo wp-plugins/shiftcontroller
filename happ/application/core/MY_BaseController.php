@@ -8,6 +8,7 @@ class MY_BaseController extends MX_Controller
 	protected $builtin_views;
 	protected $inherit_views;
 	public $is_module = FALSE;
+	public $default_params = array();
 
 	function __construct()
 	{

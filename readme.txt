@@ -51,6 +51,9 @@ The upgrade is simply - upload everything up again to your `/wp-content/plugins/
 
 == Changelog ==
 
+= 2.3.4 =
+* Shift pickup links didn't work for staff members on the everyone schedule page (shortcode page).
+
 = 2.3.3 =
 * JavaScript error when staff picking up free shifts from everyone schedule page (shortcode page).
 

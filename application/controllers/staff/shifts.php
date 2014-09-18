@@ -30,7 +30,9 @@ class Shifts_controller extends Backend_controller_crud
 		$sm->get_by_id( $id );
 
 		if( ! $sm->exists() )
+		{
 			return;
+		}
 
 		/* check if staff can pick up shifts */
 		if( ! $this->app_conf->get('staff_pick_shifts') )

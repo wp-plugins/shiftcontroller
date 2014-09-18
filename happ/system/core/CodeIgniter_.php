@@ -186,12 +186,8 @@
  * ------------------------------------------------------
  */
 
-	if( ! isset($nts_default_url_params) )
-	{
-		$nts_default_url_params = array();
-	}
 	$RTR =& load_class('Router', 'core');
-	$RTR->_set_routing( $nts_default_url_params );
+	$RTR->_set_routing();
 
 	// Set any routing overrides that may exist in the main index file
 	if (isset($routing))
@@ -363,6 +359,11 @@
 	$BM->mark('controller_execution_time_( '.$class.' / '.$method.' )_start');
 
 	$CI = new $class();
+	$app = isset($GLOBALS['NTS_APP']) ? $GLOBALS['NTS_APP'] : '';
+	if( $app && isset($GLOBALS['NTS_CONFIG'][$app]['DEFAULT_PARAMS']) )
+	{
+		$CI->default_params = $GLOBALS['NTS_CONFIG'][$app]['DEFAULT_PARAMS'];
+	}
 
 /*
  * ------------------------------------------------------
