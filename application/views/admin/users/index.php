@@ -36,9 +36,18 @@ foreach( $entries as $e ){
 
 // email
 	if( $login_with == 'username' )
-		$row[] = ci_anchor( array($this->conf['path'], 'edit', $e->id), $e->username, 'title="' . lang('common_edit') . '"' );
+	{
+		$this_view = $e->username ? $e->username : lang('common_na');
+	}
 	else
-		$row[] = ci_anchor( array($this->conf['path'], 'edit', $e->id), $e->email, 'title="' . lang('common_edit') . '"' );
+	{
+		$this_view = $e->email ? $e->email : lang('common_na');
+	}
+	$row[] = ci_anchor( 
+		array($this->conf['path'], 'edit', $e->id),
+		$this_view,
+		'title="' . lang('common_edit') . '"'
+		);
 
 // level
 	$row[] = $e->prop_text('level');

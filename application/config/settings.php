@@ -34,6 +34,18 @@ $config['week_starts'] = array(
 		),
 	);
 
+$config['time_min'] = array(
+	'default' 	=> 0,
+	'label'		=> lang('time_min'),
+	'type'		=> 'time',
+	);
+
+$config['time_max'] = array(
+	'default' 	=> 24 * 60 * 60,
+	'label'		=> lang('time_max'),
+	'type'		=> 'time',
+	);
+
 $config['email_from'] = array(
 	'default' 	=> '',
 	'label'		=> lang('conf_email_from'),

@@ -157,7 +157,7 @@ function hc_form_input(
 	if( isset($field['hide']) && $field['hide'] )
 		return;
 
-	$keep = array( 'data', 'id', 'name', 'value', 'type', 'required', 'label', 'options', 'readonly', 'disabled', 'style', 'extra', 'text_before', 'text_after', 'cols', 'rows', 'help');
+	$keep = array( 'conf', 'data', 'id', 'name', 'value', 'type', 'required', 'label', 'options', 'readonly', 'disabled', 'style', 'extra', 'text_before', 'text_after', 'cols', 'rows', 'help');
 	$unset = array( 'type', 'label', 'extra', 'text_before', 'text_after' );
 
 	reset( $keep );
@@ -407,29 +407,41 @@ function hc_format_time_of_day( $ts )
 
 function hc_form_time($data = '', $value = '', $extra = '')
 {
-	$step = 15;
+	$step = 15 * 60;
 	$out = '';
 	$options = array();
 	$CI =& ci_get_instance();
 	$CI->hc_time->setDateDb( 20130118 );
 
-	$start_hour = 0;
-	$end_hour = 24;
+	$start_with = 0;
+	$end_with = 24 * 60 * 60;
+	if( isset($data['conf']['min']) && ($data['conf']['min'] > $start_with) )
+	{
+		$start_with = $data['conf']['min'];
+	}
+	if( isset($data['conf']['max']) && ($data['conf']['max'] < $end_with) )
+	{
+		$end_with = $data['conf']['max'];
+	}
+	if( $end_with < $start_with )
+	{
+		$end_with = $start_with;
+	}
 
-	if( $value && ($value > $end_hour * 60 * 60) )
+	if( $value && ($value > $end_with) )
 	{
 		$value = $value - 24 * 60 * 60;
 	}
 
-	if( $start_hour )
-		$CI->hc_time->modify( '+' . ( $start_hour * 60 * 60) . ' seconds' );
+	if( $start_with )
+		$CI->hc_time->modify( '+' . $start_with . ' seconds' );
 
-	$no_of_steps = ( ($end_hour - $start_hour) * 60) / $step;
+	$no_of_steps = ( $end_with - $start_with) / $step;
 	for( $ii = 0; $ii <= $no_of_steps; $ii++ )
 	{
-		$sec = ( $start_hour * 60 * 60) + $ii * 60 * $step;
+		$sec = $start_with + $ii * $step;
 		$options[ $sec ] = $CI->hc_time->formatTime();
-		$CI->hc_time->modify( '+' . $step . ' minutes' );
+		$CI->hc_time->modify( '+' . $step . ' seconds' );
 	}
 
 	$value = set_value($data['name'], $value);

@@ -51,6 +51,12 @@ The upgrade is simply - upload everything up again to your `/wp-content/plugins/
 
 == Changelog ==
 
+= 2.3.5 =
+* Configuration option to set min and max values for time selection dropdowns, that will speed up time selection.
+* Drop our database tables on plugin uninstall (delete) from WordPress admin. Also release the license code for the Pro version so it can be reused in another installation.
+* Backend appearance restyled for a closer match to the latest WordPress version.
+* Cleaned and optimized some files thus reducing the package size.
+
 = 2.3.4 =
 * Shift pickup links didn't work for staff members on the everyone schedule page (shortcode page).
 

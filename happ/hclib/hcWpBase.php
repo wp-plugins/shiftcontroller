@@ -28,9 +28,9 @@ class hcWpPost {
 	}
 }
 
-if( ! class_exists('hcWpBase3') )
+if( ! class_exists('hcWpBase4') )
 {
-class hcWpBase3
+class hcWpBase4
 {
 	var $app = '';
 	var $slug = '';
@@ -143,6 +143,13 @@ class hcWpBase3
 				$f = $this->happ_web_dir . '/' . $real_f;
 			}
 			$this->register_admin_style($f);
+
+		/* add wp overwriter */
+			if( substr($f, -strlen('/hitcode.css')) == '/hitcode.css' )
+			{
+				$f2 = str_replace( '/hitcode.css', '/hitcode-wp.css', $f );
+				$this->register_admin_style($f2);
+			}
 		}
 
 		reset( $js_files );
@@ -203,9 +210,26 @@ class hcWpBase3
 
 		add_shortcode( $this->app, array($this, 'front_view'));
 		add_action( 'admin_menu', array($this, 'admin_menu') );
-		
+
 		$submenu = is_multisite() ? 'network_admin_menu' : 'admin_menu';
 		add_action( $submenu, array($this, 'admin_submenu') );
+	}
+
+	static function uninstall( $prefix )
+	{
+		global $wpdb, $table_prefix;
+
+		$mypref = $table_prefix . $prefix . '_';
+		$sql = "SHOW TABLES LIKE '$mypref%'";
+		$results = $wpdb->get_results( $sql );
+		foreach( $results as $index => $value )
+		{
+			foreach( $value as $tbl )
+			{
+				$sql = "DROP TABLE IF EXISTS $tbl";
+				$e = $wpdb->query($sql);
+			}
+		}
 	}
 
 	public function admin_menu()

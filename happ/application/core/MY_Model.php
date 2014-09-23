@@ -77,6 +77,46 @@ class MY_model extends DataMapper
 		}
 	}
 
+	function remove_validation( $what )
+	{
+		unset( $this->validation[$what] );
+	}
+
+	function remove_validation_rule( $what, $rule )
+	{
+		if( ! isset($this->validation[$what]) )
+		{
+			return;
+		}
+
+		$rule_keys = array_keys($this->validation[$what]['rules']);
+		foreach( $rule_keys as $k )
+		{
+			$remove_this = FALSE;
+			if( is_numeric($k) ) // compare value
+			{
+				if( $rule == $this->validation[$what]['rules'][$k] )
+				{
+					$remove_this = TRUE;
+					break;
+				}
+			}
+			else // compare key
+			{
+				if( $rule == $k )
+				{
+					$remove_this = TRUE;
+					break;
+				}
+			}
+			if( $remove_this )
+			{
+				unset( $this->validation[$what]['rules'][$k] );
+				break;
+			}
+		}
+	}
+
 	function title(){
 		$return = array();
 		reset( $this->build_title );

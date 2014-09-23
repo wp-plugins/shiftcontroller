@@ -145,6 +145,8 @@ $lang['auth_email_new_password_subject'] = 'New Password';
 
 /* TIME */
 $lang['time'] = 'Time';
+$lang['time_min'] = 'Min Time';
+$lang['time_max'] = 'Max Time';
 $lang['time_calendar'] = 'Calendar';
 $lang['time_date'] = 'Date';
 $lang['time_dates'] = 'Dates';

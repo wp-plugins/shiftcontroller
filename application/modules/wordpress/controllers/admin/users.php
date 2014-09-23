@@ -97,6 +97,8 @@ class Wordpress_Users_controller extends Backend_controller
 				/* this user */
 				$current_user = wp_get_current_user();
 				$user = new User_Model;
+				$user->remove_validation( 'email' );
+				$user->remove_validation( 'username' );
 				$user->get_by_id( $current_user->ID );
 
 				$user->email = $current_user->user_email;
@@ -159,6 +161,9 @@ class Wordpress_Users_controller extends Backend_controller
 							}
 
 							$user = new User_Model;
+							$user->remove_validation( 'email' );
+							$user->remove_validation( 'username' );
+
 							$user->get_by_id( $wuser->ID );
 							$is_new = $user->exists() ? FALSE : TRUE;
 

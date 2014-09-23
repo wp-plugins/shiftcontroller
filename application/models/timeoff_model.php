@@ -103,6 +103,27 @@ class Timeoff_model extends _Timeblock_model
 			),
 		);
 
+	public function get_form_fields()
+	{
+		$return = parent::get_form_fields();
+
+	/* adjust min and max time */
+		$CI =& ci_get_instance();
+		$time_min = $CI->app_conf->get( 'time_min' );
+		$time_max = $CI->app_conf->get( 'time_max' );
+
+		$time_min = $time_min ? $time_min : 0;
+		$time_max = $time_max ? $time_max : 24 * 60 * 60;
+
+		$return['start']['conf']['min'] = $time_min;
+		$return['start']['conf']['max'] = $time_max;
+		$return['end']['conf']['min'] = $time_min;
+		$return['end']['conf']['max'] = $time_max;
+
+		return $return;
+	}
+
+
 	public function title( $html = FALSE )
 	{
 		$return = '';
