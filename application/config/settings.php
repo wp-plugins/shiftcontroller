@@ -29,8 +29,13 @@ $config['week_starts'] = array(
 	'label'		=> lang('conf_week_starts'),
 	'type'		=> 'dropdown',
 	'options'	=> array(
-		1	=> lang('time_monday'),
 		0	=> lang('time_sunday'),
+		1	=> lang('time_monday'),
+		2	=> lang('time_tuesday'),
+		3	=> lang('time_wednesday'),
+		4	=> lang('time_thursday'),
+		5	=> lang('time_friday'),
+		6	=> lang('time_saturday'),
 		),
 	);
 
