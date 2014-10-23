@@ -54,6 +54,8 @@ class hcWpBase4
 	var $happ_web_dir = '';
 	var $deactivate_other = array();
 
+	var $premium = NULL;
+
 	public function __construct( 
 		$app,
 		$full_path,
@@ -127,7 +129,7 @@ class hcWpBase4
 			}
 
 			$full = FALSE;
-			$prfx = array('http://', 'https://');
+			$prfx = array('http://', 'https://', '//');
 			reset( $prfx );
 			foreach( $prfx as $prf )
 			{
@@ -142,6 +144,7 @@ class hcWpBase4
 			{
 				$f = $this->happ_web_dir . '/' . $real_f;
 			}
+
 			$this->register_admin_style($f);
 
 		/* add wp overwriter */
@@ -219,6 +222,11 @@ class hcWpBase4
 	{
 		global $wpdb, $table_prefix;
 
+		if( ! strlen($prefix) )
+		{
+			return;
+		}
+
 		$mypref = $table_prefix . $prefix . '_';
 		$sql = "SHOW TABLES LIKE '$mypref%'";
 		$results = $wpdb->get_results( $sql );
@@ -238,6 +246,10 @@ class hcWpBase4
 
 	public function admin_submenu()
 	{
+		if( $this->premium )
+		{
+			$this->premium->admin_submenu();
+		}
 	}
 
 	public function deactivate_other( $plugins = array() )
@@ -301,6 +313,10 @@ class hcWpBase4
 	function register_admin_style( $url )
 	{
 		$id = $this->app . '-style-admin-' . (count($this->_admin_styles) + 1);
+
+		$url = str_replace( 'https://', '//', $url );
+		$url = str_replace( 'http://', '//', $url );
+
 		$this->_admin_styles[] = array( $id, $url );
 	}
 
@@ -322,12 +338,19 @@ class hcWpBase4
 			$url = '';
 		}
 
+		$url = str_replace( 'https://', '//', $url );
+		$url = str_replace( 'http://', '//', $url );
+
 		if( ! $skip )
 			$this->_admin_scripts[] = array( $id, $url );
 	}
 
 	public function admin_total_init()
 	{
+		if( $this->premium )
+		{
+			$this->premium->admin_total_init();
+		}
 	}
 
 	public function admin_init()
@@ -374,28 +397,38 @@ class hcWpBase4
 				$GLOBALS['NTS_CONFIG'][$this->app]['FORCE_LOGIN_NAME'] = $current_user->user_email;
 
 				$url = parse_url( get_permalink($post) );
-				$base_url = $url['path'];
+//				$base_url = $url['path'];
+				switch( $this->system_type )
+				{
+					case 'nts':
+						$base_url = $url['scheme'] . '://'. $url['host'] . $url['path'];
+						break;
+
+					case 'ci':
+						$base_url = $url['path'];
+						break;
+				}
 				$index_page = (isset($url['query']) && $url['query']) ? '?' . $url['query'] . '&' : $this->query_prefix;
 
 				$GLOBALS['NTS_CONFIG'][$this->app]['BASE_URL'] = $base_url;
 				$GLOBALS['NTS_CONFIG'][$this->app]['INDEX_PAGE'] = $index_page;
 				$return = TRUE;
 
+				global $post;
+				// might be shortcode with params
+				$pattern = '\[' . $this->slug . '\s+(.+)\]';
+				if(
+					preg_match('/'. $pattern .'/s', $post->post_content, $matches)
+					)
+				{
+					$GLOBALS['NTS_CONFIG'][$this->app]['DEFAULT_PARAMS'] = shortcode_parse_atts( $matches[1] );
+				}
+
 				switch( $this->system_type )
 				{
 					case 'ci':
 						$GLOBALS['NTS_CONFIG'][$this->app]['FORCE_USER_LEVEL'] = 0;
 					// action
-
-						global $post;
-						// might be shortcode with params
-						$pattern = '\[' . $this->slug . '\s+(.+)\]';
-						if(
-							preg_match('/'. $pattern .'/s', $post->post_content, $matches)
-							)
-						{
-							$GLOBALS['NTS_CONFIG'][$this->app]['DEFAULT_PARAMS'] = shortcode_parse_atts( $matches[1] );
-						}
 						require( $this->happ_path . '/application/index_action.php' );
 						$GLOBALS['NTS_CONFIG'][$this->app]['ACTION_STARTED'] = 1;
 						break;
@@ -535,12 +568,24 @@ class hcWpBase4
 				}
 				else
 				{
-					wp_enqueue_script( $sa[0], $sa[1] );
+					wp_enqueue_script(
+						$sa[0],
+						$sa[1],
+						array(),
+						''
+						// TRUE // in footer
+						);
 				}
 			}
 			else
 			{
-				wp_enqueue_script( $sa[0] );
+				wp_enqueue_script(
+					$sa[0],
+					'',
+					array(),
+					''
+					// TRUE // in footer
+					);
 			}
 		}
 	}
@@ -614,10 +659,13 @@ class hcWpBase4
 				ID 
 			FROM $wpdb->posts 
 			WHERE 
-				(post_type = 'post' OR post_type = 'page') AND 
+				( post_type = 'post' OR post_type = 'page' ) 
+				AND 
 				(
 				post_content LIKE '%" . $shortcode . "%]%'
 				)
+				AND 
+				( post_status <> 'trash' )
 			"
 			);
 		foreach( $pages as $p )
@@ -745,6 +793,15 @@ class hcWpBase4
 			unset( $_SESSION['NTS_SESSION_REF'] );
 		}
 	}
+
+	public function dev_options()
+	{
+		if( $this->premium )
+		{
+			$this->premium->dev_options();
+		}
+	}
+
 }
 }
 ?>
