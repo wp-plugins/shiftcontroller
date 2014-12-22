@@ -8,7 +8,7 @@ Plugin Name: ShiftController
 Plugin URI: http://www.shiftcontroller.com/
 Description: Staff scheduling plugin.
 Author: HitCode
-Version: 2.3.5
+Version: 2.3.6
 Author URI: http://www.hitcode.com/
 */
 

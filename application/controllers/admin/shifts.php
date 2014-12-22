@@ -89,10 +89,17 @@ class Shifts_controller extends Backend_controller_crud
 	// group count
 		if( ! $this->_load($id) )
 			return;
-		$this->data['group_count'] = $this->{$this->model}
-			->where( 'group_id', $this->{$this->model}->group_id )
-			->count()
-			;
+
+		$group_count = 1;
+		$group_id = $this->{$this->model}->group_id;
+		if( $group_id )
+		{
+			$group_count = $this->{$this->model}
+				->where( 'group_id', $group_id )
+				->count()
+				;
+		}
+		$this->data['group_count'] = $group_count;
 
 		$args = func_get_args();
 		call_user_func_array( array($this, 'parent::edit'), $args );
