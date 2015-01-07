@@ -6,7 +6,7 @@ License: GPLv2 or later
 
 Stable tag: trunk
 Requires at least: 3.3
-Tested up to: 4.0
+Tested up to: 4.1
 
 Schedule staff and shifts anywhere at anytime online from your WordPress powered website.
 
@@ -50,6 +50,11 @@ Author URI: http://www.shiftcontroller.com
 The upgrade is simply - upload everything up again to your `/wp-content/plugins/` directory, then go to the ShiftController menu item in the admin panel. It will automatically start the upgrade process if any needed.
 
 == Changelog ==
+= 2.3.7 =
+* BUG: On plugin complete uninstall might delete all WordPress tables.
+
+= 2.3.6 =
+* BUG: (Pro Versions) multiple shifts could be deleted when deleting a single shift created as non recurring from shift edit form in the Delete tab. 
 
 = 2.3.5 =
 * Configuration option to set min and max values for time selection dropdowns, that will speed up time selection.

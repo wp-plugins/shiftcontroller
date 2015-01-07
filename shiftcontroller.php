@@ -8,7 +8,7 @@ Plugin Name: ShiftController
 Plugin URI: http://www.shiftcontroller.com/
 Description: Staff scheduling plugin.
 Author: HitCode
-Version: 2.3.6
+Version: 2.3.7
 Author URI: http://www.hitcode.com/
 */
 
@@ -56,6 +56,7 @@ class ShiftController extends hcWpBase4
 
 	static function uninstall( $prefix = 'shiftcontroller' )
 	{
+		$prefix = 'shiftcontroller';
 		hcWpBase4::uninstall( $prefix );
 	}
 }
