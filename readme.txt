@@ -50,6 +50,9 @@ Author URI: http://www.shiftcontroller.com
 The upgrade is simply - upload everything up again to your `/wp-content/plugins/` directory, then go to the ShiftController menu item in the admin panel. It will automatically start the upgrade process if any needed.
 
 == Changelog ==
+= 2.3.9 =
+* A slight optimization on login/logout internal process.
+
 = 2.3.7 =
 * BUG: On plugin complete uninstall might delete all WordPress tables.
 

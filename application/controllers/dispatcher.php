@@ -6,14 +6,10 @@ class Dispatcher_controller extends Front_controller
 	{
 		parent::__construct();
 		$app = $this->config->item('nts_app');
-
-		if ( ! $this->auth->check() )
+		if( isset($GLOBALS['NTS_CONFIG'][$app]['FORCE_LOGIN_ID']) )
 		{
-			if( isset($GLOBALS['NTS_CONFIG'][$app]['FORCE_LOGIN_ID']) )
-			{
-				$id = $GLOBALS['NTS_CONFIG'][$app]['FORCE_LOGIN_ID'];
-				$this->auth->login( $id );
-			}
+			$id = $GLOBALS['NTS_CONFIG'][$app]['FORCE_LOGIN_ID'];
+			$this->auth->login( $id );
 		}
 
 	// sync user account

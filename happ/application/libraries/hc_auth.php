@@ -127,6 +127,7 @@ class Hc_auth
 				);
 			$this->session->set_userdata($session_data);
 			$_SESSION['NTS_SESSION_REF'] = hc_random(16);
+			$this->user = NULL;
 
 			if( method_exists($this->auth_model, 'trigger_event') )
 			{
