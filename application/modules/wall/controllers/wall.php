@@ -69,6 +69,10 @@ class Wall_wall_controller extends Front_controller
 		{
 			$shift_model->where_related( 'location', 'id', $location_id );
 		}
+		if( $staff_id && (count($staff_id) > 1) )
+		{
+			$shift_model->where_related( 'user', 'id', $staff_id );
+		}
 
 		$shift_model->group_start();
 			$shift_model->where('status', SHIFT_MODEL::STATUS_ACTIVE);
