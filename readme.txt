@@ -50,6 +50,10 @@ Author URI: http://www.shiftcontroller.com
 The upgrade is simply - upload everything up again to your `/wp-content/plugins/` directory, then go to the ShiftController menu item in the admin panel. It will automatically start the upgrade process if any needed.
 
 == Changelog ==
+
+= 2.4.1 =
+* A small fix in code that might break redirects with WP high error reporting level
+
 = 2.4.0 =
 * A fix for multiple staff ids in the shortcode param.
 

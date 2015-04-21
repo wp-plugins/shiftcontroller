@@ -265,8 +265,14 @@ if ( ! function_exists('get_config'))
 			$modules_locations = $config['modules_locations'];
 
 			reset( $modules );
-			foreach( $modules as $module )
+			foreach( $modules as $module => $param )
 			{
+				if (is_numeric($module))
+				{
+					$module = $param;
+					$param = '';
+				}
+
 				reset( $modules_locations );
 				foreach( $modules_locations as $ml )
 				{
